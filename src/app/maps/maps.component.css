@@ -1,0 +1,17 @@
+@import url("https://unpkg.com/leaflet@1.3.3/dist/leaflet.css");
+
+#googleMap {
+  margin: 2% 2% 2% 2%;
+  border: 2px solid red;
+  width: 95%;
+  height: 800px;
+  align-content: center;
+}
+
+#osmMap {
+  margin: 2% 2% 2% 2%;
+  border: 2px solid red;
+  width: 95%;
+  height: 800px;
+  align-content: center;
+}
