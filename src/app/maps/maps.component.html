@@ -1,1 +1,16 @@
-<div id="osmMap"></div>
+<div id="osmMap">
+  <template id="leaflet-popup-html">
+    <div id="leaflet-popup-form" class="marker-popup">
+
+      <!--p>Commenti:</p-->
+
+      <textarea id="leaflet-popup-text" class="marker-popup" placeholder="Insert here your comment!" maxlength="200" rows="5" cols="30"></textarea>
+
+      <button id="leaflet-popup-button" class="marker-popup" onClick=""> Send </button>
+    </div>
+  </template>
+</div>
+<div id="coordinates-overlay">
+  <span id="coordinates-overlay-lat"></span>
+  <span id="coordinates-overlay-lng"></span>
+</div>
