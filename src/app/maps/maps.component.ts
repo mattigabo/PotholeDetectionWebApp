@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import L from 'leaflet';
 import {RestAdapterService} from "../rest-adapter.service";
 import {Marker} from "../Ontologies";
+import {CoordinatesService} from './leaflet.extensions';
 
 @Component({
   selector: 'app-maps',
@@ -11,23 +12,28 @@ import {Marker} from "../Ontologies";
 
 export class MapsComponent implements OnInit {
 
-  constructor(private restService: RestAdapterService) { }
+  constructor(private restService: RestAdapterService) {
+    // L.Control.Coordinates = L.Control.extend(CoordinatesService());
+    L.Control.zoomControl = false;
+  }
 
   ngOnInit() {
-    let body = {town:"Riccione"};
-
-    console.log(body);
-
-    var osmMap = L.map('osmMap').setView([51.505, -0.09], 13);
+    var osmMap = L.map('osmMap', {zoomControl:false}).setView([44, 12], 10);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> ' +
-      'contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-      'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18,
+      attribution:
+        'Map &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> | ' +
+        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
+        'Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a> | ' +
+        'Contribs <a href="https://www.linkedin.com/in/alessandro-cevoli/">Xander</a>&' +
+                  '<a href="https://www.linkedin.com/in/matteogabellini/">Gabe </a>',
+      maxZoom: 20,
       id: 'mapbox.streets',
       accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
     }).addTo(osmMap);
+
+    var cs = new CoordinatesService(osmMap);
+
 
 
     this.restService.getAllMarker().subscribe( (potholes: Marker[]) =>  {

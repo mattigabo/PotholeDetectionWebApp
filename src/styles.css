@@ -1,8 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
 html {
-  background-color: beige;
+  background-color: white;
   height: 100%;
   width: 100%;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
 
 body{
@@ -15,5 +17,4 @@ body{
 h1, h2, h3, h4, h5, h6 , p {
   margin-right: 2%;
   margin-left: 2%;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
