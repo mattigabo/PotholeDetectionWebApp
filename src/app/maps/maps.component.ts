@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import L from 'leaflet';
+import {RestAdapterService} from "../rest-adapter.service";
+import {Marker} from "../Ontologies";
 
 @Component({
   selector: 'app-maps',
@@ -9,7 +11,7 @@ import L from 'leaflet';
 
 export class MapsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private restService: RestAdapterService) { }
 
   ngOnInit() {
     let body = {town:"Riccione"};
@@ -26,6 +28,16 @@ export class MapsComponent implements OnInit {
       id: 'mapbox.streets',
       accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
     }).addTo(osmMap);
+
+
+    this.restService.getAllMarker().subscribe( (potholes: Marker[]) =>  {
+      potholes.forEach((m: Marker) => {
+        console.log(m);
+        var poi = L.marker(m.coordinates).addTo(osmMap);
+        console.log(poi);
+      })
+      }
+    );
   }
 
 }
