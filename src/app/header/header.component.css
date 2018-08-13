@@ -14,8 +14,8 @@
 }
 
 #filters > a {
-  margin-left: 2%;
-  margin-top: 2%;
+  margin-left: 1%;
+  margin-top: 1%;
   padding: 1%;
   float: left;
   pointer-events: all;
@@ -47,49 +47,48 @@
 #repository{color: rebeccapurple}
 #about {color: black}
 #help {color: white}
-#menu {color: black}
+#menu-button {color: black}
 
-/**
-    Tooltips code from W3School
- */
-
-.tooltip {
-  position: relative;
-  display: inline-block;
+.nav {
+  height: 100%;
+  width: 20%;
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  background-color: #333333;
+  opacity: 0.8;
+  overflow-x: hidden;
+  padding-top: 2%;
+  /*transition: 0.5s;*/
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.65);
+  display: none;
 }
 
-.tooltip .tooltiptext {
+/* The navigation menu links */
+.nav #nav-close-button {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
 
-  visibility: hidden;
+/* When you mouse over the navigation links, change their color */
+.nav #nav-close-button:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.nav #nav-close-button {
   position: absolute;
-  width: 120px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 5px;
-  z-index: 1;
-  opacity: 0.5;
-  transition: opacity .6s;
+  top: 2%;
+  right: 10%;
 }
 
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: -35%;
-  left: 50%;
-  margin-left: -5px;
-  border: 5px solid;
-  border-color: transparent transparent #555 transparent;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-
-.tooltip-bottom {
-  top: 135%;
-  left: 50%;
-  margin-left: -60px;
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .nav {padding-top: 15px;}
+  .nav a {font-size: 18px;}
 }

@@ -3,30 +3,58 @@
 #osmMap {
   height: 100%;
   z-index: 1;
+  overflow: hidden;
 }
 
-#coordinates-overlay {
+.overlay {
   position: fixed;
   z-index: 2;
-  bottom: 5%;
-  right: 5%;
   background-color: #444444;
   color: white;
   border-radius: 5px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
-  cursor: pointer;
   font-size: medium;
   opacity: 0.8;
   padding: 5px;
   display: none;
-
-  min-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-#coordinates-overlay > span {
+#coordinates-overlay {
+  cursor: pointer;
+  min-width: 180px;
+}
+
+#lat-lng-span {
   float: right;
   padding-right: 5px;
   padding-left: 5px;
+}
+
+#messages-overlay {
+  top: 25%;
+  right: 50%;
+}
+
+#messages-overlay > span {
+  float: right;
+  padding-right: 5px;
+  padding-left: 2px;
+}
+
+#coordinates-overlay-close-button {
+  float: left;
+  position: relative;
+  opacity: 0.8;
+  padding-right: 2px;
+  padding-left: 5px;
+  color: #818181;
+}
+
+#coordinates-overlay-close-button:hover {
+  color: #f1f1f1;
 }
 
 /*

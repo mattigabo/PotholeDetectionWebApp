@@ -1,23 +1,27 @@
-<!--<div class="header">-->
-  <div id="filters">
-    <a id= "menu" (click)="showFilters()">
-      <i class="fas fa-filter fa-3x"></i>
-    </a>
-  </div>
-  <div id="credits">
-    <a id= "repository" href="{{repository}}" target="_blank">
-        <i class="fab fa-github fa-2x" ></i>
-    </a>
-    <a id= "email" href="{{credits}}" target="_blank">
-      <i class="fab fa-google fa-2x" ></i>
-    </a>
-    <a id= "about" href="{{about}}" target="_blank">
-      <i class="fas fa-info-circle fa-2x" ></i>
-    </a>
-    <a id= "help" href="{{help}}" target="_blank">
-      <i class="fas fa-question-circle fa-2x" ></i>
-    </a>
-  </div>
-<!--</div>-->
+<div id="sideNav" class="nav overlay">
+  <a id="nav-close-button" href="javascript:void(0)">
+    <i class="fas fa-arrow-circle-left fa-xl"></i>
+  </a>
+  <form id="filtersForm">
 
-
+  </form>
+</div>
+<div id="filters">
+  <a id= "menu-button">
+    <i class="fas fa-filter fa-3x"></i>
+  </a>
+</div>
+<div id="credits">
+  <a id= "repository" href="{{repository}}" target="_blank">
+      <i class="fab fa-github fa-2x" ></i>
+  </a>
+  <a id= "email" href="{{credits}}" target="_blank">
+    <i class="fab fa-google fa-2x" ></i>
+  </a>
+  <a id= "about" href="{{about}}" target="_blank">
+    <i class="fas fa-info-circle fa-2x" ></i>
+  </a>
+  <a id= "help" href="{{help}}" target="_blank">
+    <i class="fas fa-question-circle fa-2x" ></i>
+  </a>
+</div>
