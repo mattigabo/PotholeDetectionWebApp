@@ -12,13 +12,15 @@ import {CoordinatesService} from './leaflet.extensions';
 
 export class MapsComponent implements OnInit {
 
+  private osmMap;
+
   constructor(private restService: RestAdapterService) {
     // L.Control.Coordinates = L.Control.extend(CoordinatesService());
     L.Control.zoomControl = false;
   }
 
   ngOnInit() {
-    var osmMap = L.map('osmMap', {zoomControl:false}).setView([44, 12], 10);
+    this.osmMap = L.map('osmMap', {zoomControl:false}).setView([44, 12], 10);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution:
@@ -30,20 +32,26 @@ export class MapsComponent implements OnInit {
       maxZoom: 20,
       id: 'mapbox.streets',
       accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
-    }).addTo(osmMap);
+    }).addTo(this.osmMap);
 
-    var cs = new CoordinatesService(osmMap);
+    var cs = new CoordinatesService(this.osmMap);
 
 
 
     this.restService.getAllMarker().subscribe( (potholes: Marker[]) =>  {
       potholes.forEach((m: Marker) => {
-        console.log(m);
-        var poi = L.marker(m.coordinates).addTo(osmMap);
-        console.log(poi);
+        this.addMarkerToTheMap(m);
       })
       }
     );
   }
 
+
+  private addMarkerToTheMap(m: Marker){
+    console.log(m);
+    var poi = L.marker(m.coordinates)
+      .addTo(this.osmMap)
+      .bindPopup(document.getElementById('leaflet-popup-html').innerHTML);;
+    console.log(poi);
+  }
 }
