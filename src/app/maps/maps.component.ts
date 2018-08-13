@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import L from 'leaflet';
 import {CoordinatesService} from './leaflet.extensions';
+import {RestAdapterService} from "../rest-adapter.service";
+import {Marker} from "../Ontologies";
 import * as L_SAF from 'node_modules/leaflet-selectareafeature';
 
 @Component({
@@ -11,14 +13,16 @@ import * as L_SAF from 'node_modules/leaflet-selectareafeature';
 
 export class MapsComponent implements OnInit {
 
-  constructor() {
+  private osmMap;
+
+  constructor(private restService: RestAdapterService) {
     // L.Control.Coordinates = L.Control.extend(CoordinatesService());
     L.Control.zoomControl = false;
   }
 
   ngOnInit() {
 
-    var osmMap = L.map('osmMap', {
+    this.osmMap = L.map('osmMap', {
       zoomControl:false
     }).setView([44, 12], 10);
 
@@ -33,10 +37,25 @@ export class MapsComponent implements OnInit {
       minZoom: 5,
       id: 'mapbox.streets',
       accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
-    }).addTo(osmMap);
+    }).addTo(this.osmMap);
 
-    var cs = new CoordinatesService(osmMap);
+    var cs = new CoordinatesService(this.osmMap);
 
+
+    this.restService.getAllMarker().subscribe( (potholes: Marker[]) =>  {
+      potholes.forEach((m: Marker) => {
+        this.addMarkerToTheMap(m);
+      })
+      }
+    );
   }
 
+
+  private addMarkerToTheMap(m: Marker){
+    console.log(m);
+    var poi = L.marker(m.coordinates)
+      .addTo(this.osmMap)
+      .bindPopup(document.getElementById('leaflet-popup-html').innerHTML);;
+    console.log(poi);
+  }
 }
