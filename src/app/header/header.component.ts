@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-header',
@@ -19,10 +20,19 @@ export class HeaderComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-  }
 
-  showFilters() {
-    window.alert(this.about)
-  }
+    $('#menu-button').on('click', function () {
 
+      $('#menu-button').fadeOut(100, function () {
+        $('#sideNav').animate({"width":"toggle"}, 500);
+      });
+    });
+
+    $('#nav-close-button').on('click', function () {
+      $('#sideNav').animate({"width":"toggle"}, 500, function () {
+          $('#menu-button').fadeIn(100);
+      });
+    })
+
+  }
 }
