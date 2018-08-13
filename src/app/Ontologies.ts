@@ -3,7 +3,7 @@
  *  automatic binding of json proprieties
  */
 export interface Marker {
-  MID: number;
+  id: number;
   nDetections: number;
   coordinates: GeoCoordinates ;
   addressNode: OSMAddressNode;

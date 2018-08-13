@@ -38,7 +38,7 @@ export class MapsComponent implements OnInit {
 
 
 
-    this.restService.getAllMarker().subscribe( (potholes: Marker[]) =>  {
+    this.restService.getAllMarkers().subscribe( (potholes: Marker[]) =>  {
       potholes.forEach((m: Marker) => {
         this.addMarkerToTheMap(m);
       })
