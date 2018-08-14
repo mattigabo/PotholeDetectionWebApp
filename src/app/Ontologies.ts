@@ -27,3 +27,9 @@ export interface OSMAddressNode{
   countryCode: string;
   place: string;
 }
+
+export interface MarkerComment {
+  marker: number,
+  comment: string,
+  date: number;
+}
