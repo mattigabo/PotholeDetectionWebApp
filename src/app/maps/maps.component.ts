@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import L from 'leaflet';
-import {CoordinatesService} from './leaflet.extensions';
+import {FeaturesService} from './leaflet.extensions';
 import {RestAdapterService} from "../rest-adapter.service";
 import {Marker} from "../Ontologies";
-import * as L_SAF from 'node_modules/leaflet-selectareafeature';
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-maps',
@@ -16,15 +16,17 @@ export class MapsComponent implements OnInit {
   private osmMap;
 
   constructor(private restService: RestAdapterService) {
-    // L.Control.Coordinates = L.Control.extend(CoordinatesService());
+    // L.Control.Coordinates = L.Control.extend(FeaturesService());
     L.Control.zoomControl = false;
   }
 
   ngOnInit() {
 
-    this.osmMap = L.map('osmMap', {
-      zoomControl:false
+    let map = L.map('osmMap', {
+      zoomControl: false
     }).setView([44, 12], 10);
+
+    this.osmMap = map;
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution:
@@ -39,9 +41,7 @@ export class MapsComponent implements OnInit {
       accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
     }).addTo(this.osmMap);
 
-    var cs = new CoordinatesService(this.osmMap);
-
-
+    var cs = new FeaturesService(this.osmMap);
 
     this.restService.getAllMarkers().subscribe( (potholes: Marker[]) =>  {
         potholes.forEach((m: Marker) => {
@@ -51,12 +51,11 @@ export class MapsComponent implements OnInit {
     );
   }
 
-
   private addMarkerToTheMap(m: Marker){
     console.log(m);
     var poi = L.marker(m.coordinates)
       .addTo(this.osmMap)
-      .bindPopup(document.getElementById('leaflet-popup-html').innerHTML);;
+      .bindPopup($('#leaflet-popup-html').html);
     console.log(poi);
   }
 }

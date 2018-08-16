@@ -21,16 +21,21 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
 
-    $('#menu-button').on('click', function () {
-
-      $('#menu-button').fadeOut(100, function () {
-        $('#sideNav').animate({"width":"toggle"}, 500);
+    $('#filters-button').on('click', function () {
+      $('.overlay').each(function (idx, obj) {
+        $(obj).hide()
+      });
+      $('#filters-button').fadeOut(100, function () {
+        $('#filters-nav').animate({"width":"toggle"}, 500);
       });
     });
 
-    $('#nav-close-button').on('click', function () {
-      $('#sideNav').animate({"width":"toggle"}, 500, function () {
-          $('#menu-button').fadeIn(100);
+    $('#filters-nav-close-button').on('click', function () {
+      $('.overlay').each(function (idx, obj) {
+        $(obj).hide()
+      });
+      $('#filters-nav').animate({"width":"toggle"}, 500, function () {
+          $('#filters-button').fadeIn(100);
       });
     })
 

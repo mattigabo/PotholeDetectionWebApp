@@ -1,6 +1,69 @@
-:host {
-  position: fixed;
-  left: 5%;
+#options {
+  position: absolute;
+  right: 2%;
   bottom: 5%;
   z-index: 2;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-end;
+  pointer-events: none;
+  margin-right: 2%;
 }
+
+#options > a {
+  position: relative;
+  float: right;
+  pointer-events: all;
+  padding-left: 25px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#draw-nav-button {
+  color: #444444;
+}
+
+#draw-nav-button:hover {
+  color: black;
+}
+
+#draw-nav {
+  height: 100%;
+  width: 20%;
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  background-color: #333333;
+  opacity: 0.8;
+  overflow-x: hidden;
+  padding-top: 2%;
+  /*transition: 0.5s;*/
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.65);
+  display: none;
+}
+
+/* The navigation menu links */
+#draw-nav-close-button {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+#draw-nav-close-button:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+#draw-nav #draw-nav-close-button {
+  position: absolute;
+  top: 2%;
+  right: 80%;
+}
+
+
