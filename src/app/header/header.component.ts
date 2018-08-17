@@ -26,15 +26,26 @@ export class HeaderComponent implements OnInit {
         $(obj).hide()
       });
       $('#filters-button').fadeOut(100, function () {
-        $('#filters-nav').animate({"width":"toggle"}, 500);
+        $('#filters-nav').animate({
+          width:"toggle",
+          display:"flex"
+        }, 500);
       });
+
+      $('#filters-form').show(600);
     });
 
     $('#filters-nav-close-button').on('click', function () {
       $('.overlay').each(function (idx, obj) {
         $(obj).hide()
       });
-      $('#filters-nav').animate({"width":"toggle"}, 500, function () {
+
+      $('#filters-form').hide();
+
+      $('#filters-nav').animate({
+        width:"toggle",
+        display: "none"
+      }, 500, function () {
           $('#filters-button').fadeIn(100);
       });
     })

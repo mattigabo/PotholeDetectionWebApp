@@ -1,19 +1,15 @@
-<div id="osmMap">
-  <template id="leaflet-popup-html">
-    <div id="leaflet-popup-form" class="marker-popup">
-
-      <!--p>Commenti:</p-->
-
-      <textarea id="leaflet-popup-text" class="marker-popup" placeholder="Insert here your comment!" maxlength="200" rows="5" cols="30"></textarea>
-
-      <button id="leaflet-popup-button" class="marker-popup" onClick=""> Send </button>
+<div id="osm-map">
+    <div id="marker-popup" class="close-on-esc overlay">
+        <label id="marker-popup-label"> Coordinates: </label><var id="marker-popup-val">  </var>
+        <textarea id="marker-popup-text" placeholder="Insert here your comment!" maxlength="200" rows="5" cols="30"></textarea>
+        <button id="marker-popup-button"> Send </button>
     </div>
-  </template>
 </div>
+
 <div id="messages-overlay" class="overlay close-on-esc">
   <span id="message"></span>
 </div>
-<div id="coordinates-overlay" class="overlay">
+<div id="coordinates-overlay" class="overlay close-on-esc">
   <a id="coordinates-overlay-close-button">
     <i class="fas fa-times-circle fa-xs"></i>
   </a>
@@ -58,5 +54,4 @@
       </a>
     </div>
   </div>
-
 </div>

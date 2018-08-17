@@ -9,33 +9,68 @@ export class FeaturesService {
 
   constructor (map) {
 
-    map.on('click', function(coordinates) {
+    let newMarkers = L.featureGroup();
+
+    newMarkers.on('click', function (clickEvent) {
 
       let
-        lat = coordinates.latlng.lat.toFixed(4).toString(),
-        lng = coordinates.latlng.lng.toFixed(4).toString()
+        lat = clickEvent.latlng.lat.toFixed(4).toString(),
+        lng = clickEvent.latlng.lng.toFixed(4).toString()
       ;
 
-      if (coordinates.latlng) {
+      if (clickEvent.latlng) {
+
+        let
+          top = clickEvent.containerPoint.y - 200,
+          left = clickEvent.containerPoint.x - 100
+        ;
+
+        $('#marker-popup-val').html(lat + '<strong> N </strong>, ' + lng + '<strong> E </strong> ');
+
+        let marker_popup = $('#marker-popup');
+
+        // console.log($('#marker-popup-val').html());
+        marker_popup.css({
+          width:"toggle",
+          display: 'flex',
+          left: left.toString() + "px",
+          top: top.toString() + "px"
+        });
+
+        marker_popup.show(100);
+      }
+    });
+
+    newMarkers.addTo(map);
+
+    let showCoordinates = function(coordinates) {
+
+      let
+        lat = coordinates.lat.toFixed(4).toString(),
+        lng = coordinates.lng.toFixed(4).toString()
+      ;
+
+      if (coordinates) {
         $('#lat-lng-span').html(lat + '<strong> N </strong>, ' + lng + '<strong> E </strong> ');
 
         $('#lat-lng-input').attr("value", lat + " N, " + lng + " E");
 
-        let
-          top = coordinates.containerPoint.y - 40,
-          left = coordinates.containerPoint.x - 200
-        ;
-
         let overlay = $('#coordinates-overlay');
 
         overlay.css({
-          "top": top.toString() + "px",
-          "left": left.toString() + "px",
-          "display": "block"
+          display: "flex"
         });
 
         $('.context-menu').hide(100);
       }
+    };
+
+    $("#coordinates-overlay-close-button").on('click', function (clickEvent) {
+      $('#coordinates-overlay').hide(100);
+    });
+
+    map.on('click', function (event) {
+      showCoordinates(event.latlng);
     });
 
     map.on('move', function (moveEvent) {
@@ -43,32 +78,17 @@ export class FeaturesService {
       $('.context-menu').hide(100);
     });
 
-    $("#coordinates-overlay-close-button").on('click', function (clickEvent) {
-        $('#coordinates-overlay').hide(100);
-    });
-
     map.on('contextmenu', function (contextEvent) {
+      showCoordinates(contextEvent.latlng);
+
       FeaturesService.setCoordinates(contextEvent.latlng);
+
       $('.context-menu').css({
         display: "grid",
         transaction: 0.5,
         top: (contextEvent.containerPoint.y + 10).toString() + "px",
         left: (contextEvent.containerPoint.x + 10).toString() + "px"
       });
-    });
-
-    $(document).on('keyup', function (keyEvent) {
-      let key = keyEvent.key ? keyEvent.key.toUpperCase() : keyEvent.which;
-
-      if (key === "ESCAPE") {
-        $('.close-on-esc').each(function (idx, obj) {
-          $(obj).hide();
-        });
-
-        $('.open-on-esc').each(function (idx, obj) {
-          $(obj).show();
-        });
-      }
     });
 
     $('#lat-lng-span').on( 'click', function(clickEvent) {
@@ -89,9 +109,7 @@ export class FeaturesService {
     });
 
     $('#add-marker').on('click', function () {
-      L.marker(FeaturesService.getCoordinates())
-        .addTo(map)
-        .bindPopup($('#leaflet-popup-html').html);
+      L.marker(FeaturesService.getCoordinates()).addTo(newMarkers);
 
       $('.context-menu').fadeOut(100);
     });

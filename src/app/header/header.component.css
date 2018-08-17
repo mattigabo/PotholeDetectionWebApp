@@ -118,6 +118,41 @@
   right: 10%;
 }
 
+#filters-form {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: 10%;
+  margin: 2%;
+}
+
+#filters-fields {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-bottom: solid 2px #818181;
+  border-top: solid 2px #818181;
+}
+
+#filters-fields > * {
+  color: #f1f1f1;
+  padding: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  width: available;
+}
+
+#filters-nav-send-button {
+  position: relative;
+  left: 80%;
+  margin: 5%;
+  color: #818181;
+}
+
+#filters-nav-send-button:hover {
+  color: #f1f1f1;
+}
+
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
   #filters-nav {padding-top: 15px;}
