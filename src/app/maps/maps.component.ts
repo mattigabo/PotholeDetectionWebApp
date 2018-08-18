@@ -1,64 +1,75 @@
 import { Component, OnInit } from '@angular/core';
 import L from 'leaflet';
-import {FeaturesService} from './leaflet.extensions';
 import {RestAdapterService} from "../rest-adapter.service";
 import {Marker} from "../Ontologies";
+
 import * as $ from "jquery";
+import {ContextMenu} from "./context-menu/context-menu";
+import {CoordinatesOverlay} from "./coordinates/coordinates-overlay";
+import {MarkersPopup} from "./markers-popup/markers-popup";
 
 @Component({
   selector: 'app-maps',
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.css']
 })
-
 export class MapsComponent implements OnInit {
 
-  private osmMap;
-  private fetchedMarkers;
+  public static osmMap : L.Map;
+  private featureGroups = [];
 
   constructor(private restService: RestAdapterService) {
-    L.Control.zoomControl = false;
+    // L.Control.zoomControl = false;
   }
 
   ngOnInit() {
 
-    this.osmMap = L.map('osm-map', {
-      zoomControl: false
-    }).setView([44, 12], 10);
+    let that = this;
 
-    let tile_layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> | ' +
-        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
-        '&copy; <a href="https://www.mapbox.com/">Mapbox</a> | ' +
-        '<a href="https://www.linkedin.com/in/alessandro-cevoli/">Xander</a>&' +
-                  '<a href="https://www.linkedin.com/in/matteogabellini/">Gabe</a>',
-      maxZoom: 20,
-      minZoom: 5,
-      id: 'mapbox.streets',
-      accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
+    $("#osm-map").ready(readyEvent => {
+
+      MapsComponent.osmMap = L.map('osm-map', {
+        zoomControl: false
+      });
+
+      MapsComponent.osmMap = MapsComponent.osmMap.setView([44, 12], 10);
+
+      let osmMap : L.Map = MapsComponent.osmMap;
+
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> | ' +
+          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
+          '&copy; <a href="https://www.mapbox.com/">Mapbox</a> | ' +
+          '<a href="https://www.linkedin.com/in/alessandro-cevoli/">Xander</a>&' +
+          '<a href="https://www.linkedin.com/in/matteogabellini/">Gabe</a>',
+        maxZoom: 20,
+        minZoom: 5,
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
+      }).addTo(osmMap);
+
+      let users_defined : L.FeatureGroup = L.featureGroup();
+      let fetched = L.featureGroup();
+      let area_selected = L.featureGroup();
+
+      area_selected.addTo(osmMap);
+      fetched.addTo(osmMap);
+      users_defined.addTo(osmMap);
+
+      let cm = new ContextMenu(osmMap, users_defined, fetched, area_selected);
+      let co = new CoordinatesOverlay(osmMap);
+      let mp = new MarkersPopup(osmMap,
+    [users_defined, fetched, area_selected]);
+
+      that.restService.getAllMarkers()
+        .subscribe( (potholes: Marker[]) =>  {
+            potholes.forEach((m: Marker) => {
+              L.marker(m.coordinates).addTo(fetched);
+            })
+          }
+        );
+
     });
-
-    tile_layer.addTo(this.osmMap);
-
-    this.fetchedMarkers = L.featureGroup();
-
-    this.fetchedMarkers.addTo(this.osmMap);
-
-    var fs = new FeaturesService(this.osmMap, [this.fetchedMarkers]);
-
-    this.restService.getAllMarkers()
-      .subscribe( (potholes: Marker[]) =>  {
-        potholes.forEach((m: Marker) => {
-          this.addMarkerToTheMap(m);
-        })
-      }
-    );
-  }
-
-  private addMarkerToTheMap(m: Marker){
-    console.log(m);
-    let poi = L.marker(m.coordinates).addTo(this.fetchedMarkers);
-    console.log(poi);
   }
 }

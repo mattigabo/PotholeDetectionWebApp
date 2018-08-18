@@ -1,0 +1,73 @@
+@import "../maps.component.css";
+
+#marker-popup {
+  flex-direction: column;
+  top: 15%;
+  left: 33%;
+  /*width: 33%;*/
+  /*height: 60%;*/
+  min-width: 400px;
+  min-height: 300px;
+  max-height: 70%;
+  max-width: 50%;
+}
+
+#marker-popup-form {
+  background-color: inherit;
+}
+
+#marker-popup-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#marker-popup-header > * {
+  margin: 1%;
+}
+
+#marker-popup-close-button {
+  color: #818181;
+}
+
+#marker-popup-close-button:hover {
+  color: #f1f1f1;
+}
+
+#marker-popup-comment {
+  background: whitesmoke;
+  color: #444444;
+  min-height: 100px;
+  resize: none;
+  margin: 2%;
+}
+
+#marker-popup-info {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-bottom: solid 2px #818181;
+  border-top: solid 2px #818181;
+  margin: 1%;
+  padding: 2%;
+}
+
+#marker-popup-info > * {
+  padding-bottom: 5px;
+}
+#marker-popup-info > * > *{
+  padding-left: 10px;
+}
+
+#marker-popup-send-button {
+  position: relative;
+  color: #818181;
+  margin-top: 2%;
+  margin-left: 85%;
+  margin-bottom: 5%;
+  margin-right: 10%;
+}
+
+#marker-popup-send-button:hover {
+  color: #f1f1f1;
+}

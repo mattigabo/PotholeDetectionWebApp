@@ -1,0 +1,40 @@
+@import "../maps.component.css";
+
+#coordinates-overlay {
+  cursor: pointer;
+  min-width: 160px;
+  bottom: 5%;
+  right: 3%;
+  justify-content: space-between;
+}
+
+#lat-lng-span {
+  float: right;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+#messages-overlay {
+  bottom: 10%;
+  right: 7%;
+}
+
+#messages-overlay > span {
+  position: relative;
+  float: left;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+#coordinates-overlay-close-button {
+  float: right;
+  position: relative;
+  opacity: 0.8;
+  padding-right: 5px;
+  padding-left: 5px;
+  color: #818181;
+}
+
+#coordinates-overlay-close-button:hover {
+  color: #f1f1f1;
+}
