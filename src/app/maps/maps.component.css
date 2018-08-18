@@ -66,36 +66,78 @@
  * Boxes that show the infos of the marker
  *
  */
+
 #marker-popup {
   flex-direction: column;
-  top: 25%;
+  top: 15%;
   left: 33%;
-  width: 32%;
-  height: 50%;
-  min-width: 150px;
+  /*width: 33%;*/
+  /*height: 60%;*/
+  min-width: 400px;
   min-height: 300px;
+  max-height: 70%;
+  max-width: 50%;
 }
 
 #marker-popup-form {
   background-color: inherit;
 }
 
-#marker-popup-text {
-  background: transparent;
-  min-height: 30px;
-  resize: vertical;
+#marker-popup-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-#marker-popup-button {
-  padding: 2% 5%;
-  background:#333;
-  color: white;
-  border: 0 none;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-  margin-top: 5%;
+#marker-popup-header > * {
+  margin: 1%;
 }
 
+#marker-popup-close-button {
+  color: #818181;
+}
+
+#marker-popup-close-button:hover {
+  color: #f1f1f1;
+}
+
+#marker-popup-comment {
+  background: whitesmoke;
+  color: #444444;
+  min-height: 100px;
+  resize: none;
+  margin: 2%;
+}
+
+#marker-popup-info {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-bottom: solid 2px #818181;
+  border-top: solid 2px #818181;
+  margin: 1%;
+  padding: 2%;
+}
+
+#marker-popup-info > * {
+  padding-bottom: 5px;
+}
+#marker-popup-info > * > *{
+  padding-left: 10px;
+}
+
+#marker-popup-send-button {
+  position: relative;
+  color: #818181;
+  margin-top: 2%;
+  margin-left: 85%;
+  margin-bottom: 5%;
+  margin-right: 10%;
+}
+
+#marker-popup-send-button:hover {
+  color: #f1f1f1;
+}
 /**
  * CUSTOM CONTEXT MENU
  **/
@@ -135,8 +177,8 @@
   justify-content: space-between;
   padding: 5px;
   margin-bottom: 2px;
-  border-bottom: 1px #f1f1f1;
 }
+
 .context-menu__link {
   color: #919191;
 }

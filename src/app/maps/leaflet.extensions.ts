@@ -36,25 +36,31 @@ export class FeaturesService {
 
         if (clickEvent.latlng) {
 
-          $('#marker-popup-val').html(lat + '<strong> N </strong>, ' + lng + '<strong> E </strong> ');
+          $('#marker-popup-var--coordinates').html(lat + '<strong> N </strong>, ' + lng + '<strong> E </strong> ');
 
           let marker_popup = $('#marker-popup');
 
+          marker_popup.fadeIn(300);
           marker_popup.css({
             display: 'flex'
           });
-
-          marker_popup.fadeIn(200);
-
         }
       });
+    });
+
+    $('#marker-popup-close-button').on('click', function () {
+      $('#marker-popup').fadeOut(300);
+    });
+
+    $('#marker-popup-send-button').on('click', function () {
+      // To Do
     });
   }
 
   private initCoordinatesOverlay(map) {
 
     $("#coordinates-overlay-close-button").on('click', function (clickEvent) {
-      $('#coordinates-overlay').hide(100);
+      $('#coordinates-overlay').fadeOut(200);
     });
 
     map.on('click', function (event) {
@@ -62,8 +68,9 @@ export class FeaturesService {
     });
 
     map.on('move', function (moveEvent) {
-      $('#coordinates-overlay').hide(100);
-      $('.context-menu').hide(100);
+      $(".overlay").each(function (idx, obj) {
+        $(obj).hide();
+      });
     });
 
     $('#lat-lng-span').on( 'click', function(clickEvent) {
@@ -133,8 +140,6 @@ export class FeaturesService {
       overlay.css({
         display: 'flex'
       });
-
-      $('.context-menu').hide(100);
     }
   };
 
