@@ -32,7 +32,9 @@ export class HeaderComponent implements OnInit {
         }, 500);
       });
 
-      $('#filters-form').show(600);
+      $('.filters-nav-form').each(function (idx, obj) {
+       $(obj).show(600);
+      });
     });
 
     $('#filters-nav-close-button').on('click', function () {
@@ -40,7 +42,9 @@ export class HeaderComponent implements OnInit {
         $(obj).hide()
       });
 
-      $('#filters-form').hide();
+      $('.filters-nav-form').each(function (idx, obj) {
+        $(obj).hide();
+      });
 
       $('#filters-nav').animate({
         width:"toggle",

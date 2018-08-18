@@ -43,27 +43,9 @@ export class MapsComponent implements OnInit {
 
     this.fetchedMarkers = L.featureGroup();
 
-    this.fetchedMarkers.on('click', function (clickEvent) {
-
-      let
-        lat = clickEvent.latlng.lat.toFixed(4).toString(),
-        lng = clickEvent.latlng.lng.toFixed(4).toString()
-      ;
-
-      if (clickEvent.latlng) {
-
-        $('#marker-popup-val').html(lat + '<strong> N </strong>, ' + lng + '<strong> E </strong> ');
-        $('#marker-popup').css({
-          display: 'flex',
-          left: (clickEvent.containerPoint.x - 140).toString() + "px",
-          top: (clickEvent.containerPoint.y - 200).toString() + "px"
-        });
-      }
-    });
-
     this.fetchedMarkers.addTo(this.osmMap);
 
-    var cs = new FeaturesService(this.osmMap);
+    var fs = new FeaturesService(this.osmMap, [this.fetchedMarkers]);
 
     this.restService.getAllMarkers()
       .subscribe( (potholes: Marker[]) =>  {
@@ -76,9 +58,7 @@ export class MapsComponent implements OnInit {
 
   private addMarkerToTheMap(m: Marker){
     console.log(m);
-    let poi = L.marker(m.coordinates)
-      .addTo(this.fetchedMarkers)
-      .bindPopup($('#marker-popup').html());
+    let poi = L.marker(m.coordinates).addTo(this.fetchedMarkers);
     console.log(poi);
   }
 }

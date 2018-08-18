@@ -118,15 +118,22 @@
   right: 10%;
 }
 
-#filters-form {
+.filters-nav-form {
   display: flex;
   flex-direction: column;
   position: relative;
-  top: 10%;
-  margin: 2%;
+
+  margin: 10% 2% 2%;
 }
 
-#filters-fields {
+#filter-by-place-form{
+}
+
+#filter-by-route-form {
+
+}
+
+.filters-nav-fields {
   display: flex;
   flex-direction: column;
   border: none;
@@ -134,22 +141,23 @@
   border-top: solid 2px #818181;
 }
 
-#filters-fields > * {
+.filters-nav-fields > * {
   color: #f1f1f1;
   padding: 10px;
   margin-bottom: 5px;
   margin-top: 5px;
   width: available;
+  opacity: 1.0;
 }
 
-#filters-nav-send-button {
+.filters-nav-send-button {
   position: relative;
   left: 80%;
   margin: 5%;
   color: #818181;
 }
 
-#filters-nav-send-button:hover {
+.filters-nav-send-button:hover {
   color: #f1f1f1;
 }
 

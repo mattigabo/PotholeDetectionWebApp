@@ -18,9 +18,9 @@
   opacity: 0.8;
   padding: 5px;
   display: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /*overflow: hidden;*/
+  /*text-overflow: ellipsis;*/
+  /*white-space: nowrap;*/
 }
 
 #coordinates-overlay {
