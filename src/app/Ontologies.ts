@@ -9,10 +9,20 @@ export interface Marker {
   addressNode: OSMAddressNode;
 }
 
-export interface GeoCoordinates{
+export class GeoCoordinates{
   lat: number;
   lng: number;
   radius: number;
+
+  constructor(lat:number, lng:number, radius?: number){
+    this.lat  = lat;
+    this.lng = lng;
+    if(radius != undefined){
+      this.radius = radius;
+    } else {
+      this.radius = 0;
+    }
+  }
 }
 
 export interface OSMAddressNode{

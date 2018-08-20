@@ -57,7 +57,7 @@ export class MapsComponent implements OnInit {
       fetched.addTo(osmMap);
       users_defined.addTo(osmMap);
 
-      let cm = new ContextMenu(osmMap, users_defined, fetched, area_selected);
+      let cm = new ContextMenu(osmMap, users_defined, fetched, area_selected, this.restService);
       let co = new CoordinatesOverlay(osmMap);
       let mp = new MarkersPopup(osmMap,
     [users_defined, fetched, area_selected]);

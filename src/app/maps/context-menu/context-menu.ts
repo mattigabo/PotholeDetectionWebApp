@@ -1,6 +1,8 @@
 import {CoordinatesOverlay} from "../coordinates/coordinates-overlay";
 import * as $ from "jquery";
 import L from 'leaflet';
+import {RestAdapterService} from "../../rest-adapter.service";
+import {GeoCoordinates} from "../../Ontologies";
 
 export class ContextMenu {
 
@@ -10,7 +12,8 @@ export class ContextMenu {
   constructor(map : L.Map,
               user_defined : L.FeatureGroup,
               fetched : L.FeatureGroup,
-              area_selected : L.FeatureGroup) {
+              area_selected : L.FeatureGroup,
+              restService: RestAdapterService) {
 
     map.on('contextmenu', function (contextEvent) {
       CoordinatesOverlay.showCoordinates(contextEvent.latlng, false);
@@ -27,7 +30,7 @@ export class ContextMenu {
 
     $('#add-marker').on('click', function () {
       L.marker(ContextMenu.getCoordinates()).addTo(user_defined);
-
+      ContextMenu.addMarker(ContextMenu.getCoordinates(), restService);
       $('.context-menu').fadeOut(100);
     });
 
@@ -54,5 +57,13 @@ export class ContextMenu {
       lat: ContextMenu.lat,
       lng: ContextMenu.lng
     };
+  }
+
+  private static addMarker(coordinates, restService: RestAdapterService){
+    var geoCoordinates: GeoCoordinates = new GeoCoordinates(coordinates.lat, coordinates.lng);
+    restService.addMarker(geoCoordinates).subscribe(X => {
+      alert("Marker added");
+      //TODO add a toast message that show the adding success
+    });
   }
 }

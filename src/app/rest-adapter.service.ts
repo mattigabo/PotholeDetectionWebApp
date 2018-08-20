@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "./Ontologies";
-import {Observable} from "rxjs/index";
-import { map } from 'rxjs/operators'
+import {Observable , throwError} from "rxjs/index";
+import { map , catchError } from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root'
@@ -68,13 +68,15 @@ export class RestAdapterService {
 
   addMarker(coordinates: GeoCoordinates){
     var marker: MarkerForPost = new MarkerForPost(coordinates.lat, coordinates.lng);
-    this.httpClient.post<MarkerForPost>(this.rootApiUrl, marker, httpOptions);
+    return this.httpClient.post<MarkerForPost>(this.rootApiUrl, marker, httpOptions)
   }
 
   addComment(comment: MarkerComment){
     var url: string = this.rootApiUrl + comment.marker
     this.httpClient.put<MarkerComment>(url, comment, httpOptions);
   }
+
+
 
 }
 
