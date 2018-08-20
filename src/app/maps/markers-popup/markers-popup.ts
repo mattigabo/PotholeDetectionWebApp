@@ -4,8 +4,8 @@ import {CoordinatesOverlay} from "../coordinates/coordinates-overlay";
 
 export class MarkersPopup {
 
-  constructor(map : L.Map, featureGroups: L.FeatureGroup[]) {
-    featureGroups.forEach((group) => {
+  constructor(map : L.Map, bindTo: L.FeatureGroup[]) {
+    bindTo.forEach((group) => {
       group.on('click', function (clickEvent) {
 
         CoordinatesOverlay.showCoordinates(clickEvent.latlng);

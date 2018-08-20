@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
 
 @Component({
@@ -7,7 +7,7 @@ import * as $ from 'jquery';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   constructor() {
     $(document).ready(function (readyEvent) {
@@ -26,6 +26,12 @@ export class AppComponent {
           });
         }
       });
+    });
+  }
+
+  ngOnInit(): void {
+    $(document).ready(() => {
+
     });
   }
 }
