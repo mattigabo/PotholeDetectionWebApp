@@ -8,9 +8,11 @@ import { MapsComponent } from './maps/maps.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './maps/context-menu/context-menu.component';
-import {RestAdapterService} from "./rest-adapter.service";
+import { RestAdapterService } from "./rest-adapter.service";
 import { CoordinatesComponent } from './maps/coordinates/coordinates.component';
 import { MarkersPopupComponent } from './maps/markers-popup/markers-popup.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToasterModule} from "angular2-toaster";
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { MarkersPopupComponent } from './maps/markers-popup/markers-popup.compon
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ToasterModule.forRoot()
   ],
   providers: [
     RestAdapterService

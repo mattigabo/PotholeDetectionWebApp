@@ -1,4 +1,4 @@
-import L from 'leaflet';
+import * as L from 'leaflet';
 
 export enum LAYER_NAME {
   OSM = "osm-map",
@@ -19,13 +19,13 @@ export class MapSingleton {
   private static _isInit : boolean = false;
   private static _INSTANCE : MapSingleton = new MapSingleton();
 
-  public static instance : () => MapSingleton = () => MapSingleton._INSTANCE;
-  public static isCreated : () => boolean = () => MapSingleton._isCreated;
-  public static isInit : () => boolean = () => MapSingleton._isCreated;
+  public static get instance() : MapSingleton {return MapSingleton._INSTANCE}
+  public static get isCreated() : boolean {return  MapSingleton._isCreated}
+  public static get isInit(): boolean {return MapSingleton._isCreated}
 
-  public map : () => L.Map = () => this.osmMap;
-  public layers : () => L.LayerGroup = () => this.masterLayer;
-  public index : () => number[] = () => this.layerGroupsIndex;
+  public get map(): L.Map { return this.osmMap}
+  public get layers() : L.LayerGroup {return this.masterLayer}
+  public get index() : number[] { return this.layerGroupsIndex}
 
   private constructor() {
 

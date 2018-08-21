@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
+import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
+
 
 @Component({
   selector: 'app-root',
@@ -9,7 +11,15 @@ import * as $ from 'jquery';
 
 export class AppComponent implements OnInit {
 
-  constructor() {
+  public potholeSystemToastConfig : ToasterConfig = new ToasterConfig({
+    positionClass: 'toast-bottom-left',
+    timeout:3000,
+    animation: 'fade',
+    showCloseButton: true
+  });
+
+  constructor(private toaster: ToasterService) {
+
     $(document).ready(function (readyEvent) {
 
       /** HERE DOCUMENT EVENT LISTENER **/
