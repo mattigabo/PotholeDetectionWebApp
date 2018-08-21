@@ -3,6 +3,7 @@ import * as $ from "jquery";
 import L from 'leaflet';
 import {RestAdapterService} from "../../rest-adapter.service";
 import {GeoCoordinates} from "../../Ontologies";
+import {Toast, ToasterService} from "angular2-toaster";
 
 export class ContextMenu {
 
@@ -13,7 +14,8 @@ export class ContextMenu {
               user_defined : L.FeatureGroup,
               fetched : L.FeatureGroup,
               area_selected : L.FeatureGroup,
-              restService: RestAdapterService) {
+              restService: RestAdapterService,
+              toasterService: ToasterService) {
 
     map.on('contextmenu', function (contextEvent) {
       CoordinatesOverlay.showCoordinates(contextEvent.latlng, false);
@@ -30,7 +32,7 @@ export class ContextMenu {
 
     $('#add-marker').on('click', function () {
       L.marker(ContextMenu.getCoordinates()).addTo(user_defined);
-      ContextMenu.addMarker(ContextMenu.getCoordinates(), restService);
+      ContextMenu.addMarker(ContextMenu.getCoordinates(), restService, toasterService);
       $('.context-menu').fadeOut(100);
     });
 
@@ -59,11 +61,31 @@ export class ContextMenu {
     };
   }
 
-  private static addMarker(coordinates, restService: RestAdapterService){
+  private static addMarker(coordinates, restService: RestAdapterService, toasterService: ToasterService){
+    // var infoToast: Toast = {
+    //   type: 'info',
+    //   title: 'Prova',
+    //   body: "Marker successfully added",
+    //   showCloseButton: true
+    // };
+    //
+    // toasterService.pop(infoToast);
+
+    var successToast: Toast = {
+      type: 'success',
+      title: 'Marker Added',
+      body: "Marker successfully added",
+      showCloseButton: true
+    };
+
+    var errorToast: Toast = {
+      type: 'error',
+      title: 'Marker Not Added',
+      body: "Error occured during the marker adding",
+      showCloseButton: true
+    };
+
     var geoCoordinates: GeoCoordinates = new GeoCoordinates(coordinates.lat, coordinates.lng);
-    restService.addMarker(geoCoordinates).subscribe(X => {
-      alert("Marker added");
-      //TODO add a toast message that show the adding success
-    });
+    restService.addMarker(geoCoordinates, X => { alert(successToast.body); });
   }
 }

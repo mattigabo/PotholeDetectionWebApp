@@ -6,7 +6,8 @@ import {Marker} from "../Ontologies";
 import * as $ from "jquery";
 import {ContextMenu} from "./context-menu/context-menu";
 import {CoordinatesOverlay} from "./coordinates/coordinates-overlay";
-import {MarkersPopup} from "./markers-popup/markers-popup";
+import {MarkersPopup} from "./markers-popup/markers-popup"
+import {Toast, ToasterService} from "angular2-toaster";
 
 @Component({
   selector: 'app-maps',
@@ -18,7 +19,7 @@ export class MapsComponent implements OnInit {
   public static osmMap : L.Map;
   private featureGroups = [];
 
-  constructor(private restService: RestAdapterService) {
+  constructor(private restService: RestAdapterService, private toasterService: ToasterService) {
     // L.Control.zoomControl = false;
   }
 
@@ -57,7 +58,7 @@ export class MapsComponent implements OnInit {
       fetched.addTo(osmMap);
       users_defined.addTo(osmMap);
 
-      let cm = new ContextMenu(osmMap, users_defined, fetched, area_selected, this.restService);
+      let cm = new ContextMenu(osmMap, users_defined, fetched, area_selected, this.restService, this.toasterService);
       let co = new CoordinatesOverlay(osmMap);
       let mp = new MarkersPopup(osmMap,
     [users_defined, fetched, area_selected]);
@@ -69,7 +70,6 @@ export class MapsComponent implements OnInit {
             })
           }
         );
-
     });
   }
 }
