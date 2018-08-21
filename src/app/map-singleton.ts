@@ -64,7 +64,7 @@ export class MapSingleton {
       let user_defined : L.FeatureGroup = L.featureGroup();
       let fetched : L.FeatureGroup = L.featureGroup();
       let area_selected : L.FeatureGroup = L.featureGroup();
-      let geometry : L.LayerGroup = L.layerGroup();
+      let geometry : L.FeatureGroup = L.featureGroup();
 
       that.masterLayer =
         L.layerGroup([mapbox, user_defined, fetched, area_selected, geometry]);

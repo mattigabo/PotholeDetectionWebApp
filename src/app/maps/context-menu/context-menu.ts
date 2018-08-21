@@ -1,6 +1,7 @@
 import {CoordinatesOverlay} from "../coordinates/coordinates-overlay";
 import * as $ from "jquery";
 import L from 'leaflet';
+import {CoordinatesComponent} from "../coordinates/coordinates.component";
 
 export class ContextMenu {
 
@@ -13,7 +14,7 @@ export class ContextMenu {
               area_selected : L.FeatureGroup) {
 
     map.on('contextmenu', function (contextEvent) {
-      CoordinatesOverlay.showCoordinates(contextEvent.latlng, false);
+      CoordinatesComponent.showCoordinates(contextEvent.latlng, false);
 
       ContextMenu.setCoordinates(contextEvent.latlng);
 

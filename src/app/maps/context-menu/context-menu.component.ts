@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {LAYER_NAME, MapSingleton} from "../../map-singleton";
 import * as $ from "jquery";
-import L from 'leaflet';
-import {CoordinatesOverlay} from "../coordinates/coordinates-overlay";
-// import {FeaturesService} from "../leaflet.extensions";
+import * as L from 'leaflet';
+// import 'leaflet-draw';
+import {CoordinatesComponent} from "../coordinates/coordinates.component";
 
 @Component({
   selector: 'app-context-menu',
@@ -54,7 +54,7 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
       let geometry : L.LayerGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]);
 
       this.osmMap.on('contextmenu', function (contextEvent) {
-        CoordinatesOverlay.showCoordinates(contextEvent.latlng, false);
+        CoordinatesComponent.showCoordinates(contextEvent.latlng, false);
 
         that.coordinates = contextEvent.latlng;
 
@@ -74,6 +74,37 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
 
       $('#add-area-selector').on('click', function () {
         // TO DO
+
+        geometry.clearLayers();
+
+        let circle = new L.Circle(that.coordinates, {
+          radius: 10000,
+          color: "red",
+          weight: 3
+        });
+
+        circle.addTo(geometry);
+
+        console.log(circle.getBounds());
+
+        var release = false;
+
+        circle.on('click', function (click) {
+
+          if (!release) {
+            console.log("captured!");
+            that.osmMap.on('mousemove', function (mouseMove) {
+              circle.setLatLng(mouseMove.latlng);
+            });
+            release = true;
+          } else {
+            console.log("released");
+            that.osmMap.removeEventListener('mousemove');
+            circle.setLatLng(click.latlng);
+            release = false;
+          }
+        });
+
         $('.context-menu').fadeOut(100);
       });
 
@@ -81,6 +112,7 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
         user_defined.clearLayers();
         fetched.clearLayers();
         area_selected.clearLayers();
+        geometry.clearLayers();
         $('.context-menu').fadeOut(100);
       });
 

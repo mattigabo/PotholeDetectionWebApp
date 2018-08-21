@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
-import L from 'leaflet';
+import * as L from 'leaflet';
 import {RestAdapterService} from "../rest-adapter.service";
 import {MapSingleton} from "../map-singleton";
 

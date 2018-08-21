@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import L from 'leaflet';
+import * as L from 'leaflet';
 import {RestAdapterService} from "../rest-adapter.service";
 import {Marker} from "../Ontologies";
 

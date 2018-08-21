@@ -1,9 +1,10 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import L from 'leaflet';
+import * as L from 'leaflet';
 import * as $ from 'jquery';
 import {CoordinatesOverlay} from "../coordinates/coordinates-overlay";
 import {RestAdapterService} from "../../rest-adapter.service";
 import {MapSingleton} from "../../map-singleton";
+import {CoordinatesComponent} from "../coordinates/coordinates.component";
 
 @Component({
   selector: 'app-markers-popup',
@@ -56,7 +57,7 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
 
   public static displayMarkerPopUp =  function (clickEvent) {
 
-    CoordinatesOverlay.showCoordinates(clickEvent.latlng);
+    CoordinatesComponent.showCoordinates(clickEvent.latlng);
 
     let
       lat = clickEvent.latlng.lat.toFixed(4).toString(),
