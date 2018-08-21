@@ -46,9 +46,9 @@ export class RestAdapterService {
     return oPothole;
   }
 
-  getLocationInfo(lat: number, lng: number){
-    var geoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinater=[" + lat + ", " + lng + "]"
-    this.httpClient.get<GeoServiceResponse>(geoCodingServiceUrl, httpOptions)
+  getLocationInfo(lat: number, lng: number): Observable<OSMAddressNode>{
+    var geoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lat + ", " + lng + "]"
+    return this.httpClient.get<GeoServiceResponse>(geoCodingServiceUrl, httpOptions)
       .pipe(map(response => response.content));;
   }
 

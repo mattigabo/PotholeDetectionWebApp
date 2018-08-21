@@ -7,26 +7,26 @@
   <div id="marker-popup-info">
     <label id="marker-popup-label--coordinates">
       <strong>Coordinates</strong>:
-      <var id="marker-popup-var--coordinates-lat" typeof="double"></var><strong>N</strong>,
-      <var id="marker-popup-var--coordinates-lng" typeof="double"></var><strong>E</strong>
+      {{latitude}} <strong>N</strong>,
+      {{longitude}}<strong>E</strong>
     </label>
     <label id="marker-popup-label--country">
-      <strong>Country</strong>: <var id="marker-popup-var--country"></var>
+      <strong>Country</strong>: {{country}}
     </label>
     <label id="marker-popup-label--region">
-      <strong>Region</strong>: <var id="marker-popup-var--region"></var>
+      <strong>Region</strong>: {{region}}
     </label>
     <label id="marker-popup-label--county">
-      <strong>County</strong>: <var id="marker-popup-var--county"></var>
+      <strong>County</strong>: {{county}}
     </label>
     <label id="marker-popup-label--town">
-      <strong>Town</strong>: <var id="marker-popup-var--town"></var>
+      <strong>Town</strong>: {{town}}
     </label>
     <label id="marker-popup-label--place">
-      <strong>Place</strong>: <var id="marker-popup-var--place"></var>
+      <strong>Place</strong>: {{place}}
     </label>
     <label id="marker-popup-label--road">
-      <strong>Road</strong>: <var id="marker-popup-var--road"></var>
+      <strong>Road</strong>: {{road}}
     </label>
   </div>
   <textarea id="marker-popup-comment"

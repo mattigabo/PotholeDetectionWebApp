@@ -4,17 +4,29 @@ import * as $ from 'jquery';
 import {RestAdapterService} from "../../rest-adapter.service";
 import {MapSingleton} from "../map-singleton";
 import {CoordinatesComponent} from "../coordinates/coordinates.component";
+import {OSMAddressNode} from "../../Ontologies";
 
 @Component({
   selector: 'app-markers-popup',
   templateUrl: './markers-popup.component.html',
   styleUrls: ['./markers-popup.component.css']
 })
+
 export class MarkersPopupComponent implements OnInit,AfterViewInit {
 
   private osmMap : L.Map;
   private layers : L.LayerGroup;
   private index : number[];
+
+
+  latitude: number
+  longitude: number
+  country: string;
+  region: string;
+  county: string;
+  town: string;
+  place: string;
+  road: string;
 
   constructor(private restService : RestAdapterService) { }
 
@@ -27,13 +39,13 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
     this.index = MapSingleton.instance.index;
 
     this.layers.getLayer(this.index["user-defined"])
-      .on('click', MarkersPopupComponent.displayMarkerPopUp);
+      .on('click', this.displayMarkerPopUp);
 
     this.layers.getLayer(this.index["fetched"])
-      .on('click', MarkersPopupComponent.displayMarkerPopUp);
+      .on('click', this.displayMarkerPopUp);
 
     this.layers.getLayer(this.index["area-selected"])
-      .on('click', MarkersPopupComponent.displayMarkerPopUp);
+      .on('click', this.displayMarkerPopUp);
   }
 
   fadeMarkerPopUp = (click: Event) => {
@@ -44,7 +56,7 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
     // ToDo
   };
 
-  public static displayMarkerPopUp =  (event) => {
+  public displayMarkerPopUp =  (event) => {
 
     CoordinatesComponent.showCoordinates(event.latlng);
 
@@ -55,14 +67,23 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
 
     if (event.latlng) {
 
-      $('#marker-popup-var--coordinates-lat').text(lat);
-      $('#marker-popup-var--coordinates-lng').text(lng);
+      this.latitude = lat;
+      this.longitude = lng;
 
       let marker_popup = $('#marker-popup');
-
       marker_popup.fadeIn(300);
       marker_popup.css({
         display: 'flex'
+      });
+
+      this.restService.getLocationInfo(lat, lng).subscribe((address: OSMAddressNode) => {
+
+        this.country = address.country;
+        this.region = address.region;
+        this.county = address.county;
+        this.town = address.town;
+        this.place = address.place;
+        this.road = address.road;
       });
     }
   }
