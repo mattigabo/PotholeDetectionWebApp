@@ -20,15 +20,9 @@ export class AppComponent implements OnInit {
   });
 
   constructor(private toaster: ToasterService) {
-
-    $(document).ready(() => {
-
-    });
   }
 
   ngOnInit(): void {
-    $(document).ready(() => {
-
       $(document).on('keyup', (keyEvent) => {
         let key = keyEvent.key ? keyEvent.key.toUpperCase() : keyEvent.which;
 
@@ -42,6 +36,5 @@ export class AppComponent implements OnInit {
           });
         }
       });
-    });
   }
 }

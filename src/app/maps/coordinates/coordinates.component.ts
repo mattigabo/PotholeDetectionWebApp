@@ -21,19 +21,15 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.osmMap = MapSingleton.instance.map;
+    this.layers = MapSingleton.instance.layers;
+    this.index = MapSingleton.instance.index;
 
-    $(document).ready(() => {
-
-      this.osmMap = MapSingleton.instance.map;
-      this.layers = MapSingleton.instance.layers;
-      this.index = MapSingleton.instance.index;
-
-      this.osmMap.on('click', function (event : L.LeafletMouseEvent) {
-        CoordinatesComponent.showCoordinates(event.latlng);
-      });
-
-      this.osmMap.on('move', CoordinatesComponent.hideOverlays);
+    this.osmMap.on('click', function (event : L.LeafletMouseEvent) {
+      CoordinatesComponent.showCoordinates(event.latlng);
     });
+
+    this.osmMap.on('move', CoordinatesComponent.hideOverlays);
   }
 
   fadeCoordinates = (event : Event) => {

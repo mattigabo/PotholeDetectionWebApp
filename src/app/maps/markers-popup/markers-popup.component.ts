@@ -19,28 +19,21 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
   constructor(private restService : RestAdapterService) { }
 
   ngOnInit() {
-    $(document).ready(() => {
-
-    });
   }
 
   ngAfterViewInit(): void {
-    $(document).ready(() => {
+    this.osmMap = MapSingleton.instance.map;
+    this.layers = MapSingleton.instance.layers;
+    this.index = MapSingleton.instance.index;
 
-      this.osmMap = MapSingleton.instance.map;
-      this.layers = MapSingleton.instance.layers;
-      this.index = MapSingleton.instance.index;
+    this.layers.getLayer(this.index["user-defined"])
+      .on('click', MarkersPopupComponent.displayMarkerPopUp);
 
-      this.layers.getLayer(this.index["user-defined"])
-        .on('click', MarkersPopupComponent.displayMarkerPopUp);
+    this.layers.getLayer(this.index["fetched"])
+      .on('click', MarkersPopupComponent.displayMarkerPopUp);
 
-      this.layers.getLayer(this.index["fetched"])
-        .on('click', MarkersPopupComponent.displayMarkerPopUp);
-
-      this.layers.getLayer(this.index["area-selected"])
-        .on('click', MarkersPopupComponent.displayMarkerPopUp);
-
-    });
+    this.layers.getLayer(this.index["area-selected"])
+      .on('click', MarkersPopupComponent.displayMarkerPopUp);
   }
 
   fadeMarkerPopUp = (click: Event) => {

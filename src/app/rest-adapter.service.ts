@@ -4,6 +4,7 @@ import { HttpHeaders } from '@angular/common/http';
 import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "./Ontologies";
 import {Observable , throwError} from "rxjs/index";
 import { map , catchError } from 'rxjs/operators'
+import {tap} from "rxjs/internal/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -66,10 +67,9 @@ export class RestAdapterService {
     return this.doGETResourcesRequest(requestUrl);
   }
 
-  addMarker(coordinates: GeoCoordinates, onComplete:  Function){
+  addMarker(coordinates: GeoCoordinates, onSuccess: (value: MarkerForPost) => void, onError: (error: any) => void){
     var marker: MarkerForPost = new MarkerForPost(coordinates.lat, coordinates.lng);
-    return this.httpClient.post<MarkerForPost>(this.rootApiUrl, marker, httpOptions)
-      .pipe(catchError(this.handleError)).subscribe(onComplete());
+    return this.httpClient.post<MarkerForPost>(this.rootApiUrl, marker, httpOptions).subscribe(onSuccess, onError);
   }
 
   addComment(comment: MarkerComment){

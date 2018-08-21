@@ -23,30 +23,26 @@ export class MapsComponent implements OnInit, AfterViewInit {
   constructor(private restService: RestAdapterService) {}
 
   ngOnInit() {
+    MapSingleton.instance.init();
 
-    $(document).ready(() => {
+    this.osmMap = MapSingleton.instance.map;
+    this.layers = MapSingleton.instance.layers;
+    this.index = MapSingleton.instance.index;
 
-      MapSingleton.instance.init();
+    let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup;
+    let fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup;
+    let area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup;
+    let geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
 
-      this.osmMap = MapSingleton.instance.map;
-      this.layers = MapSingleton.instance.layers;
-      this.index = MapSingleton.instance.index;
-
-      let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup;
-      let fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup;
-      let area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup;
-      let geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
-
-      console.log("Map Component Ready!")
-    });
-
+    console.log("Map Component Ready!")
   }
 
   ngAfterViewInit(): void {
     this.restService.getAllMarkers()
-      .subscribe( (potholes: Marker[]) =>  {
+      .subscribe((potholes: Marker[]) => {
           potholes.forEach((m: Marker) => {
-            let fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup;
+            console.log("Marker drawing...")
+            let fetched: L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup;
             L.marker(m.coordinates).addTo(fetched);
           })
         }

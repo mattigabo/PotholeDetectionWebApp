@@ -34,36 +34,30 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    $(document).ready(() => {
-
-    });
   }
 
   ngAfterViewInit(): void {
     let that = this;
 
-    $(document).ready(() => {
+    this.osmMap = MapSingleton.instance.map;
+    this.layers = MapSingleton.instance.layers;
+    this.index = MapSingleton.instance.index ;
 
-      this.osmMap = MapSingleton.instance.map;
-      this.layers = MapSingleton.instance.layers;
-      this.index = MapSingleton.instance.index ;
+    let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup,
+        fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup,
+        area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup,
+        geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
 
-      let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup,
-          fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup,
-          area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup,
-          geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
+    this.osmMap.on('contextmenu', function (event : L.LeafletMouseEvent) {
+      CoordinatesComponent.showCoordinates(event.latlng, false);
 
-      this.osmMap.on('contextmenu', function (event : L.LeafletMouseEvent) {
-        CoordinatesComponent.showCoordinates(event.latlng, false);
+      that.coordinates = event.latlng;
 
-        that.coordinates = event.latlng;
-
-        $('.context-menu').css({
-          display: "grid",
-          transaction: 0.5,
-          top: (event.containerPoint.y + 10).toString() + "px",
-          left: (event.containerPoint.x + 10).toString() + "px"
-        });
+      $('.context-menu').css({
+        display: "grid",
+        transaction: 0.5,
+        top: (event.containerPoint.y + 10).toString() + "px",
+        left: (event.containerPoint.x + 10).toString() + "px"
       });
     });
   }
@@ -152,6 +146,9 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
     };
 
     let geoCoordinates: GeoCoordinates = new GeoCoordinates(coordinates.lat, coordinates.lng);
-    restService.addMarker(geoCoordinates, X => { toasterService.pop(successToast); });
+    restService.addMarker(geoCoordinates,
+      X =>  toasterService.pop(successToast),
+      err => toasterService.pop(errorToast),
+    );
   }
 }
