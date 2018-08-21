@@ -96,7 +96,7 @@ const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json'
   })
-}
+};
 
 interface AllMarkersApiResponse {
   id: number;

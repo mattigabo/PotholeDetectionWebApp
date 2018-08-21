@@ -1,5 +1,5 @@
 <div id="filters-nav" class="nav close-on-esc">
-  <a id="filters-nav-close-button" class="nav-close-button">
+  <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
     <i class="fas fa-arrow-circle-left fa-xl"></i>
   </a>
   <form id="filter-by-place-form" class="filters-nav-form">
@@ -29,7 +29,7 @@
 
 </div>
 <div id="filters">
-  <a id= "filters-button" class="nav-display-button open-on-esc">
+  <a id= "filters-button" class="nav-display-button open-on-esc" (click)="openFiltersNav($event)">
     <i class="fas fa-filter fa-3x"></i>
   </a>
 </div>

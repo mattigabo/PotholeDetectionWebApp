@@ -1,9 +1,12 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {LAYER_NAME, MapSingleton} from "../../map-singleton";
+import {LAYER_NAME, MapSingleton} from "../map-singleton";
 import * as $ from "jquery";
 import * as L from 'leaflet';
 // import 'leaflet-draw';
 import {CoordinatesComponent} from "../coordinates/coordinates.component";
+import {RestAdapterService} from "../../rest-adapter.service";
+import {Toast, ToasterService} from "angular2-toaster";
+import {GeoCoordinates} from "../../Ontologies";
 
 @Component({
   selector: 'app-context-menu',
@@ -26,7 +29,8 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
   }
 
   constructor(
-    // private map: L.Map
+    private restService: RestAdapterService,
+    private toasterService: ToasterService
   ) { }
 
   ngOnInit() {
@@ -40,84 +44,114 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
 
     $(document).ready(() => {
 
-      this.osmMap = MapSingleton.instance().map();
-      this.layers = MapSingleton.instance().layers();
-      this.index = MapSingleton.instance().index();
+      this.osmMap = MapSingleton.instance.map;
+      this.layers = MapSingleton.instance.layers;
+      this.index = MapSingleton.instance.index ;
 
-      // console.log(this.index);
-      // console.log(this.osmMap);
-      // console.log(this.layers);
+      let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup,
+          fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup,
+          area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup,
+          geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
 
-      let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]);
-      let fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]);
-      let area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]);
-      let geometry : L.LayerGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]);
+      this.osmMap.on('contextmenu', function (event : L.LeafletMouseEvent) {
+        CoordinatesComponent.showCoordinates(event.latlng, false);
 
-      this.osmMap.on('contextmenu', function (contextEvent) {
-        CoordinatesComponent.showCoordinates(contextEvent.latlng, false);
-
-        that.coordinates = contextEvent.latlng;
+        that.coordinates = event.latlng;
 
         $('.context-menu').css({
           display: "grid",
           transaction: 0.5,
-          top: (contextEvent.containerPoint.y + 10).toString() + "px",
-          left: (contextEvent.containerPoint.x + 10).toString() + "px"
+          top: (event.containerPoint.y + 10).toString() + "px",
+          left: (event.containerPoint.x + 10).toString() + "px"
         });
       });
-
-      $('#add-marker').on('click', function () {
-        L.marker(that.coordinates).addTo(user_defined);
-
-        $('.context-menu').fadeOut(100);
-      });
-
-      $('#add-area-selector').on('click', function () {
-        // TO DO
-
-        geometry.clearLayers();
-
-        let circle = new L.Circle(that.coordinates, {
-          radius: 10000,
-          color: "red",
-          weight: 3
-        });
-
-        circle.addTo(geometry);
-
-        console.log(circle.getBounds());
-
-        var release = false;
-
-        circle.on('click', function (click) {
-
-          if (!release) {
-            console.log("captured!");
-            that.osmMap.on('mousemove', function (mouseMove) {
-              circle.setLatLng(mouseMove.latlng);
-            });
-            release = true;
-          } else {
-            console.log("released");
-            that.osmMap.removeEventListener('mousemove');
-            circle.setLatLng(click.latlng);
-            release = false;
-          }
-        });
-
-        $('.context-menu').fadeOut(100);
-      });
-
-      $('#clear-layers').on('click', function () {
-        user_defined.clearLayers();
-        fetched.clearLayers();
-        area_selected.clearLayers();
-        geometry.clearLayers();
-        $('.context-menu').fadeOut(100);
-      });
-
     });
   }
 
+  clearLayers = (event : Event) => {
+    let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup,
+        fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup,
+        area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup,
+        geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
 
+    user_defined.clearLayers();
+    fetched.clearLayers();
+    area_selected.clearLayers();
+    geometry.clearLayers();
+    $('.context-menu').fadeOut(100);
+  };
+
+  addMarker = (event : Event) => {
+    let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup;
+    L.marker(this.coordinates).addTo(user_defined);
+    ContextMenuComponent._addMarker(this.coordinates, this.restService, this.toasterService);
+    $('.context-menu').fadeOut(100);
+  };
+
+  addArea = (event : Event) => {
+
+    let geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup,
+        that = this;
+
+    geometry.clearLayers();
+
+    let circle = new L.Circle(that.coordinates, {
+      radius: 10000,
+      color: "red",
+      weight: 3
+    });
+
+    circle.addTo(geometry);
+
+    console.log(circle.getBounds());
+
+    var release = false;
+
+    circle.on('click', (click : L.LeafletMouseEvent) => {
+
+      if (!release) {
+        console.log("captured!");
+        that.osmMap.on('mousemove', function (move : L.LeafletMouseEvent) {
+          circle.setLatLng(move.latlng);
+        });
+        release = true;
+      } else {
+        console.log("released");
+        // @ts-ignore
+        that.osmMap.removeEventListener('mousemove');
+        circle.setLatLng(click.latlng);
+        release = false;
+      }
+    });
+
+    $('.context-menu').fadeOut(100);
+  };
+
+  private static _addMarker(coordinates, restService: RestAdapterService, toasterService: ToasterService){
+    let infoToast: Toast = {
+      type: 'info',
+      title: 'Prova',
+      body: "Marker successfully added",
+      showCloseButton: true
+    };
+
+    // toasterService.pop(infoToast);
+
+    let successToast: Toast = {
+      type: 'success',
+      title: 'Marker Added',
+      body: "Marker successfully added",
+      showCloseButton: true
+    };
+
+    let errorToast: Toast = {
+      type: 'error',
+      title: 'Marker Not Added',
+      body: "Error occured during the marker adding",
+      showCloseButton: true
+    };
+
+    let geoCoordinates: GeoCoordinates = new GeoCoordinates(coordinates.lat, coordinates.lng);
+    restService.addMarker(geoCoordinates, X => { toasterService.pop(successToast); });
+  }
 }

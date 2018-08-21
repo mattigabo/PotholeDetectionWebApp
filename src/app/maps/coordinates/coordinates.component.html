@@ -1,10 +1,10 @@
-<div id="messages-overlay" class="overlay close-on-esc">
-  <span id="message"></span>
-</div>
+<!--<div id="messages-overlay" class="overlay close-on-esc">-->
+  <!--<span id="message"></span>-->
+<!--</div>-->
 <div id="coordinates-overlay" class="overlay close-on-esc">
-  <a id="coordinates-overlay-close-button" class="close-button">
+  <a id="coordinates-overlay-close-button" class="close-button" (click)="fadeCoordinates($event)">
     <i class="fas fa-times-circle fa-xs"></i>
   </a>
   <input type="text" value="0.0 N, 0.0 E" id="lat-lng-input" hidden>
-  <span id="lat-lng-span"></span>
+  <span id="lat-lng-span" (click)="copyCoordinates($event)"></span>
 </div>

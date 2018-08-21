@@ -14,21 +14,21 @@
 
   <div class="context-menu__items col">
     <div class="context-menu__item row">
-      <a id="add-marker" class="context-menu__link">
+      <a id="add-marker" class="context-menu__link" (click)="addMarker($event)">
         <div class="context-menu__label">
           <label>Add Marker</label>
         </div>
       </a>
     </div>
     <div class="context-menu__item row">
-      <a id="add-area-selector" class="context-menu__link">
+      <a id="add-area-selector" class="context-menu__link" (click)="addArea($event)">
         <div class="context-menu__label">
           <label>Add Area Selector</label>
         </div>
       </a>
     </div>
     <div class="context-menu__item row">
-      <a id="clear-layers" class="context-menu__link">
+      <a id="clear-layers" class="context-menu__link" (click)="clearLayers($event)">
         <div class="context-menu__label">
           <label>Clear All</label>
         </div>

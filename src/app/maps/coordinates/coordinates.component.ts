@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {MapSingleton} from "../../map-singleton";
+import {MapSingleton} from "../map-singleton";
 import * as L from 'leaflet';
 import * as $ from 'jquery';
-import {CoordinatesOverlay} from "./coordinates-overlay";
+import {Toast, ToasterService} from "angular2-toaster";
 
 @Component({
   selector: 'app-coordinates',
@@ -15,7 +15,7 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
   private layers: L.LayerGroup;
   private index: number[];
 
-  constructor() { }
+  constructor(private toastService: ToasterService) { }
 
   ngOnInit() {
   }
@@ -24,36 +24,33 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
 
     $(document).ready(() => {
 
-      this.osmMap = MapSingleton.instance().map();
-      this.layers = MapSingleton.instance().layers();
-      this.index = MapSingleton.instance().index();
+      this.osmMap = MapSingleton.instance.map;
+      this.layers = MapSingleton.instance.layers;
+      this.index = MapSingleton.instance.index;
 
-      // console.log(this.index);
-      // console.log(this.osmMap);
-      // console.log(this.layers);
-
-      $("#coordinates-overlay-close-button").on('click', function (clickEvent) {
-        $('#coordinates-overlay').fadeOut(200);
-      });
-
-      this.osmMap.on('click', function (event) {
+      this.osmMap.on('click', function (event : L.LeafletMouseEvent) {
         CoordinatesComponent.showCoordinates(event.latlng);
       });
 
       this.osmMap.on('move', CoordinatesComponent.hideOverlays);
-
-      $('#lat-lng-span').on( 'click', CoordinatesComponent.copyCoordinatesOverlayContent);
-
     });
   }
 
-  public static hideOverlays = function (moveEvent) {
+  fadeCoordinates = (event : Event) => {
+    $('#coordinates-overlay').fadeOut(200);
+  };
+
+  copyCoordinates = (event : Event) => {
+    CoordinatesComponent._copyCoordinates(event, this.toastService);
+  };
+
+  public static hideOverlays = (event : Event) => {
     $('.overlay').each(function (idx, obj) {
       $(obj).hide();
     });
   };
 
-  public static copyCoordinatesOverlayContent = function(clickEvent) {
+  public static _copyCoordinates = (event: Event, toasterService: ToasterService) => {
 
     let coordinates = $('#lat-lng-input') as HTMLInputElement;
 
@@ -61,16 +58,16 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
 
     document.execCommand("copy");
 
-    $('#message').html("Copied!");
-    $('#messages-overlay').fadeIn(100, function () {
-      setTimeout(function () {
-        $('#messages-overlay').fadeOut(100);
-        $('#message').html = "";
-      }, 500);
-    });
+    var infoToast: Toast = {
+      type: 'info',
+      body: "Coordinates copied!",
+      showCloseButton: true
+    };
+
+    toasterService.pop(infoToast);
   };
 
-  public static showCoordinates = function(coordinates, closeContextMenu = true) {
+  public static showCoordinates = function(coordinates: L.LatLng, closeContextMenu = true) {
 
     let
       lat = coordinates.lat.toFixed(4).toString(),

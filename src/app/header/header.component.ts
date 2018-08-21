@@ -2,7 +2,8 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
 import * as L from 'leaflet';
 import {RestAdapterService} from "../rest-adapter.service";
-import {MapSingleton} from "../map-singleton";
+import {MapSingleton} from "../maps/map-singleton";
+import {CoordinatesComponent} from "../maps/coordinates/coordinates.component";
 
 @Component({
   selector: 'app-header',
@@ -24,52 +25,50 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     $(document).ready(() => {
-      $('#filters-button').on('click', function () {
-        $('.overlay').each(function (idx, obj) {
-          $(obj).hide()
-        });
-        $('#filters-button').fadeOut(100, function () {
-          $('#filters-nav').animate({
-            width:"toggle",
-            display:"flex"
-          }, 500);
-        });
-
-        $('.filters-nav-form').each(function (idx, obj) {
-          $(obj).show(600);
-        });
-      });
-
-      $('#filters-nav-close-button').on('click', function () {
-        $('.overlay').each(function (idx, obj) {
-          $(obj).hide()
-        });
-
-        $('.filters-nav-form').each(function (idx, obj) {
-          $(obj).hide();
-        });
-
-        $('#filters-nav').animate({
-          width:"toggle",
-          display: "none"
-        }, 500, function () {
-          $('#filters-button').fadeIn(100);
-        });
-      });
-
 
     });
   }
 
+  openFiltersNav = (clickEvent : Event) => {
+
+    CoordinatesComponent.hideOverlays(clickEvent);
+
+    $('#filters-button').fadeOut(100, function () {
+      $('#filters-nav').animate({
+        width:"toggle",
+        display:"flex"
+      }, 500);
+    });
+
+    $('.filters-nav-form').each(function (idx, obj) {
+      $(obj).show(600);
+      $(obj).css({
+        disply: "flex"
+      });
+    });
+  };
+
+  closeFiltersNav = (clickEvent : Event) => {
+
+    CoordinatesComponent.hideOverlays(clickEvent);
+
+    $('.filters-nav-form').each(function (idx, obj) {
+      $(obj).hide();
+    });
+
+    $('#filters-nav').animate({
+      width:"toggle",
+      display: "none"
+    }, 500, function () {
+      $('#filters-button').fadeIn(100);
+    });
+  };
+
   ngAfterViewInit(): void {
     $(document).ready(() => {
-      let osmMap : L.Map = MapSingleton.instance().map();
-      let layers : L.LayerGroup = MapSingleton.instance().layers();
-      let index : number[] = MapSingleton.instance().index();
-
-      console.log(index);
-      console.log(osmMap);
-      console.log(layers);
+      let osmMap : L.Map = MapSingleton.instance.map;
+      let layers : L.LayerGroup = MapSingleton.instance.layers;
+      let index : number[] = MapSingleton.instance.index;
 
       $('#filter-by-place-send-button').on('click', function () {
         // ToDo

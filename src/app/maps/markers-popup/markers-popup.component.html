@@ -1,6 +1,6 @@
 <div id="marker-popup" class="close-on-esc overlay">
   <div id="marker-popup-header"><p><strong>Marker Information</strong></p>
-    <a id="marker-popup-close-button" class="close-button">
+    <a id="marker-popup-close-button" class="close-button" (click)="fadeMarkerPopUp($event)">
       <i class="fas fa-times-circle fa-xl"></i>
     </a>
   </div>
@@ -32,7 +32,7 @@
   <textarea id="marker-popup-comment"
             placeholder="Insert here your comment! (max.: 500 chars)"
             maxlength="500" rows="10" cols="30"></textarea>
-  <a id="marker-popup-send-button" class="marker-send-button">
+  <a id="marker-popup-send-button" class="marker-send-button" (click)="addComment($event)">
     <i class="fas fa-arrow-circle-right fa-2x"></i>
   </a>
 </div>

@@ -37,11 +37,13 @@ export class MapSingleton {
     return MapSingleton._INSTANCE;
   }
 
-  init(options = {
+  private static defaultOptions = {
     zoomControl: false,
     center: new L.LatLng(44, 12),
     zoom: 10
-  }) {
+  };
+
+  init(map_id = 'osm-map', options = MapSingleton.defaultOptions) {
 
     let that = this;
 
@@ -73,20 +75,21 @@ export class MapSingleton {
 
       console.log(options);
 
-      that.osmMap = L.map('osm-map', options);
+      that.osmMap = L.map(map_id, options);
 
+      // @ts-ignore
       that.layerGroupsIndex[LAYER_NAME.OSM] = that.osmMap._leaflet_id;
-
-      that.layerGroupsIndex[LAYER_NAME.MASTER] = that.masterLayer._leaflet_id;
-
+      // @ts-ignore
+      that.layerGroupsIndex[LAYER_NAME.MASTER] = that.masterLayer. _leaflet_id;
+      // @ts-ignore
       that.layerGroupsIndex[LAYER_NAME.MAP_BOX] = mapbox._leaflet_id;
-
+      // @ts-ignore
       that.layerGroupsIndex[LAYER_NAME.AREA_SELECTED] = area_selected._leaflet_id;
-
+      // @ts-ignore
       that.layerGroupsIndex[LAYER_NAME.FETCHED] = fetched._leaflet_id;
-
+      // @ts-ignore
       that.layerGroupsIndex[LAYER_NAME.USER_DEFINED] = user_defined._leaflet_id;
-
+      // @ts-ignore
       that.layerGroupsIndex[LAYER_NAME.GEOMETRY] = geometry._leaflet_id;
 
       console.log("Map Singleton Ready!");

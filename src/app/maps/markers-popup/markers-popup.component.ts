@@ -1,9 +1,8 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import * as $ from 'jquery';
-import {CoordinatesOverlay} from "../coordinates/coordinates-overlay";
 import {RestAdapterService} from "../../rest-adapter.service";
-import {MapSingleton} from "../../map-singleton";
+import {MapSingleton} from "../map-singleton";
 import {CoordinatesComponent} from "../coordinates/coordinates.component";
 
 @Component({
@@ -28,13 +27,9 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
   ngAfterViewInit(): void {
     $(document).ready(() => {
 
-      this.osmMap = MapSingleton.instance().map();
-      this.layers = MapSingleton.instance().layers();
-      this.index = MapSingleton.instance().index();
-
-      // console.log(this.index);
-      // console.log(this.osmMap);
-      // console.log(this.layers);
+      this.osmMap = MapSingleton.instance.map;
+      this.layers = MapSingleton.instance.layers;
+      this.index = MapSingleton.instance.index;
 
       this.layers.getLayer(this.index["user-defined"])
         .on('click', MarkersPopupComponent.displayMarkerPopUp);
@@ -45,26 +40,27 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
       this.layers.getLayer(this.index["area-selected"])
         .on('click', MarkersPopupComponent.displayMarkerPopUp);
 
-      $('#marker-popup-close-button').on('click', function () {
-        $('#marker-popup').fadeOut(300);
-      });
-
-      $('#marker-popup-send-button').on('click', function () {
-        // To Do
-      });
     });
   }
 
-  public static displayMarkerPopUp =  function (clickEvent) {
+  fadeMarkerPopUp = (click: Event) => {
+    $('#marker-popup').fadeOut(300);
+  };
 
-    CoordinatesComponent.showCoordinates(clickEvent.latlng);
+  addComment = (click: Event) => {
+    // ToDo
+  };
+
+  public static displayMarkerPopUp =  (event) => {
+
+    CoordinatesComponent.showCoordinates(event.latlng);
 
     let
-      lat = clickEvent.latlng.lat.toFixed(4).toString(),
-      lng = clickEvent.latlng.lng.toFixed(4).toString()
+      lat = event.latlng.lat.toFixed(4).toString(),
+      lng = event.latlng.lng.toFixed(4).toString()
     ;
 
-    if (clickEvent.latlng) {
+    if (event.latlng) {
 
       $('#marker-popup-var--coordinates-lat').text(lat);
       $('#marker-popup-var--coordinates-lng').text(lng);

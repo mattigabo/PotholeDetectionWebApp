@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
 import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
+import {MapSingleton} from "./maps/map-singleton";
 
 
 @Component({
@@ -20,10 +21,15 @@ export class AppComponent implements OnInit {
 
   constructor(private toaster: ToasterService) {
 
-    $(document).ready(function (readyEvent) {
+    $(document).ready(() => {
 
-      /** HERE DOCUMENT EVENT LISTENER **/
-      $(document).on('keyup', function (keyEvent) {
+    });
+  }
+
+  ngOnInit(): void {
+    $(document).ready(() => {
+
+      $(document).on('keyup', (keyEvent) => {
         let key = keyEvent.key ? keyEvent.key.toUpperCase() : keyEvent.which;
 
         if (key === "ESCAPE") {
@@ -36,12 +42,6 @@ export class AppComponent implements OnInit {
           });
         }
       });
-    });
-  }
-
-  ngOnInit(): void {
-    $(document).ready(() => {
-
     });
   }
 }
