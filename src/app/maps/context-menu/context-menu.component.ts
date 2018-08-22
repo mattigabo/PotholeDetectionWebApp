@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {LAYER_NAME, MapSingleton} from "../map-singleton";
 import * as $ from "jquery";
-import * as L from 'leaflet';
-// import 'leaflet-draw';
+import * as Leaflet from 'leaflet';
+import 'leaflet-draw';
 import {CoordinatesComponent} from "../coordinates/coordinates.component";
 import {RestAdapterService} from "../../rest-adapter.service";
 import {Toast, ToasterService} from "angular2-toaster";
@@ -14,13 +14,25 @@ import {GeoCoordinates} from "../../Ontologies";
   styleUrls: ['./context-menu.component.css']
 })
 export class ContextMenuComponent implements OnInit, AfterViewInit {
-  private osmMap: L.Map;
-  private layers: L.LayerGroup;
-  private index: number[];
+  private _map: Leaflet.Map;
+  private _layers: Leaflet.LayerGroup;
+  private _index: number[];
 
-  private _coordinates : L.LatLng;
+  private _coordinates : Leaflet.LatLng;
+  private _circleMaker: Leaflet.Draw.Circle;
+  private _circleEditor: Leaflet.EditToolbar.Edit;
 
-  public set coordinates (coordinates : L.LatLng)  {
+  private _circleOptions = {
+    shapeOptions: {
+      color: 'red'
+    },
+    metric: true,
+    showRadius: true,
+  };
+
+
+
+  public set coordinates (coordinates : Leaflet.LatLng)  {
     this._coordinates = coordinates;
   };
 
@@ -39,16 +51,23 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     let that = this;
 
-    this.osmMap = MapSingleton.instance.map;
-    this.layers = MapSingleton.instance.layers;
-    this.index = MapSingleton.instance.index ;
+    this._map = MapSingleton.instance.map;
+    this._layers = MapSingleton.instance.layers;
+    this._index = MapSingleton.instance.index ;
 
-    let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup,
-        fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup,
-        area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup,
-        geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
+    let user_defined = MapSingleton.instance.layer(LAYER_NAME.USER_DEFINED),
+        fetched = MapSingleton.instance.layer(LAYER_NAME.FETCHED),
+        area_selected = MapSingleton.instance.layer(LAYER_NAME.AREA_SELECTED),
+        geometry = MapSingleton.instance.layer(LAYER_NAME.GEOMETRY);
 
-    this.osmMap.on('contextmenu', function (event : L.LeafletMouseEvent) {
+    this._circleMaker = new Leaflet.Draw.Circle(this._map, this._circleOptions);
+
+    this._circleEditor = new Leaflet.EditToolbar.Edit(this._map, {
+      // @ts-ignore
+      featureGroup: geometry
+    });
+
+    this._map.on('contextmenu', function (event : Leaflet.LeafletMouseEvent) {
       CoordinatesComponent.showCoordinates(event.latlng, false);
 
       that.coordinates = event.latlng;
@@ -63,10 +82,10 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
   }
 
   clearLayers = (event : Event) => {
-    let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup,
-        fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup,
-        area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup,
-        geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
+    let user_defined : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.USER_DEFINED]) as Leaflet.FeatureGroup,
+        fetched : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.FETCHED]) as Leaflet.FeatureGroup,
+        area_selected : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.AREA_SELECTED]) as Leaflet.FeatureGroup,
+        geometry : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.GEOMETRY]) as Leaflet.FeatureGroup;
 
     user_defined.clearLayers();
     fetched.clearLayers();
@@ -76,47 +95,22 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
   };
 
   addMarker = (event : Event) => {
-    let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup;
-    L.marker(this.coordinates).addTo(user_defined);
+    let user_defined : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.USER_DEFINED]) as Leaflet.FeatureGroup;
+    Leaflet.marker(this.coordinates).addTo(user_defined);
     ContextMenuComponent._addMarker(this.coordinates, this.restService, this.toasterService);
     $('.context-menu').fadeOut(100);
   };
 
   addArea = (event : Event) => {
 
-    let geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup,
+    let geometry : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.GEOMETRY]) as Leaflet.FeatureGroup,
         that = this;
 
     geometry.clearLayers();
 
-    let circle = new L.Circle(that.coordinates, {
-      radius: 10000,
-      color: "red",
-      weight: 3
-    });
-
-    circle.addTo(geometry);
-
-    console.log(circle.getBounds());
-
-    var release = false;
-
-    circle.on('click', (click : L.LeafletMouseEvent) => {
-
-      if (!release) {
-        console.log("captured!");
-        that.osmMap.on('mousemove', function (move : L.LeafletMouseEvent) {
-          circle.setLatLng(move.latlng);
-        });
-        release = true;
-      } else {
-        console.log("released");
-        // @ts-ignore
-        that.osmMap.removeEventListener('mousemove');
-        circle.setLatLng(click.latlng);
-        release = false;
-      }
-    });
+    this._circleMaker.enable();
+    // @ts-ignore
+    this._circleEditor.disable();
 
     $('.context-menu').fadeOut(100);
   };

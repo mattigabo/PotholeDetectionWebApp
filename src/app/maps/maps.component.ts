@@ -4,9 +4,6 @@ import {RestAdapterService} from "../rest-adapter.service";
 import {Marker} from "../Ontologies";
 
 import * as $ from "jquery";
-// import {CoordinatesOverlay} from "./coordinates/coordinates-overlay";
-// import {MarkersPopup} from "./markers-popup/markers-popup";
-import {from} from "rxjs";
 import {LAYER_NAME, MapSingleton} from "./map-singleton";
 
 @Component({
@@ -23,16 +20,16 @@ export class MapsComponent implements OnInit, AfterViewInit {
   constructor(private restService: RestAdapterService) {}
 
   ngOnInit() {
-    MapSingleton.instance.init();
+    MapSingleton.instance.initMap();
 
     this.osmMap = MapSingleton.instance.map;
     this.layers = MapSingleton.instance.layers;
     this.index = MapSingleton.instance.index;
 
-    let user_defined : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.USER_DEFINED]) as L.FeatureGroup;
-    let fetched : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup;
-    let area_selected : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.AREA_SELECTED]) as L.FeatureGroup;
-    let geometry : L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.GEOMETRY]) as L.FeatureGroup;
+    let user_defined = MapSingleton.instance.layer(LAYER_NAME.USER_DEFINED);
+    let fetched = MapSingleton.instance.layer(LAYER_NAME.FETCHED);
+    let area_selected = MapSingleton.instance.layer(LAYER_NAME.AREA_SELECTED);
+    let geometry = MapSingleton.instance.layer(LAYER_NAME.GEOMETRY);
 
     console.log("Map Component Ready!")
   }
@@ -42,7 +39,7 @@ export class MapsComponent implements OnInit, AfterViewInit {
       .subscribe((potholes: Marker[]) => {
           potholes.forEach((m: Marker) => {
             console.log("Marker drawing...")
-            let fetched: L.FeatureGroup = this.layers.getLayer(this.index[LAYER_NAME.FETCHED]) as L.FeatureGroup;
+            let fetched = MapSingleton.instance.layer(LAYER_NAME.FETCHED);
             L.marker(m.coordinates).addTo(fetched);
           })
         }

@@ -1,4 +1,4 @@
-import * as L from 'leaflet';
+import * as Leaflet from 'leaflet';
 
 export enum LAYER_NAME {
   OSM = "osm-map",
@@ -12,9 +12,9 @@ export enum LAYER_NAME {
 
 export class MapSingleton {
 
-  private osmMap : L.Map;
-  private layerGroupsIndex : number[] = [];
-  private masterLayer : L.LayerGroup;
+  private _map : Leaflet.Map;
+  private _index : number[] = [];
+  private _layers : Leaflet.LayerGroup;
   private static _isCreated : boolean = false;
   private static _isInit : boolean = false;
   private static _INSTANCE : MapSingleton = new MapSingleton();
@@ -23,9 +23,9 @@ export class MapSingleton {
   public static get isCreated() : boolean {return  MapSingleton._isCreated}
   public static get isInit(): boolean {return MapSingleton._isCreated}
 
-  public get map(): L.Map { return this.osmMap}
-  public get layers() : L.LayerGroup {return this.masterLayer}
-  public get index() : number[] { return this.layerGroupsIndex}
+  public get map(): Leaflet.Map { return this._map}
+  public get layers() : Leaflet.LayerGroup {return this._layers}
+  public get index() : number[] { return this._index}
 
   private constructor() {
 
@@ -39,16 +39,16 @@ export class MapSingleton {
 
   private static defaultOptions = {
     zoomControl: false,
-    center: new L.LatLng(44, 12),
+    center: new Leaflet.LatLng(44, 12),
     zoom: 10
   };
 
-  init(map_id = 'osm-map', options = MapSingleton.defaultOptions) {
+  initMap(map_id = 'osm-map', options = MapSingleton.defaultOptions) {
 
     let that = this;
 
     if (!MapSingleton._isInit) {
-      let mapbox = L.tileLayer(
+      let mapbox = Leaflet.tileLayer(
         'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
         {
           attribution:
@@ -63,40 +63,44 @@ export class MapSingleton {
           accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
         });
 
-      let user_defined : L.FeatureGroup = L.featureGroup();
-      let fetched : L.FeatureGroup = L.featureGroup();
-      let area_selected : L.FeatureGroup = L.featureGroup();
-      let geometry : L.FeatureGroup = L.featureGroup();
+      let user_defined : Leaflet.FeatureGroup = Leaflet.featureGroup();
+      let fetched : Leaflet.FeatureGroup = Leaflet.featureGroup();
+      let area_selected : Leaflet.FeatureGroup = Leaflet.featureGroup();
+      let geometry : Leaflet.FeatureGroup = Leaflet.featureGroup();
 
-      that.masterLayer =
-        L.layerGroup([mapbox, user_defined, fetched, area_selected, geometry]);
+      that._layers =
+        Leaflet.layerGroup([mapbox, user_defined, fetched, area_selected, geometry]);
 
-      options["layers"] = that.masterLayer;
+      options["layers"] = that._layers;
 
       console.log(options);
 
-      that.osmMap = L.map(map_id, options);
+      that._map = Leaflet.map(map_id, options);
 
       // @ts-ignore
-      that.layerGroupsIndex[LAYER_NAME.OSM] = that.osmMap._leaflet_id;
+      that._index[LAYER_NAME.OSM] = that._map._leaflet_id;
       // @ts-ignore
-      that.layerGroupsIndex[LAYER_NAME.MASTER] = that.masterLayer. _leaflet_id;
+      that._index[LAYER_NAME.MASTER] = that._layers. _leaflet_id;
       // @ts-ignore
-      that.layerGroupsIndex[LAYER_NAME.MAP_BOX] = mapbox._leaflet_id;
+      that._index[LAYER_NAME.MAP_BOX] = mapbox._leaflet_id;
       // @ts-ignore
-      that.layerGroupsIndex[LAYER_NAME.AREA_SELECTED] = area_selected._leaflet_id;
+      that._index[LAYER_NAME.AREA_SELECTED] = area_selected._leaflet_id;
       // @ts-ignore
-      that.layerGroupsIndex[LAYER_NAME.FETCHED] = fetched._leaflet_id;
+      that._index[LAYER_NAME.FETCHED] = fetched._leaflet_id;
       // @ts-ignore
-      that.layerGroupsIndex[LAYER_NAME.USER_DEFINED] = user_defined._leaflet_id;
+      that._index[LAYER_NAME.USER_DEFINED] = user_defined._leaflet_id;
       // @ts-ignore
-      that.layerGroupsIndex[LAYER_NAME.GEOMETRY] = geometry._leaflet_id;
+      that._index[LAYER_NAME.GEOMETRY] = geometry._leaflet_id;
 
       console.log("Map Singleton Ready!");
 
       MapSingleton._isInit = true;
 
     }
+  }
+
+  public layer (id: string) : Leaflet.FeatureGroup{
+    return this.layers.getLayer(this.index[id]) as Leaflet.FeatureGroup;
   }
 }
 
