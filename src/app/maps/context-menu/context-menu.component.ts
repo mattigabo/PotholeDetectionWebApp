@@ -7,6 +7,7 @@ import {CoordinatesComponent} from "../coordinates/coordinates.component";
 import {RestAdapterService} from "../../rest-adapter.service";
 import {Toast, ToasterService} from "angular2-toaster";
 import {GeoCoordinates} from "../../Ontologies";
+import {CoordinatesService} from "../coordinates/coordinates.service";
 
 @Component({
   selector: 'app-context-menu',
@@ -14,13 +15,15 @@ import {GeoCoordinates} from "../../Ontologies";
   styleUrls: ['./context-menu.component.css']
 })
 export class ContextMenuComponent implements OnInit, AfterViewInit {
+
   private _map: Leaflet.Map;
   private _layers: Leaflet.LayerGroup;
   private _index: number[];
 
-  private _coordinates : Leaflet.LatLng;
   private _circleMaker: Leaflet.Draw.Circle;
   private _circleEditor: Leaflet.EditToolbar.Edit;
+
+  private _circleID : number;
 
   private _circleOptions = {
     shapeOptions: {
@@ -30,89 +33,125 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
     showRadius: true,
   };
 
-
-
-  public set coordinates (coordinates : Leaflet.LatLng)  {
-    this._coordinates = coordinates;
-  };
-
-  public get coordinates () {
-    return this._coordinates;
-  }
-
   constructor(
     private restService: RestAdapterService,
-    private toasterService: ToasterService
+    private toasterService: ToasterService,
+    private coordinatesService: CoordinatesService
   ) { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit(): void {
-    let that = this;
 
     this._map = MapSingleton.instance.map;
     this._layers = MapSingleton.instance.layers;
     this._index = MapSingleton.instance.index ;
 
-    let user_defined = MapSingleton.instance.layer(LAYER_NAME.USER_DEFINED),
-        fetched = MapSingleton.instance.layer(LAYER_NAME.FETCHED),
-        area_selected = MapSingleton.instance.layer(LAYER_NAME.AREA_SELECTED),
+    let area_selected = MapSingleton.instance.layer(LAYER_NAME.AREA_SELECTED),
         geometry = MapSingleton.instance.layer(LAYER_NAME.GEOMETRY);
+
+    // @ts-ignore
+    Leaflet.drawLocal.draw.handlers.circle.tooltip.start = "";
+    // @ts-ignore
+    Leaflet.drawLocal.edit.handlers.edit.tooltip.text = "";
+    // @ts-ignore
+    Leaflet.drawLocal.edit.handlers.edit.tooltip.subtext = "";
 
     this._circleMaker = new Leaflet.Draw.Circle(this._map, this._circleOptions);
 
     this._circleEditor = new Leaflet.EditToolbar.Edit(this._map, {
       // @ts-ignore
-      featureGroup: geometry
+      featureGroup: geometry,
     });
 
-    this._map.on('contextmenu', function (event : Leaflet.LeafletMouseEvent) {
-      CoordinatesComponent.showCoordinates(event.latlng, false);
+    this._map.on('contextmenu', this.onMapContextMenuShowContextMenu);
 
-      that.coordinates = event.latlng;
+    geometry.on('click', (event) => {
 
-      $('.context-menu').css({
-        display: "grid",
-        transaction: 0.5,
-        top: (event.containerPoint.y + 10).toString() + "px",
-        left: (event.containerPoint.x + 10).toString() + "px"
+      this._circleEditor.save();
+      // @ts-ignore
+      // this._circleEditor.disable();
+
+      (event.target as Leaflet.FeatureGroup).eachLayer((layer) => {
+        let circle = layer as Leaflet.Circle;
+        console.log(circle.getLatLng(), circle.getRadius());
       });
+
+    });
+
+    this._map.on(Leaflet.Draw.Event.CREATED, (event : Leaflet.DrawEvents.Created) => {
+      let type = event.layerType,
+          circle = event.layer;
+      if (type === "circle") {
+        circle.addTo(geometry);
+
+        this._circleID = geometry.getLayerId(circle)
+      }
+    });
+
+    this._map.on(Leaflet.Draw.Event.DRAWSTOP, (event : Leaflet.DrawEvents.DrawStop) => {
+      this._circleMaker.disable();
+      // @ts-ignore
+      this._circleEditor.enable();
+    });
+
+    this._map.on(Leaflet.Draw.Event.EDITMOVE, (event: Leaflet.DrawEvents.EditStart) => {
+      ContextMenuComponent.hideContextMenu(event.target)
+    });
+
+    this._map.on(Leaflet.Draw.Event.EDITRESIZE, (event: Leaflet.DrawEvents.EditStart) => {
+      ContextMenuComponent.hideContextMenu(event.target)
     });
   }
 
-  clearLayers = (event : Event) => {
-    let user_defined : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.USER_DEFINED]) as Leaflet.FeatureGroup,
-        fetched : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.FETCHED]) as Leaflet.FeatureGroup,
-        area_selected : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.AREA_SELECTED]) as Leaflet.FeatureGroup,
-        geometry : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.GEOMETRY]) as Leaflet.FeatureGroup;
+  onMapContextMenuShowContextMenu = (event : Leaflet.LeafletMouseEvent) => {
 
-    user_defined.clearLayers();
-    fetched.clearLayers();
-    area_selected.clearLayers();
-    geometry.clearLayers();
-    $('.context-menu').fadeOut(100);
+    CoordinatesComponent.showCoordinates(event.latlng, false);
+
+    this.coordinatesService.coordinates = event.latlng;
+
+    $('.context-menu').css({
+      display: "grid",
+      transaction: 0.5,
+      top: (event.containerPoint.y + 10).toString() + "px",
+      left: (event.containerPoint.x + 10).toString() + "px"
+    });
   };
 
   addMarker = (event : Event) => {
     let user_defined : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.USER_DEFINED]) as Leaflet.FeatureGroup;
-    Leaflet.marker(this.coordinates).addTo(user_defined);
-    ContextMenuComponent._addMarker(this.coordinates, this.restService, this.toasterService);
-    $('.context-menu').fadeOut(100);
+    Leaflet.marker(this.coordinatesService.coordinates).addTo(user_defined);
+    ContextMenuComponent._addMarker(this.coordinatesService.coordinates, this.restService, this.toasterService);
+    ContextMenuComponent.hideContextMenu(event)
   };
 
   addArea = (event : Event) => {
 
-    let geometry : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.GEOMETRY]) as Leaflet.FeatureGroup,
-        that = this;
+    let geometry = MapSingleton.instance.layer(LAYER_NAME.GEOMETRY);
+
+    // @ts-ignore
+    this._circleEditor.disable();
 
     geometry.clearLayers();
 
     this._circleMaker.enable();
+
+    ContextMenuComponent.hideContextMenu(event)
+  };
+
+  clearLayers = (event : Event) => {
+    MapSingleton.instance.layer(LAYER_NAME.USER_DEFINED).clearLayers();
+    MapSingleton.instance.layer(LAYER_NAME.FETCHED).clearLayers();
+    MapSingleton.instance.layer(LAYER_NAME.AREA_SELECTED).clearLayers();
+    MapSingleton.instance.layer(LAYER_NAME.GEOMETRY).clearLayers();
     // @ts-ignore
     this._circleEditor.disable();
+    ContextMenuComponent.hideContextMenu(event)
+  };
 
-    $('.context-menu').fadeOut(100);
+  public static hideContextMenu = (event) => {
+    $('.context-menu').each((idx, obj) => $(obj).fadeOut(100));
   };
 
   private static _addMarker(coordinates, restService: RestAdapterService, toasterService: ToasterService){

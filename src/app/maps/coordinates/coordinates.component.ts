@@ -32,21 +32,15 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
     this.osmMap.on('move', CoordinatesComponent.hideOverlays);
   }
 
-  fadeCoordinates = (event : Event) => {
+  onCloseFadeCoordinatesOverlay = (event : Event) => {
     $('#coordinates-overlay').fadeOut(200);
   };
 
-  copyCoordinates = (event : Event) => {
-    CoordinatesComponent._copyCoordinates(event, this.toastService);
+  onClickCopyCoordinates = (event : Event) => {
+    this._copyCoordinates(event, this.toastService);
   };
 
-  public static hideOverlays = (event : Event) => {
-    $('.overlay').each(function (idx, obj) {
-      $(obj).hide();
-    });
-  };
-
-  public static _copyCoordinates = (event: Event, toasterService: ToasterService) => {
+  private _copyCoordinates = (event: Event, toasterService: ToasterService) => {
 
     let coordinates = $('#lat-lng-input') as HTMLInputElement;
 
@@ -61,6 +55,12 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
     };
 
     toasterService.pop(infoToast);
+  };
+
+  public static hideOverlays = (event : Event) => {
+    $('.overlay').each(function (idx, obj) {
+      $(obj).hide();
+    });
   };
 
   public static showCoordinates = function(coordinates: L.LatLng, closeContextMenu = true) {

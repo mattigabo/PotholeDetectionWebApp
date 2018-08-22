@@ -80,7 +80,7 @@
 
 #menu-button:hover {color: black}
 
-#filters-nav {
+.nav {
   height: 100%;
   width: 300px;
   position: fixed;
@@ -94,28 +94,21 @@
   /*transition: 0.5s;*/
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.65);
   display: none;
-}
-
-/* The navigation menu links */
-#filters-nav #filters-nav-close-button {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
-
-/* When you mouse over the navigation links, change their color */
-#filters-nav #filters-nav-close-button:hover {
   color: #f1f1f1;
 }
 
-/* Position and style the close button (top right corner) */
-#filters-nav #filters-nav-close-button {
-  position: absolute;
-  top: 2%;
-  right: 10%;
+/* The navigation menu links */
+.nav-close-button {
+  position: relative;
+  text-decoration: none;
+  color: #818181;
+  top: 4%;
+  left: 80%;
+}
+
+/* When you mouse over the navigation links, change their color */
+.nav-close-button:hover {
+  color: #f1f1f1;
 }
 
 .filters-nav-form {
@@ -126,19 +119,13 @@
   margin: 10% 2% 2%;
 }
 
-#filter-by-place-form{
-}
-
-#filter-by-route-form {
-
-}
-
 .filters-nav-fields {
   display: flex;
   flex-direction: column;
   border: none;
   border-bottom: solid 2px #818181;
   border-top: solid 2px #818181;
+  margin-bottom: 5%;
 }
 
 .filters-nav-fields > * {
@@ -159,10 +146,4 @@
 
 .filters-nav-send-button:hover {
   color: #f1f1f1;
-}
-
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  #filters-nav {padding-top: 15px;}
-  #filters-nav a {font-size: 18px;}
 }
