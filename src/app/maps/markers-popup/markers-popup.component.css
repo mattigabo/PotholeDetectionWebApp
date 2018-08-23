@@ -34,14 +34,6 @@
   color: #f1f1f1;
 }
 
-#marker-popup-comment {
-  background: whitesmoke;
-  color: #444444;
-  min-height: 100px;
-  resize: none;
-  margin: 2%;
-}
-
 #marker-popup-info {
   display: flex;
   flex-direction: column;
@@ -50,6 +42,14 @@
   border-top: solid 2px #818181;
   margin: 1%;
   padding: 2%;
+}
+
+#marker-popup-comment {
+  background: whitesmoke;
+  color: #444444;
+  min-height: 100px;
+  resize: none;
+  margin: 2%;
 }
 
 #marker-popup-info > * {
@@ -62,12 +62,42 @@
 #marker-popup-send-button {
   position: relative;
   color: #818181;
-  margin-top: 2%;
-  margin-left: 85%;
-  margin-bottom: 5%;
-  margin-right: 10%;
+  margin: 2% 10% 5% 85%;
 }
 
 #marker-popup-send-button:hover {
   color: #f1f1f1;
 }
+
+@media only screen and (max-width: 480px){
+  #marker-popup {
+    position: absolute;
+    z-index: 3;
+    left:0;
+    top: 0;
+    width: 20%;
+    height: 120%;
+  }
+
+  #marker-popup-send-button {
+    margin: 0;
+    top: 4%;
+    left: 80%;
+  }
+}
+
+/*@media only screen and (max-height: 480px){*/
+  /*#marker-popup {*/
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+  /*}*/
+
+  /*#marker-popup-send-button {*/
+    /*margin: 0;*/
+    /*top: 4%;*/
+    /*left: 80%;*/
+  /*}*/
+/*}*/

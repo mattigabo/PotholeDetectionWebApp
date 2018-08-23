@@ -13,6 +13,7 @@ import { CoordinatesComponent } from './maps/coordinates/coordinates.component';
 import { MarkersPopupComponent } from './maps/markers-popup/markers-popup.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToasterModule} from "angular2-toaster";
+import {DistributionService} from "./maps/distribution.service";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {ToasterModule} from "angular2-toaster";
     ToasterModule.forRoot()
   ],
   providers: [
-    RestAdapterService
+    RestAdapterService,
+    DistributionService
   ],
   bootstrap: [AppComponent]
 })

@@ -6,6 +6,13 @@ import * as Leaflet from 'leaflet';
 })
 export class CoordinatesService {
 
+  public static ACTIONS = {
+    REGISTER: "REGISTER",
+    DISPLAY: "DISPLAY",
+    HIDE: "HIDE",
+    HIDE_ALL: "HIDE_ALL"
+  };
+
   private _coordinates: Leaflet.LatLng;
 
   constructor() {

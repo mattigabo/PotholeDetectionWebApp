@@ -1,10 +1,11 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import * as L from 'leaflet';
+import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../rest-adapter.service";
 import {Marker} from "../Ontologies";
 
 import * as $ from "jquery";
-import {LAYER_NAME, MapSingleton} from "./map-singleton";
+import {LAYER_NAME, MapsWrapper} from "./maps.wrapper";
+import {DistributionService} from "./distribution.service";
 
 @Component({
   selector: 'app-maps',
@@ -13,34 +14,53 @@ import {LAYER_NAME, MapSingleton} from "./map-singleton";
 })
 export class MapsComponent implements OnInit, AfterViewInit {
 
-  private osmMap : L.Map;
-  private index : number[] = [];
-  private layers : L.LayerGroup;
+  private _wrapper: MapsWrapper;
+  private _map : Leaflet.Map;
+  private _index : number[] = [];
+  private _layers : L.LayerGroup;
 
-  constructor(private restService: RestAdapterService) {}
+  options = {
+    zoomControl: false,
+    center: new Leaflet.LatLng(44, 12),
+    zoom: 10
+  };
+
+  private _user_defined: Leaflet.FeatureGroup;
+  private _fetched: Leaflet.FeatureGroup;
+  private _area_selected: Leaflet.FeatureGroup;
+  private _geometry: Leaflet.FeatureGroup;
+
+  constructor(private restService: RestAdapterService,
+              private distributionService: DistributionService) {
+    distributionService.subscribe((entry => {
+      if (entry.key === MapsWrapper.name) {
+
+        this._map = this._wrapper.map;
+        this._layers = this._wrapper.layers;
+        this._index = this._wrapper.index;
+
+        this._user_defined = this._wrapper.layer(LAYER_NAME.USER_DEFINED);
+        this._fetched = this._wrapper.layer(LAYER_NAME.FETCHED);
+        this._area_selected = this._wrapper.layer(LAYER_NAME.AREA_SELECTED);
+        this._geometry = this._wrapper.layer(LAYER_NAME.GEOMETRY);
+
+        console.log("Map Component Ready!")
+      }
+    }));
+  }
 
   ngOnInit() {
-    MapSingleton.instance.initMap();
 
-    this.osmMap = MapSingleton.instance.map;
-    this.layers = MapSingleton.instance.layers;
-    this.index = MapSingleton.instance.index;
+    this._wrapper = new MapsWrapper("osm-map", this.options, this.distributionService);
 
-    let user_defined = MapSingleton.instance.layer(LAYER_NAME.USER_DEFINED);
-    let fetched = MapSingleton.instance.layer(LAYER_NAME.FETCHED);
-    let area_selected = MapSingleton.instance.layer(LAYER_NAME.AREA_SELECTED);
-    let geometry = MapSingleton.instance.layer(LAYER_NAME.GEOMETRY);
-
-    console.log("Map Component Ready!")
   }
 
   ngAfterViewInit(): void {
     this.restService.getAllMarkers()
       .subscribe((potholes: Marker[]) => {
           potholes.forEach((m: Marker) => {
-            console.log("Marker drawing...")
-            let fetched = MapSingleton.instance.layer(LAYER_NAME.FETCHED);
-            L.marker(m.coordinates).addTo(fetched);
+            console.log("Marker drawing...");
+            Leaflet.marker(m.coordinates).addTo(this._fetched);
           })
         }
       );

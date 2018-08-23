@@ -1,8 +1,10 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {MapSingleton} from "../map-singleton";
-import * as L from 'leaflet';
+import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
+import * as Leaflet from 'leaflet';
 import * as $ from 'jquery';
 import {Toast, ToasterService} from "angular2-toaster";
+import {DistributionService, Entry} from "../distribution.service";
+import {CoordinatesService} from "./coordinates.service";
 
 @Component({
   selector: 'app-coordinates',
@@ -11,25 +13,62 @@ import {Toast, ToasterService} from "angular2-toaster";
 })
 export class CoordinatesComponent implements OnInit, AfterViewInit {
 
-  private osmMap: L.Map;
-  private layers: L.LayerGroup;
-  private index: number[];
+  private _wrapper: MapsWrapper;
 
-  constructor(private toastService: ToasterService) { }
+  private _map: Leaflet.Map;
+  private _layers: Leaflet.LayerGroup;
+  private _index: number[];
 
-  ngOnInit() {
-  }
+  private _user_defined: Leaflet.FeatureGroup;
+  private _fetched: Leaflet.FeatureGroup;
+  private _area_selected: Leaflet.FeatureGroup;
+  private _geometry: Leaflet.FeatureGroup;
 
-  ngAfterViewInit(): void {
-    this.osmMap = MapSingleton.instance.map;
-    this.layers = MapSingleton.instance.layers;
-    this.index = MapSingleton.instance.index;
+  constructor(private toastService: ToasterService,
+              private coordinatesService: CoordinatesService,
+              private distributionService: DistributionService) {
 
-    this.osmMap.on('click', function (event : L.LeafletMouseEvent) {
-      CoordinatesComponent.showCoordinates(event.latlng);
+    distributionService.subscribe(entry => {
+      if (entry.key === MapsWrapper.name) {
+        this._wrapper = entry.value as MapsWrapper;
+
+        this._map = this._wrapper.map;
+        this._layers = this._wrapper.layers;
+        this._index = this._wrapper.index;
+
+        this._user_defined = this._wrapper.layer(LAYER_NAME.USER_DEFINED);
+        this._fetched = this._wrapper.layer(LAYER_NAME.FETCHED);
+        this._area_selected = this._wrapper.layer(LAYER_NAME.AREA_SELECTED);
+        this._geometry = this._wrapper.layer(LAYER_NAME.GEOMETRY);
+
+        this._map.on('click', (event : Leaflet.LeafletMouseEvent) => this.showCoordinates(event.latlng));
+
+        this._map.on('move', this.hideOverlays);
+
+        console.log("Coordinates Component Ready!");
+      }
     });
 
-    this.osmMap.on('move', CoordinatesComponent.hideOverlays);
+  }
+
+  ngOnInit() {
+
+    this.distributionService.subscribe(event => {
+      console.log(event);
+      if (event.key === CoordinatesService.ACTIONS.DISPLAY) {
+        let coordinates = (event.value as Entry<Leaflet.LatLng, boolean>).key;
+        let options = (event.value as Entry<Leaflet.LatLng, boolean>).value;
+        this.showCoordinates(coordinates, options);
+      } else if (event.key === CoordinatesService.ACTIONS.HIDE) {
+        $('#coordinates-overlay').fadeOut(200);
+      } else if (event.key === CoordinatesService.ACTIONS.HIDE_ALL) {
+        this.hideOverlays(event.value as Event);
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+
   }
 
   onCloseFadeCoordinatesOverlay = (event : Event) => {
@@ -37,11 +76,6 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
   };
 
   onClickCopyCoordinates = (event : Event) => {
-    this._copyCoordinates(event, this.toastService);
-  };
-
-  private _copyCoordinates = (event: Event, toasterService: ToasterService) => {
-
     let coordinates = $('#lat-lng-input') as HTMLInputElement;
 
     coordinates.select();
@@ -54,16 +88,16 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
       showCloseButton: true
     };
 
-    toasterService.pop(infoToast);
+    this.toastService.pop(infoToast);
   };
 
-  public static hideOverlays = (event : Event) => {
+  private hideOverlays = (event : Event) => {
     $('.overlay').each(function (idx, obj) {
       $(obj).hide();
     });
   };
 
-  public static showCoordinates = function(coordinates: L.LatLng, closeContextMenu = true) {
+  private showCoordinates = function(coordinates: Leaflet.LatLng, closeContextMenu = true) {
 
     let
       lat = coordinates.lat.toFixed(4).toString(),

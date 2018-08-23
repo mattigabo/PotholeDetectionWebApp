@@ -1,10 +1,11 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import * as L from 'leaflet';
+import * as Leaflet from 'leaflet';
 import * as $ from 'jquery';
 import {RestAdapterService} from "../../rest-adapter.service";
-import {MapSingleton} from "../map-singleton";
-import {CoordinatesComponent} from "../coordinates/coordinates.component";
+import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
 import {OSMAddressNode} from "../../Ontologies";
+import {DistributionService, Entry} from "../distribution.service";
+import {CoordinatesService} from "../coordinates/coordinates.service";
 
 @Component({
   selector: 'app-markers-popup',
@@ -14,13 +15,19 @@ import {OSMAddressNode} from "../../Ontologies";
 
 export class MarkersPopupComponent implements OnInit,AfterViewInit {
 
-  private osmMap : L.Map;
-  private layers : L.LayerGroup;
-  private index : number[];
 
+  private _wrapper: MapsWrapper;
+  private _map : Leaflet.Map;
+  private _layers : Leaflet.LayerGroup;
+  private _index : number[];
 
-  latitude: number
-  longitude: number
+  private _user_defined: Leaflet.FeatureGroup;
+  private _fetched: Leaflet.FeatureGroup;
+  private _area_selected: Leaflet.FeatureGroup;
+  private _geometry: Leaflet.FeatureGroup;
+
+  latitude: number;
+  longitude: number;
   country: string;
   region: string;
   county: string;
@@ -28,24 +35,42 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
   place: string;
   road: string;
 
-  constructor(private restService : RestAdapterService) { }
+  constructor(private restService : RestAdapterService,
+              private distributionService : DistributionService) {
 
-  ngOnInit() {
+    distributionService.subscribe(entry => {
+      if (entry.key === MapsWrapper.name) {
+        this._wrapper = entry.value as MapsWrapper;
+
+        this._map = this._wrapper.map;
+        this._layers = this._wrapper.layers;
+        this._index = this._wrapper.index;
+
+        this._user_defined = this._wrapper.layer(LAYER_NAME.USER_DEFINED);
+        this._fetched = this._wrapper.layer(LAYER_NAME.FETCHED);
+        this._area_selected = this._wrapper.layer(LAYER_NAME.AREA_SELECTED);
+        this._geometry = this._wrapper.layer(LAYER_NAME.GEOMETRY);
+
+        this._layers.getLayer(this._index["user-defined"])
+          .on('click', this.displayMarkerPopUp);
+
+        this._layers.getLayer(this._index["fetched"])
+          .on('click', this.displayMarkerPopUp);
+
+        this._layers.getLayer(this._index["area-selected"])
+          .on('click', this.displayMarkerPopUp);
+
+        console.log("Marker Popup Component Ready!")
+      }
+    });
   }
 
-  ngAfterViewInit(): void {
-    this.osmMap = MapSingleton.instance.map;
-    this.layers = MapSingleton.instance.layers;
-    this.index = MapSingleton.instance.index;
+  ngOnInit() {
+    // ToDo
+  }
 
-    this.layers.getLayer(this.index["user-defined"])
-      .on('click', this.displayMarkerPopUp);
-
-    this.layers.getLayer(this.index["fetched"])
-      .on('click', this.displayMarkerPopUp);
-
-    this.layers.getLayer(this.index["area-selected"])
-      .on('click', this.displayMarkerPopUp);
+  ngAfterViewInit() {
+    // ToDo
   }
 
   fadeMarkerPopUp = (click: Event) => {
@@ -58,11 +83,14 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
 
   public displayMarkerPopUp =  (event) => {
 
-    CoordinatesComponent.showCoordinates(event.latlng);
+    this.distributionService.submit(
+      new Entry(CoordinatesService.ACTIONS.DISPLAY,
+        new Entry(event.latlng, true )
+      ));
 
     let
-      lat = event.latlng.lat.toFixed(4).toString(),
-      lng = event.latlng.lng.toFixed(4).toString()
+      lat = event.latlng.lat.toFixed(4),
+      lng = event.latlng.lng.toFixed(4)
     ;
 
     if (event.latlng) {
