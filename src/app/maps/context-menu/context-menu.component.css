@@ -50,3 +50,7 @@
 .context-menu__icon {
   color: #f1f1f1;
 }
+
+#area-retrieve-icon, #area-retrieve-item {
+  display: none;
+}

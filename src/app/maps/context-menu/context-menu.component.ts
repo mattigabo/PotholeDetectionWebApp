@@ -67,16 +67,9 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
 
     this._map.on('contextmenu', this.onMapContextMenuShowContextMenu);
 
-    geometry.on('click', (event) => {
+    geometry.on('contextmenu', (event) => {
 
       this._circleEditor.save();
-      // @ts-ignore
-      // this._circleEditor.disable();
-
-      (event.target as Leaflet.FeatureGroup).eachLayer((layer) => {
-        let circle = layer as Leaflet.Circle;
-        console.log(circle.getLatLng(), circle.getRadius());
-      });
 
     });
 
@@ -87,6 +80,8 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
         circle.addTo(geometry);
 
         this._circleID = geometry.getLayerId(circle)
+
+        ContextMenuComponent.showRetrieveArea(event.target);
       }
     });
 
@@ -140,14 +135,57 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
     ContextMenuComponent.hideContextMenu(event)
   };
 
-  clearLayers = (event : Event) => {
+  retrieveArea = (event: Event) => {
+    // @ts-ignore
+    this._circleEditor.disable();
+
+    MapSingleton.instance.layer(LAYER_NAME.GEOMETRY)
+      .eachLayer((layer) => {
+        let circle = layer as Leaflet.Circle;
+        console.log(circle.getLatLng(), circle.getRadius());
+      });
+
+    $('#area-retrieve-icon').hide();
+
+    $('#area-retrieve-item').hide();
+
+    ContextMenuComponent.hideContextMenu(event);
+
+    this.clearSelection(event);
+  };
+
+  clearSelection = (event : Event) => {
+    // @ts-ignore
+    this._circleEditor.disable();
+
+    MapSingleton.instance.layer(LAYER_NAME.GEOMETRY).clearLayers();
+
+    ContextMenuComponent.hideRetrieveArea(event);
+    ContextMenuComponent.hideContextMenu(event);
+
+  };
+
+  clearMarkers = (event : Event) => {
     MapSingleton.instance.layer(LAYER_NAME.USER_DEFINED).clearLayers();
     MapSingleton.instance.layer(LAYER_NAME.FETCHED).clearLayers();
     MapSingleton.instance.layer(LAYER_NAME.AREA_SELECTED).clearLayers();
-    MapSingleton.instance.layer(LAYER_NAME.GEOMETRY).clearLayers();
-    // @ts-ignore
-    this._circleEditor.disable();
-    ContextMenuComponent.hideContextMenu(event)
+
+    ContextMenuComponent.hideContextMenu(event);
+  };
+
+  private static showRetrieveArea = (event?) => {
+    $('#area-retrieve-icon').css({
+      display: "flex"
+    });
+
+    $('#area-retrieve-item').css({
+      display: "flex"
+    });
+  };
+
+  private static hideRetrieveArea = (event?) => {
+    $('#area-retrieve-icon').hide();
+    $('#area-retrieve-item').hide();
   };
 
   public static hideContextMenu = (event) => {
