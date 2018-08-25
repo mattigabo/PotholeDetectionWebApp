@@ -54,7 +54,6 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
     this.distributionService.subscribe(event => {
-      console.log(event);
       if (event.key === CoordinatesService.ACTIONS.DISPLAY) {
         let coordinates = (event.value as Entry<Leaflet.LatLng, boolean>).key;
         let options = (event.value as Entry<Leaflet.LatLng, boolean>).value;

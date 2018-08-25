@@ -1,5 +1,6 @@
 import * as Leaflet from 'leaflet';
 import {DistributionService, Entry} from "./distribution.service";
+import {async} from "q";
 
 export enum LAYER_NAME {
   OSM = "osm-map",
@@ -52,15 +53,29 @@ export class MapsWrapper {
 
       this._map = Leaflet.map(map_id, options);
 
-      this._map.whenReady(() => {
-        emitter.submit(new Entry<string, any>(MapsWrapper.name, this))
+      this._map.on('locationerror', () => {
+        alert("Couldn't establish user position!");
       });
+
+      this._map.on('locationfound', (event : Leaflet.LocationEvent) => {
+        // this._map.setView(event.latlng, options.zoom);
+        alert("User found @["+
+          event.latlng.lat.toFixed(4) + " N, " +
+          event.latlng.lng.toFixed(4) + " E" +
+          "]!");
+      });
+
+      this._map.locate({setView: true, enableHighAccuracy: true});
 
       this._index[LAYER_NAME.MAP_BOX] = this.layers.getLayerId(mapbox);
       this._index[LAYER_NAME.AREA_SELECTED] = this.layers.getLayerId(area_selected);
       this._index[LAYER_NAME.FETCHED] = this.layers.getLayerId(fetched);
       this._index[LAYER_NAME.USER_DEFINED] = this.layers.getLayerId(user_defined);
       this._index[LAYER_NAME.GEOMETRY] = this.layers.getLayerId(geometry);
+
+      this._map.whenReady(() => {
+        emitter.submit(new Entry<string, any>(MapsWrapper.name, this))
+      });
 
       console.log("Map Wrapper Instance Ready!");
 
