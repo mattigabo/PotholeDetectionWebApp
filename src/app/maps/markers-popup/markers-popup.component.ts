@@ -1,10 +1,11 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, SecurityContext} from '@angular/core';
 import * as L from 'leaflet';
 import * as $ from 'jquery';
 import {RestAdapterService} from "../../rest-adapter.service";
 import {MapSingleton} from "../map-singleton";
 import {CoordinatesComponent} from "../coordinates/coordinates.component";
-import {OSMAddressNode} from "../../Ontologies";
+import {MarkerComment, OSMAddressNode} from "../../Ontologies";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-markers-popup',
@@ -18,9 +19,10 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
   private layers : L.LayerGroup;
   private index : number[];
 
+  commentText:string;
 
-  latitude: number
-  longitude: number
+  latitude: number;
+  longitude: number;
   country: string;
   region: string;
   county: string;
@@ -28,7 +30,7 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
   place: string;
   road: string;
 
-  constructor(private restService : RestAdapterService) { }
+  constructor(private restService : RestAdapterService, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
   }
@@ -53,7 +55,11 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
   };
 
   addComment = (click: Event) => {
-    // ToDo
+    this.sanitizer.sanitize(SecurityContext.HTML, this.commentText);
+    var comment: MarkerComment;
+
+    comment.comment = this.commentText
+    //this.restService.addComment()
   };
 
   public displayMarkerPopUp =  (event) => {

@@ -48,4 +48,6 @@ export class MapsComponent implements OnInit, AfterViewInit {
         }
       );
   }
+
+
 }
