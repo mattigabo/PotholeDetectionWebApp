@@ -1,6 +1,5 @@
 import * as Leaflet from 'leaflet';
 import {DistributionService, Entry} from "./distribution.service";
-import {async} from "q";
 
 export enum LAYER_NAME {
   OSM = "osm-map",
@@ -10,6 +9,7 @@ export enum LAYER_NAME {
   USER_DEFINED = "user-defined",
   AREA_SELECTED = "area-selected",
   GEOMETRY = "geometry",
+  HEAT_MAP = "heat-map"
 }
 
 export class MapsWrapper {
@@ -18,13 +18,11 @@ export class MapsWrapper {
   private _index : number[] = [];
   private _layers : Leaflet.LayerGroup;
 
-
   public get map(): Leaflet.Map { return this._map}
   public get layers() : Leaflet.LayerGroup {return this._layers}
   public get index() : number[] { return this._index}
 
   constructor(map_id : string, options : Leaflet.MapOptions, emitter: DistributionService) {
-
 
       let mapbox = Leaflet.tileLayer(
         'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',

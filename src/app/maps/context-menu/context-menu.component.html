@@ -16,6 +16,9 @@
     <div class="context-menu__icon row">
       <i class="fas fa-trash-alt"></i>
     </div>
+    <div class="context-menu__icon row">
+      <i class="fas fa-cog"></i>
+    </div>
   </div>
 
   <div class="context-menu__items col">
@@ -51,6 +54,14 @@
       <a id="clear-layers-markers" class="context-menu__link" (click)="clearMarkers($event)">
         <div class="context-menu__label">
           <label>Clear Markers</label>
+        </div>
+      </a>
+    </div>
+    <div class="context-menu__item row">
+      <a id="toggle-heat-map" class="context-menu__link" (click)="displayHeatMap($event)">
+        <div class="context-menu__label">
+          <label id="display-heat-map-label" class="toggle">Heatmap</label>
+          <label id="hide-heat-map-label" class="toggle" style="display: none">Markers</label>
         </div>
       </a>
     </div>

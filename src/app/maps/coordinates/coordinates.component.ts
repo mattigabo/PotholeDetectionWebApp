@@ -5,41 +5,27 @@ import * as $ from 'jquery';
 import {Toast, ToasterService} from "angular2-toaster";
 import {DistributionService, Entry} from "../distribution.service";
 import {CoordinatesService} from "./coordinates.service";
+import {MapAddict} from "../../map-addict";
+import {instantiationError} from "@angular/core/src/di/reflective_errors";
 
 @Component({
   selector: 'app-coordinates',
   templateUrl: './coordinates.component.html',
   styleUrls: ['./coordinates.component.css']
 })
-export class CoordinatesComponent implements OnInit, AfterViewInit {
-
-  private _wrapper: MapsWrapper;
-
-  private _map: Leaflet.Map;
-  private _layers: Leaflet.LayerGroup;
-  private _index: number[];
-
-  private _user_defined: Leaflet.FeatureGroup;
-  private _fetched: Leaflet.FeatureGroup;
-  private _area_selected: Leaflet.FeatureGroup;
-  private _geometry: Leaflet.FeatureGroup;
+export class CoordinatesComponent extends MapAddict {
 
   constructor(private toastService: ToasterService,
               private coordinatesService: CoordinatesService,
               private distributionService: DistributionService) {
 
+    super();
+
     distributionService.subscribe(entry => {
-      if (entry.key === MapsWrapper.name) {
-        this._wrapper = entry.value as MapsWrapper;
+      if (entry.key === MapsWrapper.name &&
+          entry.value instanceof MapsWrapper) {
 
-        this._map = this._wrapper.map;
-        this._layers = this._wrapper.layers;
-        this._index = this._wrapper.index;
-
-        this._user_defined = this._wrapper.layer(LAYER_NAME.USER_DEFINED);
-        this._fetched = this._wrapper.layer(LAYER_NAME.FETCHED);
-        this._area_selected = this._wrapper.layer(LAYER_NAME.AREA_SELECTED);
-        this._geometry = this._wrapper.layer(LAYER_NAME.GEOMETRY);
+        super.init(entry.value);
 
         this._map.on('click', (event : Leaflet.LeafletMouseEvent) => this.showCoordinates(event.latlng));
 

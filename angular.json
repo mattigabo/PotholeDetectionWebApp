@@ -26,7 +26,9 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.js"
+              "./node_modules/jquery/dist/jquery.js",
+              "./node_modules/leaflet/dist/leaflet.js",
+              "./node_modules/heatmap.js/build/heatmap.js"
             ]
           },
           "configurations": {
@@ -52,7 +54,12 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "PotholeDetectionWebApp:build"
+            "browserTarget": "PotholeDetectionWebApp:build",
+            "ssl":true,
+            "sslKey":"../ssl/server.key",
+            "sslCert":"../ssl/server.crt",
+            "host": "192.168.1.11",
+            "port":8443
           },
           "configurations": {
             "production": {

@@ -6,6 +6,7 @@ import {LAYER_NAME, MapsWrapper} from "../maps/maps.wrapper";
 import {CoordinatesComponent} from "../maps/coordinates/coordinates.component";
 import {DistributionService, Entry} from "../maps/distribution.service";
 import {CoordinatesService} from "../maps/coordinates/coordinates.service";
+import {MapAddict} from "../map-addict";
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,7 @@ import {CoordinatesService} from "../maps/coordinates/coordinates.service";
   styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent extends MapAddict {
 
   help = "";
   about =
@@ -23,32 +24,16 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   credits = 'pumpkinheads@gmail.com';
   repository = 'https://github.com/mattigabo/PotholeDetectionWebApp';
 
-  private _wrapper: MapsWrapper;
-
-  private _map: Leaflet.Map;
-  private _layers: Leaflet.LayerGroup;
-  private _index: number[];
-
-  private _user_defined: Leaflet.FeatureGroup;
-  private _fetched: Leaflet.FeatureGroup;
-  private _area_selected: Leaflet.FeatureGroup;
-  private _geometry: Leaflet.FeatureGroup;
-
   constructor(private restService : RestAdapterService,
               private distributionService: DistributionService) {
 
+    super();
+
     distributionService.subscribe(entry => {
-      if (entry.key === MapsWrapper.name) {
-        this._wrapper = entry.value as MapsWrapper;
+      if (entry.key === MapsWrapper.name &&
+          entry.value instanceof MapsWrapper) {
 
-        this._map = this._wrapper.map;
-        this._layers = this._wrapper.layers;
-        this._index = this._wrapper.index;
-
-        this._user_defined = this._wrapper.layer(LAYER_NAME.USER_DEFINED);
-        this._fetched = this._wrapper.layer(LAYER_NAME.FETCHED);
-        this._area_selected = this._wrapper.layer(LAYER_NAME.AREA_SELECTED);
-        this._geometry = this._wrapper.layer(LAYER_NAME.GEOMETRY);
+        super.init(entry.value);
 
         $('#filter-by-place-send-button').on('click', function () {
           // ToDo

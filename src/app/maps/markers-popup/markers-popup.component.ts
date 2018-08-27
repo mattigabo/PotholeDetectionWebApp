@@ -3,9 +3,10 @@ import * as Leaflet from 'leaflet';
 import * as $ from 'jquery';
 import {RestAdapterService} from "../../rest-adapter.service";
 import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
-import {OSMAddressNode} from "../../Ontologies";
+import {OSMAddressNode} from "../../ontologies";
 import {DistributionService, Entry} from "../distribution.service";
 import {CoordinatesService} from "../coordinates/coordinates.service";
+import {MapAddict} from "../../map-addict";
 
 @Component({
   selector: 'app-markers-popup',
@@ -13,18 +14,7 @@ import {CoordinatesService} from "../coordinates/coordinates.service";
   styleUrls: ['./markers-popup.component.css']
 })
 
-export class MarkersPopupComponent implements OnInit,AfterViewInit {
-
-
-  private _wrapper: MapsWrapper;
-  private _map : Leaflet.Map;
-  private _layers : Leaflet.LayerGroup;
-  private _index : number[];
-
-  private _user_defined: Leaflet.FeatureGroup;
-  private _fetched: Leaflet.FeatureGroup;
-  private _area_selected: Leaflet.FeatureGroup;
-  private _geometry: Leaflet.FeatureGroup;
+export class MarkersPopupComponent extends MapAddict{
 
   latitude: number;
   longitude: number;
@@ -38,18 +28,13 @@ export class MarkersPopupComponent implements OnInit,AfterViewInit {
   constructor(private restService : RestAdapterService,
               private distributionService : DistributionService) {
 
+    super();
+
     distributionService.subscribe(entry => {
-      if (entry.key === MapsWrapper.name) {
-        this._wrapper = entry.value as MapsWrapper;
+      if (entry.key === MapsWrapper.name &&
+          entry.value instanceof MapsWrapper) {
 
-        this._map = this._wrapper.map;
-        this._layers = this._wrapper.layers;
-        this._index = this._wrapper.index;
-
-        this._user_defined = this._wrapper.layer(LAYER_NAME.USER_DEFINED);
-        this._fetched = this._wrapper.layer(LAYER_NAME.FETCHED);
-        this._area_selected = this._wrapper.layer(LAYER_NAME.AREA_SELECTED);
-        this._geometry = this._wrapper.layer(LAYER_NAME.GEOMETRY);
+        super.init(entry.value);
 
         this._layers.getLayer(this._index["user-defined"])
           .on('click', this.displayMarkerPopUp);

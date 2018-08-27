@@ -1,32 +1,24 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
 import * as $ from "jquery";
 import * as Leaflet from 'leaflet';
 import 'leaflet-draw';
-import {CoordinatesComponent} from "../coordinates/coordinates.component";
+import '../../extensions/heatmap-wrapper';
 import {RestAdapterService} from "../../rest-adapter.service";
 import {Toast, ToasterService} from "angular2-toaster";
-import {GeoCoordinates} from "../../Ontologies";
+import {GeoCoordinates} from "../../ontologies";
 import {CoordinatesService} from "../coordinates/coordinates.service";
 import {DistributionService, Entry} from "../distribution.service";
+import {MapAddict} from "../../map-addict";
 
 @Component({
   selector: 'app-context-menu',
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.css']
 })
-export class ContextMenuComponent implements OnInit, AfterViewInit {
+export class ContextMenuComponent extends MapAddict {
 
-  private _wrapper: MapsWrapper;
-
-  private _map: Leaflet.Map;
-  private _layers: Leaflet.LayerGroup;
-  private _index: number[];
-
-  private _user_defined: Leaflet.FeatureGroup;
-  private _fetched: Leaflet.FeatureGroup;
-  private _area_selected: Leaflet.FeatureGroup;
-  private _geometry: Leaflet.FeatureGroup;
+  private _heatmap : Leaflet.Layer;
 
   private _circleMaker: Leaflet.Draw.Circle;
   private _circleEditor: Leaflet.EditToolbar.Edit;
@@ -41,23 +33,29 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
     showRadius: true,
   };
 
+  private _isHeatmapDisplayed: boolean = false;
+
   constructor(private restService: RestAdapterService,
               private toasterService: ToasterService,
               private coordinatesService: CoordinatesService,
-              private distributionService: DistributionService) {
+              private distService: DistributionService) {
+    super();
 
-    distributionService.subscribe(entry => {
-      if (entry.key === MapsWrapper.name) {
-        this._wrapper = entry.value as MapsWrapper;
+    distService.subscribe(entry => {
+      if (entry.key === MapsWrapper.name &&
+          entry.value instanceof MapsWrapper) {
 
-        this._map = this._wrapper.map;
-        this._layers = this._wrapper.layers;
-        this._index = this._wrapper.index;
+        super.init(entry.value as MapsWrapper);
 
-        this._user_defined = this._wrapper.layer(LAYER_NAME.USER_DEFINED);
-        this._fetched = this._wrapper.layer(LAYER_NAME.FETCHED);
-        this._area_selected = this._wrapper.layer(LAYER_NAME.AREA_SELECTED);
-        this._geometry = this._wrapper.layer(LAYER_NAME.GEOMETRY);
+        // @ts-ignore
+        // this._heatmap = new Leaflet.HeatMap({
+        //   minOpacity: 0.8,
+        //   radius: 10,
+        //   scaleRadius: true,
+        //   useLocalExtrema: true,
+        // }).addTo(this._layers);
+
+        // this._index[LAYER_NAME.HEAT_MAP] = this._layers.getLayerId(this._heatmap);
 
         // @ts-ignore
         Leaflet.drawLocal.draw.handlers.circle.tooltip.start = "";
@@ -85,11 +83,13 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
           let type = event.layerType,
             circle = event.layer;
           if (type === "circle") {
-            circle.addTo(this._geometry);
-
-            this._circleID = this._geometry.getLayerId(circle)
 
             ContextMenuComponent.showRetrieveArea(event.target);
+
+            circle.addTo(this._geometry);
+
+            this._circleID = this._geometry.getLayerId(circle);
+
           }
         });
 
@@ -113,16 +113,16 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-
+      super.ngOnInit();
   }
 
   ngAfterViewInit() {
-
+    super.ngAfterViewInit();
   }
 
   onMapContextMenuShowContextMenu = (event : Leaflet.LeafletMouseEvent) => {
 
-    this.distributionService.submit(
+    this.distService.submit(
       new Entry(CoordinatesService.ACTIONS.DISPLAY,
         new Entry(event.latlng, false)
       ));
@@ -142,8 +142,6 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
       left: left.toString() + "px"
     });
 
-    console.log(left + contextMenu.width());
-
     if (left + contextMenu.width() > $(window).width()) {
       left -= (contextMenu.width() + 20);
       contextMenu.css({
@@ -160,14 +158,18 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
 
   };
 
-  addMarker = (event : Event) => {
+  addMarker(event : Event) {
+
+    ContextMenuComponent.hideContextMenu(event);
+
     let user_defined : Leaflet.FeatureGroup = this._layers.getLayer(this._index[LAYER_NAME.USER_DEFINED]) as Leaflet.FeatureGroup;
     Leaflet.marker(this.coordinatesService.coordinates).addTo(user_defined);
     ContextMenuComponent._addMarker(this.coordinatesService.coordinates, this.restService, this.toasterService);
-    ContextMenuComponent.hideContextMenu(event)
-  };
+  }
 
-  addArea = (event : Event) => {
+  addArea(event : Event) {
+
+    ContextMenuComponent.hideContextMenu(event);
 
     // @ts-ignore
     this._circleEditor.disable();
@@ -175,11 +177,12 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
     this._geometry.clearLayers();
 
     this._circleMaker.enable();
+  }
 
-    ContextMenuComponent.hideContextMenu(event)
-  };
+  retrieveArea(event: Event){
 
-  retrieveArea = (event: Event) => {
+    ContextMenuComponent.hideContextMenu(event);
+
     // @ts-ignore
     this._circleEditor.disable();
 
@@ -193,31 +196,96 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
 
     $('#area-retrieve-item').hide();
 
-    ContextMenuComponent.hideContextMenu(event);
-
     this.clearSelection(event);
-  };
+  }
 
-  clearSelection = (event : Event) => {
+  clearSelection(event : Event) {
+    ContextMenuComponent.hideContextMenu(event);
+    ContextMenuComponent.hideRetrieveArea(event);
+
     // @ts-ignore
     this._circleEditor.disable();
 
     this._wrapper.layer(LAYER_NAME.GEOMETRY).clearLayers();
 
-    ContextMenuComponent.hideRetrieveArea(event);
+  }
+
+  clearMarkers(event : Event){
+
     ContextMenuComponent.hideContextMenu(event);
 
-  };
-
-  clearMarkers = (event : Event) => {
     this._wrapper.layer(LAYER_NAME.USER_DEFINED).clearLayers();
     this._wrapper.layer(LAYER_NAME.FETCHED).clearLayers();
     this._wrapper.layer(LAYER_NAME.AREA_SELECTED).clearLayers();
+  }
+
+  displayHeatMap(event) {
 
     ContextMenuComponent.hideContextMenu(event);
-  };
 
-  private static showRetrieveArea = (event?) => {
+    $('.toggle').each((idx, obj) => {
+      $(obj).toggle(300);
+    });
+
+
+    if (this._isHeatmapDisplayed) {
+
+      this._isHeatmapDisplayed = false;
+
+      this._layers.addLayer(this._user_defined);
+      this._layers.addLayer(this._area_selected);
+      this._layers.addLayer(this._fetched);
+
+      this._index[LAYER_NAME.AREA_SELECTED] = this._layers.getLayerId(this._area_selected);
+      this._index[LAYER_NAME.FETCHED] = this._layers.getLayerId(this._fetched);
+      this._index[LAYER_NAME.USER_DEFINED] = this._layers.getLayerId(this._user_defined);
+
+    } else {
+
+      this._isHeatmapDisplayed = true;
+
+      let data : {lat:number , lng:number, count:number}[] = [];
+
+      this._user_defined.eachLayer(layer => {
+        if (layer instanceof Leaflet.Marker) {
+          data.push({
+            lat: layer.getLatLng().lat,
+            lng: layer.getLatLng().lng,
+            count: 1
+          });
+        }
+      });
+
+      this._fetched.eachLayer(layer => {
+        if (layer instanceof Leaflet.Marker) {
+          data.push({
+            lat: layer.getLatLng().lat,
+            lng: layer.getLatLng().lng,
+            count: 1
+          });
+        }
+      });
+
+      this._area_selected.eachLayer(layer => {
+        if (layer instanceof Leaflet.Marker) {
+          data.push({
+            lat: layer.getLatLng().lat,
+            lng: layer.getLatLng().lng,
+            count: 1
+          });
+        }
+      });
+
+      this._layers.removeLayer(this._user_defined);
+      this._layers.removeLayer(this._area_selected);
+      this._layers.removeLayer(this._fetched);
+
+      // this._heatmap.setData({max: 1, data:data});
+
+    }
+  }
+
+  private static showRetrieveArea(event?) {
     $('#area-retrieve-icon').css({
       display: "flex"
     });
@@ -227,12 +295,12 @@ export class ContextMenuComponent implements OnInit, AfterViewInit {
     });
   };
 
-  private static hideRetrieveArea = (event?) => {
+  private static hideRetrieveArea(event?) {
     $('#area-retrieve-icon').hide();
     $('#area-retrieve-item').hide();
   };
 
-  public static hideContextMenu = (event) => {
+  public static hideContextMenu (event) {
     $('.context-menu').each((idx, obj) => $(obj).fadeOut(100));
   };
 
