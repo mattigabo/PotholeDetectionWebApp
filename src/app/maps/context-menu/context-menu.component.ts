@@ -3,7 +3,6 @@ import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
 import * as $ from "jquery";
 import * as Leaflet from 'leaflet';
 import 'leaflet-draw';
-import '../../extensions/heatmap-wrapper';
 import {RestAdapterService} from "../../rest-adapter.service";
 import {Toast, ToasterService} from "angular2-toaster";
 import {GeoCoordinates} from "../../ontologies";

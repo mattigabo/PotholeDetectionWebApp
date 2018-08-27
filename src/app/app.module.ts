@@ -14,6 +14,7 @@ import { MarkersPopupComponent } from './maps/markers-popup/markers-popup.compon
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToasterModule} from "angular2-toaster";
 import {DistributionService} from "./maps/distribution.service";
+import { NavigatorComponent } from './header/navigator/navigator.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import {DistributionService} from "./maps/distribution.service";
     ContextMenuComponent,
     CoordinatesComponent,
     MarkersPopupComponent,
+    NavigatorComponent,
   ],
   imports: [
     BrowserModule,

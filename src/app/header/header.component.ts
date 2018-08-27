@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import * as $ from 'jquery';
 import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../rest-adapter.service";
-import {LAYER_NAME, MapsWrapper} from "../maps/maps.wrapper";
-import {CoordinatesComponent} from "../maps/coordinates/coordinates.component";
+import {MapsWrapper} from "../maps/maps.wrapper";
 import {DistributionService, Entry} from "../maps/distribution.service";
 import {CoordinatesService} from "../maps/coordinates/coordinates.service";
 import {MapAddict} from "../map-addict";
@@ -35,14 +34,6 @@ export class HeaderComponent extends MapAddict {
 
         super.init(entry.value);
 
-        $('#filter-by-place-send-button').on('click', function () {
-          // ToDo
-        });
-
-        $('#filter-by-route-send-button').on('click', function () {
-          // ToDo
-        });
-
         console.log("Header Component Ready!");
       }
     });
@@ -65,31 +56,16 @@ export class HeaderComponent extends MapAddict {
       $('#filters-nav').animate({
         width:"toggle",
         display:"flex"
-      }, 500);
-    });
+      }, 500, () => {
 
-    $('.filters-nav-form').each(function (idx, obj) {
-      $(obj).show(600);
-      $(obj).css({
-        disply: "flex"
+        let nav_header = $('#filters-nav--header');
+
+        nav_header.show(() => {nav_header.css({display: "flex"})});
+
+        $('.filters-nav--entry').each(function (idx, obj) {
+          $(obj).show(() => {$(obj).css({display: "flex"})});
+        });
       });
     });
   };
-
-  closeFiltersNav = (clickEvent : Event) => {
-
-    this.distributionService.submit(new Entry(CoordinatesService.ACTIONS.HIDE_ALL, true));
-
-    $('.filters-nav-form').each(function (idx, obj) {
-      $(obj).hide();
-    });
-
-    $('#filters-nav').animate({
-      width:"toggle",
-      display: "none"
-    }, 500, function () {
-      $('#filters-button').fadeIn(100);
-    });
-  };
-
 }

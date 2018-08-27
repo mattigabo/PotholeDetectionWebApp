@@ -17,16 +17,16 @@ export class RestAdapterService {
 
   getAllMarkers(country?: string, region?: string, county?: string, town?: string, road?: string){
     var apiUrl = this.rootApiUrl;
-    if(country != undefined) {
-      apiUrl = apiUrl + country + "/"
-      if(region != undefined){
-        apiUrl = apiUrl + region + "/"
-        if(county != undefined){
-          apiUrl = apiUrl + county + "/"
-          if(town != undefined){
-            apiUrl = apiUrl + town + "/"
-            if(road != undefined){
-              apiUrl = apiUrl + road + "/"
+    if(country != undefined || country != "") {
+      apiUrl = apiUrl + country + "/";
+      if(region != undefined || region != ""){
+        apiUrl = apiUrl + region + "/";
+        if(county != undefined || county != ""){
+          apiUrl = apiUrl + county + "/";
+          if(town != undefined || town != ""){
+            apiUrl = apiUrl + town + "/";
+            if(road != undefined || road != ""){
+              apiUrl = apiUrl + road + "/";
             }
           }
         }
@@ -40,11 +40,9 @@ export class RestAdapterService {
     this.doGETResourcesRequest(roadApiUrl);
   }
 
-  private doGETResourcesRequest(apiUrl: string){
-    let oPothole: Observable<Marker[]> = this.httpClient.get<AllMarkersApiResponse>(apiUrl, httpOptions)
+  private doGETResourcesRequest = (apiUrl: string) : Observable<Marker[]> =>
+    this.httpClient.get<AllMarkersApiResponse>(apiUrl, httpOptions)
       .pipe(map(response => response.content));
-    return oPothole;
-  }
 
   getLocationInfo(lat: number, lng: number): Observable<OSMAddressNode>{
     var geoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lat + ", " + lng + "]"
@@ -60,9 +58,9 @@ export class RestAdapterService {
     return this.doGETResourcesRequest(requestUrl);
   }
 
-  getAllMarkersInTheArea(topLeftCorner: GeoCoordinates, bottomRightCorner: GeoCoordinates){
-    var requestUrl: string = this.rootApiUrl + "area?tlc=["+ topLeftCorner.lat + ", " + topLeftCorner.lng
-      + "]&brc=[" + bottomRightCorner.lat + "," + bottomRightCorner.lng + "]"
+  getAllMarkersInTheArea(origin: GeoCoordinates, radius: number){
+    let requestUrl: string = this.rootApiUrl + "area?origin=["+ origin.lat + ", " + origin.lng
+      + "]&radius=" + radius;
 
     return this.doGETResourcesRequest(requestUrl);
   }
