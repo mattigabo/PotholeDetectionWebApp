@@ -187,8 +187,18 @@ export class ContextMenuComponent extends MapAddict {
 
     this._wrapper.layer(LAYER_NAME.GEOMETRY)
       .eachLayer((layer) => {
-        let circle = layer as Leaflet.Circle;
-        console.log(circle.getLatLng(), circle.getRadius());
+        let circle = layer as Leaflet.Circle,
+            gc = new GeoCoordinates(
+              circle.getLatLng().lat,
+              circle.getLatLng().lng
+            );
+        this.restService.getAllMarkersInTheArea(gc, circle.getRadius())
+          .subscribe(markers => {
+            markers
+              .map(m => m.coordinates)
+              .map(c => Leaflet.marker([c.lat, c.lng]))
+              .forEach(m => this._area_selected.addLayer(m))
+          });
       });
 
     $('#area-retrieve-icon').hide();

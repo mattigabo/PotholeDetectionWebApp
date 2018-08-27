@@ -32,7 +32,8 @@ export class RestAdapterService {
         }
       }
     }
-    return this.doGETResourcesRequest(this.rootApiUrl);
+    console.log(apiUrl);
+    return this.doGETResourcesRequest(apiUrl);
   }
 
   getAllMarkersByRoadName(road:string){
@@ -45,13 +46,20 @@ export class RestAdapterService {
       .pipe(map(response => response.content));
 
   getLocationInfo(lat: number, lng: number): Observable<OSMAddressNode>{
-    var geoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lat + ", " + lng + "]"
-    return this.httpClient.get<GeoServiceResponse>(geoCodingServiceUrl, httpOptions)
-      .pipe(map(response => response.content));;
+    let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lat + ", " + lng + "]"
+    return this.httpClient.get<GeoServiceResponse<OSMAddressNode>>(reverseGeoCodingServiceUrl, httpOptions)
+      .pipe(map(response => response.content));
+  }
+
+  getPlaceCoordinates(place: string): Observable<GeoCoordinates> {
+    let geoCodingServiceUrl: string = this.rootApiUrl + "geodecode?place=" + place;
+
+    return this.httpClient.get<GeoServiceResponse<GeoCoordinates>>(geoCodingServiceUrl, httpOptions)
+      .pipe(map(response => response.content));
   }
 
   getMarkerInThePath(pointA: GeoCoordinates, pointB: GeoCoordinates, maxMetersFromPath: number){
-    var requestUrl: string = this.rootApiUrl + "route?from=["  + pointA.lat + ", " +  pointA.lng
+    let requestUrl: string = this.rootApiUrl + "route?from=["  + pointA.lat + ", " +  pointA.lng
       + "]&to=[" + pointB.lat + ", " + pointB.lng
       + "]&dist=" + maxMetersFromPath;
 
@@ -66,12 +74,12 @@ export class RestAdapterService {
   }
 
   addMarker(coordinates: GeoCoordinates, onSuccess: (value: MarkerForPost) => void, onError: (error: any) => void){
-    var marker: MarkerForPost = new MarkerForPost(coordinates.lat, coordinates.lng);
+    let marker: MarkerForPost = new MarkerForPost(coordinates.lat, coordinates.lng);
     return this.httpClient.post<MarkerForPost>(this.rootApiUrl, marker, httpOptions).subscribe(onSuccess, onError);
   }
 
   addComment(comment: MarkerComment){
-    var url: string = this.rootApiUrl + comment.marker
+    let url: string = this.rootApiUrl + comment.marker;
     this.httpClient.put<MarkerComment>(url, comment, httpOptions);
   }
 
@@ -102,9 +110,9 @@ interface AllMarkersApiResponse {
   info: string;
 }
 
-interface GeoServiceResponse{
+interface GeoServiceResponse<T>{
   id: number;
-  content: OSMAddressNode;
+  content: T;
   info: string;
 }
 

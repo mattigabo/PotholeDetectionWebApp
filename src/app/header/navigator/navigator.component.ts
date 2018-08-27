@@ -15,12 +15,12 @@ import {Marker} from "../../ontologies";
 })
 export class NavigatorComponent extends MapAddict{
 
-  constructor(private restService : RestAdapterService,
-              private distributionService: DistributionService) {
+  constructor(private _restService : RestAdapterService,
+              private _distService: DistributionService) {
 
     super();
 
-    distributionService.subscribe(entry => {
+    _distService.subscribe(entry => {
       if (entry.key === MapsWrapper.name &&
         entry.value instanceof MapsWrapper) {
 
@@ -36,7 +36,7 @@ export class NavigatorComponent extends MapAddict{
 
           let that = this;
 
-          restService.getAllMarkers(country, region, county, town, road)
+          _restService.getAllMarkers(country, region, county, town, road)
             .subscribe(markers => that.addFetchedMarkersToMap(markers));
         });
 
@@ -47,8 +47,16 @@ export class NavigatorComponent extends MapAddict{
 
           let that = this;
 
-          restService.getMarkerInThePath(origin, destination, radius)
-            .subscribe(markers => that.addFetchedMarkersToMap(markers));
+          _restService.getPlaceCoordinates(origin)
+            .subscribe(ogc => {
+
+              _restService.getPlaceCoordinates(destination)
+                .subscribe(dgc => {
+
+                  _restService.getMarkerInThePath(ogc, dgc, radius)
+                    .subscribe(markers => that.addFetchedMarkersToMap(markers));
+                });
+            })
         });
 
         console.log("Navigator Component Ready!");
@@ -63,7 +71,7 @@ export class NavigatorComponent extends MapAddict{
 
   closeFiltersNav = (clickEvent : Event) => {
 
-    this.distributionService.submit(new Entry(CoordinatesService.ACTIONS.HIDE_ALL, true));
+    this._distService.submit(new Entry(CoordinatesService.ACTIONS.HIDE_ALL, true));
 
     $('#filters-nav--header').hide();
 
@@ -105,10 +113,10 @@ export class NavigatorComponent extends MapAddict{
 
   private addFetchedMarkersToMap(markers: Marker[]) {
     this._fetched.clearLayers();
-    markers.forEach(marker => {
-      Leaflet.marker([marker.coordinates.lat, marker.coordinates.lng])
-        .addTo(this._fetched);
-    })
+    markers
+      .map(m => m.coordinates)
+      .map(c => Leaflet.marker([c.lat, c.lng]))
+      .forEach(m => this._fetched.addLayer(m));
   }
 
 }
