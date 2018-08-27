@@ -1,53 +1,66 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {MapSingleton} from "../map-singleton";
-import * as L from 'leaflet';
+import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
+import * as Leaflet from 'leaflet';
 import * as $ from 'jquery';
 import {Toast, ToasterService} from "angular2-toaster";
+import {DistributionService, Entry} from "../distribution.service";
+import {CoordinatesService} from "./coordinates.service";
+import {MapAddict} from "../../map-addict";
+import {instantiationError} from "@angular/core/src/di/reflective_errors";
 
 @Component({
   selector: 'app-coordinates',
   templateUrl: './coordinates.component.html',
   styleUrls: ['./coordinates.component.css']
 })
-export class CoordinatesComponent implements OnInit, AfterViewInit {
+export class CoordinatesComponent extends MapAddict {
 
-  private osmMap: L.Map;
-  private layers: L.LayerGroup;
-  private index: number[];
+  constructor(private toastService: ToasterService,
+              private coordinatesService: CoordinatesService,
+              private distributionService: DistributionService) {
 
-  constructor(private toastService: ToasterService) { }
+    super();
 
-  ngOnInit() {
-  }
+    distributionService.subscribe(entry => {
+      if (entry.key === MapsWrapper.name &&
+          entry.value instanceof MapsWrapper) {
 
-  ngAfterViewInit(): void {
-    this.osmMap = MapSingleton.instance.map;
-    this.layers = MapSingleton.instance.layers;
-    this.index = MapSingleton.instance.index;
+        super.init(entry.value);
 
-    this.osmMap.on('click', function (event : L.LeafletMouseEvent) {
-      CoordinatesComponent.showCoordinates(event.latlng);
+        this._map.on('click', (event : Leaflet.LeafletMouseEvent) => this.showCoordinates(event.latlng));
+
+        this._map.on('move', this.hideOverlays);
+
+        console.log("Coordinates Component Ready!");
+      }
     });
 
-    this.osmMap.on('move', CoordinatesComponent.hideOverlays);
   }
 
-  fadeCoordinates = (event : Event) => {
+  ngOnInit() {
+
+    this.distributionService.subscribe(event => {
+      if (event.key === CoordinatesService.ACTIONS.DISPLAY) {
+        let coordinates = (event.value as Entry<Leaflet.LatLng, boolean>).key;
+        let options = (event.value as Entry<Leaflet.LatLng, boolean>).value;
+        this.showCoordinates(coordinates, options);
+      } else if (event.key === CoordinatesService.ACTIONS.HIDE) {
+        $('#coordinates-overlay').fadeOut(200);
+      } else if (event.key === CoordinatesService.ACTIONS.HIDE_ALL) {
+        this.hideOverlays(event.value as Event);
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+
+  }
+
+  onCloseFadeCoordinatesOverlay = (event : Event) => {
     $('#coordinates-overlay').fadeOut(200);
   };
 
-  copyCoordinates = (event : Event) => {
-    CoordinatesComponent._copyCoordinates(event, this.toastService);
-  };
-
-  public static hideOverlays = (event : Event) => {
-    $('.overlay').each(function (idx, obj) {
-      $(obj).hide();
-    });
-  };
-
-  public static _copyCoordinates = (event: Event, toasterService: ToasterService) => {
-
+  onClickCopyCoordinates = (event : Event) => {
     let coordinates = $('#lat-lng-input') as HTMLInputElement;
 
     coordinates.select();
@@ -60,10 +73,16 @@ export class CoordinatesComponent implements OnInit, AfterViewInit {
       showCloseButton: true
     };
 
-    toasterService.pop(infoToast);
+    this.toastService.pop(infoToast);
   };
 
-  public static showCoordinates = function(coordinates: L.LatLng, closeContextMenu = true) {
+  private hideOverlays = (event : Event) => {
+    $('.overlay').each(function (idx, obj) {
+      $(obj).hide();
+    });
+  };
+
+  private showCoordinates = function(coordinates: Leaflet.LatLng, closeContextMenu = true) {
 
     let
       lat = coordinates.lat.toFixed(4).toString(),

@@ -4,8 +4,8 @@
 
 #filters {
   position: absolute;
-  top: 5%;
-  left: 2%;
+  top: 4%;
+  left: 3%;
   /*justify-content: space-between;*/
   background-color: transparent;
   display: flex;
@@ -25,7 +25,7 @@
 
 #credits {
   position: absolute;
-  top: 5%;
+  top: 4%;
   right: 2%;
   /*width: 100%;*/
   /*justify-content: space-between;*/
@@ -79,90 +79,3 @@
 }
 
 #menu-button:hover {color: black}
-
-#filters-nav {
-  height: 100%;
-  width: 300px;
-  position: fixed;
-  z-index: 3;
-  top: 0;
-  left: 0;
-  background-color: #333333;
-  opacity: 0.9;
-  overflow-x: hidden;
-  padding-top: 2%;
-  /*transition: 0.5s;*/
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.65);
-  display: none;
-}
-
-/* The navigation menu links */
-#filters-nav #filters-nav-close-button {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
-
-/* When you mouse over the navigation links, change their color */
-#filters-nav #filters-nav-close-button:hover {
-  color: #f1f1f1;
-}
-
-/* Position and style the close button (top right corner) */
-#filters-nav #filters-nav-close-button {
-  position: absolute;
-  top: 2%;
-  right: 10%;
-}
-
-.filters-nav-form {
-  display: none;
-  flex-direction: column;
-  position: relative;
-
-  margin: 10% 2% 2%;
-}
-
-#filter-by-place-form{
-}
-
-#filter-by-route-form {
-
-}
-
-.filters-nav-fields {
-  display: flex;
-  flex-direction: column;
-  border: none;
-  border-bottom: solid 2px #818181;
-  border-top: solid 2px #818181;
-}
-
-.filters-nav-fields > * {
-  color: #444444;
-  padding: 10px;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  width: available;
-  opacity: 1.0;
-}
-
-.filters-nav-send-button {
-  position: relative;
-  left: 80%;
-  margin: 5%;
-  color: #818181;
-}
-
-.filters-nav-send-button:hover {
-  color: #f1f1f1;
-}
-
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  #filters-nav {padding-top: 15px;}
-  #filters-nav a {font-size: 18px;}
-}

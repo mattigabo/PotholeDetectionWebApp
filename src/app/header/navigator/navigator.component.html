@@ -1,0 +1,49 @@
+<div id="filters-nav" class="nav close-on-esc">
+  <div id="filters-nav--header">
+    <a class="hidden"><strong></strong></a>
+    <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
+      <i class="fas fa-arrow-left fa-2x"></i>
+    </a>
+  </div>
+  <div class="filters-nav--entries">
+    <div id="filter-by-place" class="filters-nav--entry">
+      <div id="filter-by-place-form--header" class="filters-nav-form--header">
+        <a style="color: #f1f1f1" (click)="displayPlaceFilters($event)"><strong>Filters potholes by place</strong></a>
+      </div>
+      <div id="filter-by-place-form" class="filters-nav-form">
+        <div id="filter-by-place-fields" class="filters-nav--fields">
+          <input id="filter-field--country" placeholder="Country (optional)" value="">
+          <input id="filter-field--region" placeholder="Region (optional)" value="">
+          <input id="filter-field--county" placeholder="County (optional)" value="">
+          <input id="filter-field--town" placeholder="Town (optional)" value="">
+          <input id="filter-field--road" placeholder="Road (optional)" value="">
+        </div>
+        <div id="filter-by-place-send-button" class="filters-nav-form--buttons">
+          <a class="hidden"><strong></strong></a>
+          <a id="filter-by-place-send--button" class="filters-nav-form--send-button">
+            <i class="fas fa-arrow-circle-right fa-2x"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div id="filter-by-route" class="filters-nav--entry">
+      <div id="filter-by-route-form--header" class="filters-nav-form--header">
+        <a style="color: #f1f1f1;" (click)="displayRouteFilters($event)"> <strong>Filters potholes by route</strong></a>
+      </div>
+      <div id="filter-by-route-form" class="filters-nav-form">
+        <div id="filter-by-route--fields" class="filters-nav--fields">
+          <input id="filter-field--origin" placeholder="Origin">
+          <input id="filter-field--destination" placeholder="Destination">
+          <input id="filter-field--search-radius" placeholder="Search Radius (default: 100m)">
+        </div>
+        <div id="filter-by-route--buttons" class="filters-nav-form--buttons">
+          <a class="hidden"><strong></strong></a>
+          <a id="filter-by-route-send--button" class="filters-nav-form--send-button">
+            <i class="fas fa-arrow-circle-right fa-2x"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,39 +1,9 @@
-<div id="filters-nav" class="nav close-on-esc">
-  <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
-    <i class="fas fa-arrow-circle-left fa-xl"></i>
-  </a>
-  <form id="filter-by-place-form" class="filters-nav-form">
-    <p style="color: #f1f1f1;"> <strong>Filters potholes by place</strong> </p>
-    <fieldset id="filter-by-place-fields" class="filters-nav-fields">
-      <input placeholder="Country (optional)">
-      <input placeholder="Region (optional)">
-      <input placeholder="County (optional)">
-      <input placeholder="Town (optional)">
-      <input placeholder="Road (optional)">
-    </fieldset>
-    <a id="filter-by-place-send-button" class="filters-nav-send-button">
-      <i class="fas fa-arrow-circle-right fa-2x"></i>
-    </a>
-  </form>
-
-  <form id="filter-by-route-form" class="filters-nav-form">
-    <p style="color: #f1f1f1;"> <strong>Filters potholes by route</strong> </p>
-    <fieldset id="filter-by-route-fields" class="filters-nav-fields">
-      <input placeholder="Origin">
-      <input placeholder="Destination">
-    </fieldset>
-    <a id="filter-by-route-send-button" class="filters-nav-send-button">
-      <i class="fas fa-arrow-circle-right fa-2x"></i>
-    </a>
-  </form>
-
-</div>
-<div id="filters">
+<div id="filters" class="header">
   <a id= "filters-button" class="nav-display-button open-on-esc" (click)="openFiltersNav($event)">
-    <i class="fas fa-filter fa-3x"></i>
+    <i class="fas fa-filter fa-2x"></i>
   </a>
 </div>
-<div id="credits">
+<div id="credits" class="header">
   <a id= "repository" href="{{repository}}" target="_blank">
       <i class="fab fa-github fa-2x" ></i>
   </a>
@@ -47,3 +17,4 @@
     <i class="fas fa-question-circle fa-2x" ></i>
   </a>
 </div>
+<app-navigator></app-navigator>

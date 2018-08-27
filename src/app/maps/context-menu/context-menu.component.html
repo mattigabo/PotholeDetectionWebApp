@@ -7,8 +7,17 @@
     <div class="context-menu__icon row">
       <i class="fas fa-vector-square"></i>
     </div>
+    <div id="area-retrieve-icon" class="context-menu__icon row">
+      <i class="fas fa-vector-square"></i>
+    </div>
     <div class="context-menu__icon row">
       <i class="fas fa-trash-alt"></i>
+    </div>
+    <div class="context-menu__icon row">
+      <i class="fas fa-trash-alt"></i>
+    </div>
+    <div class="context-menu__icon row">
+      <i class="fas fa-cog"></i>
     </div>
   </div>
 
@@ -23,17 +32,40 @@
     <div class="context-menu__item row">
       <a id="add-area-selector" class="context-menu__link" (click)="addArea($event)">
         <div class="context-menu__label">
-          <label>Add Area Selector</label>
+          <label>Select Area</label>
+        </div>
+      </a>
+    </div>
+    <div id="area-retrieve-item" class="context-menu__item row">
+      <a id="retrieve-selected-area" class="context-menu__link" (click)="retrieveArea($event)">
+        <div class="context-menu__label">
+          <label>Retrieve Area</label>
         </div>
       </a>
     </div>
     <div class="context-menu__item row">
-      <a id="clear-layers" class="context-menu__link" (click)="clearLayers($event)">
+      <a id="clear-layers-selection" class="context-menu__link" (click)="clearSelection($event)">
         <div class="context-menu__label">
-          <label>Clear All</label>
+          <label>Clear Selection</label>
         </div>
       </a>
     </div>
+    <div class="context-menu__item row">
+      <a id="clear-layers-markers" class="context-menu__link" (click)="clearMarkers($event)">
+        <div class="context-menu__label">
+          <label>Clear Markers</label>
+        </div>
+      </a>
+    </div>
+    <div class="context-menu__item row">
+      <a id="toggle-heat-map" class="context-menu__link" (click)="displayHeatMap($event)">
+        <div class="context-menu__label">
+          <label id="display-heat-map-label" class="toggle">Heatmap</label>
+          <label id="hide-heat-map-label" class="toggle" style="display: none">Markers</label>
+        </div>
+      </a>
+    </div>
+
   </div>
 </div>
 

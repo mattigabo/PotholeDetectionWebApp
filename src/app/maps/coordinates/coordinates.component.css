@@ -1,6 +1,7 @@
 @import "../maps.component.css";
 
 #coordinates-overlay {
+  position: absolute;
   cursor: pointer;
   min-width: 160px;
   bottom: 5%;

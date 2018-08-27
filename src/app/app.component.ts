@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
 import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
-import {MapSingleton} from "./maps/map-singleton";
-
 
 @Component({
   selector: 'app-root',

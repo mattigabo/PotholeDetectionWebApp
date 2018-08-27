@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "./Ontologies";
+import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "./ontologies";
 import {Observable , throwError} from "rxjs/index";
 import { map , catchError } from 'rxjs/operators'
 import {tap} from "rxjs/internal/operators";
@@ -15,24 +15,33 @@ export class RestAdapterService {
 
   constructor(private httpClient: HttpClient) { }
 
+  getMarkerAt(coordinates: GeoCoordinates){
+    let requestUrl: string = this.rootApiUrl + "at?coordinates=["+ coordinates.lat + ", " +
+      coordinates.lng +"]";
+
+    return this.httpClient.get<RESTServiceBodyResponse<Marker>>(requestUrl, httpOptions)
+      .pipe(map(response => response.content));
+  }
+
   getAllMarkers(country?: string, region?: string, county?: string, town?: string, road?: string){
     var apiUrl = this.rootApiUrl;
-    if(country != undefined) {
-      apiUrl = apiUrl + country + "/"
-      if(region != undefined){
-        apiUrl = apiUrl + region + "/"
-        if(county != undefined){
-          apiUrl = apiUrl + county + "/"
-          if(town != undefined){
-            apiUrl = apiUrl + town + "/"
-            if(road != undefined){
-              apiUrl = apiUrl + road + "/"
+    if(country != undefined || country != "") {
+      apiUrl = apiUrl + country + "/";
+      if(region != undefined || region != ""){
+        apiUrl = apiUrl + region + "/";
+        if(county != undefined || county != ""){
+          apiUrl = apiUrl + county + "/";
+          if(town != undefined || town != ""){
+            apiUrl = apiUrl + town + "/";
+            if(road != undefined || road != ""){
+              apiUrl = apiUrl + road + "/";
             }
           }
         }
       }
     }
-    return this.doGETResourcesRequest(this.rootApiUrl);
+    console.log(apiUrl);
+    return this.doGETResourcesRequest(apiUrl);
   }
 
   getAllMarkersByRoadName(road:string){
@@ -40,40 +49,45 @@ export class RestAdapterService {
     this.doGETResourcesRequest(roadApiUrl);
   }
 
-  private doGETResourcesRequest(apiUrl: string){
-    let oPothole: Observable<Marker[]> = this.httpClient.get<AllMarkersApiResponse>(apiUrl, httpOptions)
+  private doGETResourcesRequest = (apiUrl: string) : Observable<Marker[]> =>
+    this.httpClient.get<RESTServiceBodyResponse<Marker[]>>(apiUrl, httpOptions)
       .pipe(map(response => response.content));
-    return oPothole;
-  }
 
   getLocationInfo(lat: number, lng: number): Observable<OSMAddressNode>{
-    var geoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lat + ", " + lng + "]"
-    return this.httpClient.get<GeoServiceResponse>(geoCodingServiceUrl, httpOptions)
-      .pipe(map(response => response.content));;
+    let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lat + ", " + lng + "]"
+    return this.httpClient.get<RESTServiceBodyResponse<OSMAddressNode>>(reverseGeoCodingServiceUrl, httpOptions)
+      .pipe(map(response => response.content));
+  }
+
+  getPlaceCoordinates(place: string): Observable<GeoCoordinates> {
+    let geoCodingServiceUrl: string = this.rootApiUrl + "geodecode?place=" + place;
+
+    return this.httpClient.get<RESTServiceBodyResponse<GeoCoordinates>>(geoCodingServiceUrl, httpOptions)
+      .pipe(map(response => response.content));
   }
 
   getMarkerInThePath(pointA: GeoCoordinates, pointB: GeoCoordinates, maxMetersFromPath: number){
-    var requestUrl: string = this.rootApiUrl + "route?from=["  + pointA.lat + ", " +  pointA.lng
+    let requestUrl: string = this.rootApiUrl + "route?from=["  + pointA.lat + ", " +  pointA.lng
       + "]&to=[" + pointB.lat + ", " + pointB.lng
       + "]&dist=" + maxMetersFromPath;
 
     return this.doGETResourcesRequest(requestUrl);
   }
 
-  getAllMarkersInTheArea(topLeftCorner: GeoCoordinates, bottomRightCorner: GeoCoordinates){
-    var requestUrl: string = this.rootApiUrl + "area?tlc=["+ topLeftCorner.lat + ", " + topLeftCorner.lng
-      + "]&brc=[" + bottomRightCorner.lat + "," + bottomRightCorner.lng + "]"
+  getAllMarkersInTheArea(origin: GeoCoordinates, radius: number){
+    let requestUrl: string = this.rootApiUrl + "area?origin=["+ origin.lat + ", " + origin.lng
+      + "]&radius=" + radius;
 
     return this.doGETResourcesRequest(requestUrl);
   }
 
   addMarker(coordinates: GeoCoordinates, onSuccess: (value: MarkerForPost) => void, onError: (error: any) => void){
-    var marker: MarkerForPost = new MarkerForPost(coordinates.lat, coordinates.lng);
+    let marker: MarkerForPost = new MarkerForPost(coordinates.lat, coordinates.lng);
     return this.httpClient.post<MarkerForPost>(this.rootApiUrl, marker, httpOptions).subscribe(onSuccess, onError);
   }
 
   addComment(comment: MarkerComment){
-    var url: string = this.rootApiUrl + comment.marker
+    let url: string = this.rootApiUrl + comment.marker;
     this.httpClient.put<MarkerComment>(url, comment, httpOptions);
   }
 
@@ -98,15 +112,10 @@ const httpOptions = {
   })
 };
 
-interface AllMarkersApiResponse {
-  id: number;
-  content: Marker[];
-  info: string;
-}
 
-interface GeoServiceResponse{
+interface RESTServiceBodyResponse<T>{
   id: number;
-  content: OSMAddressNode;
+  content: T;
   info: string;
 }
 

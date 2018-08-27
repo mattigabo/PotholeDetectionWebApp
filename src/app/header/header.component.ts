@@ -1,9 +1,11 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import * as $ from 'jquery';
-import * as L from 'leaflet';
+import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../rest-adapter.service";
-import {MapSingleton} from "../maps/map-singleton";
-import {CoordinatesComponent} from "../maps/coordinates/coordinates.component";
+import {MapsWrapper} from "../maps/maps.wrapper";
+import {DistributionService, Entry} from "../maps/distribution.service";
+import {CoordinatesService} from "../maps/coordinates/coordinates.service";
+import {MapAddict} from "../map-addict";
 
 @Component({
   selector: 'app-header',
@@ -11,7 +13,7 @@ import {CoordinatesComponent} from "../maps/coordinates/coordinates.component";
   styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent extends MapAddict {
 
   help = "";
   about =
@@ -21,63 +23,49 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   credits = 'pumpkinheads@gmail.com';
   repository = 'https://github.com/mattigabo/PotholeDetectionWebApp';
 
-  constructor(private restService : RestAdapterService) { }
+  constructor(private restService : RestAdapterService,
+              private distributionService: DistributionService) {
+
+    super();
+
+    distributionService.subscribe(entry => {
+      if (entry.key === MapsWrapper.name &&
+          entry.value instanceof MapsWrapper) {
+
+        super.init(entry.value);
+
+        console.log("Header Component Ready!");
+      }
+    });
+
+  }
 
   ngOnInit() {
-    $(document).ready(() => {
 
-    });
+  }
+
+  ngAfterViewInit() {
+
   }
 
   openFiltersNav = (clickEvent : Event) => {
 
-    CoordinatesComponent.hideOverlays(clickEvent);
+    this.distributionService.submit(new Entry(CoordinatesService.ACTIONS.HIDE_ALL, true));
 
     $('#filters-button').fadeOut(100, function () {
       $('#filters-nav').animate({
         width:"toggle",
         display:"flex"
-      }, 500);
-    });
+      }, 500, () => {
 
-    $('.filters-nav-form').each(function (idx, obj) {
-      $(obj).show(600);
-      $(obj).css({
-        disply: "flex"
+        let nav_header = $('#filters-nav--header');
+
+        nav_header.show(() => {nav_header.css({display: "flex"})});
+
+        $('.filters-nav--entry').each(function (idx, obj) {
+          $(obj).show(() => {$(obj).css({display: "flex"})});
+        });
       });
     });
   };
-
-  closeFiltersNav = (clickEvent : Event) => {
-
-    CoordinatesComponent.hideOverlays(clickEvent);
-
-    $('.filters-nav-form').each(function (idx, obj) {
-      $(obj).hide();
-    });
-
-    $('#filters-nav').animate({
-      width:"toggle",
-      display: "none"
-    }, 500, function () {
-      $('#filters-button').fadeIn(100);
-    });
-  };
-
-  ngAfterViewInit(): void {
-    $(document).ready(() => {
-      let osmMap : L.Map = MapSingleton.instance.map;
-      let layers : L.LayerGroup = MapSingleton.instance.layers;
-      let index : number[] = MapSingleton.instance.index;
-
-      $('#filter-by-place-send-button').on('click', function () {
-        // ToDo
-      });
-
-      $('#filter-by-route-send-button').on('click', function () {
-        // ToDo
-      });
-    });
-  }
-
 }

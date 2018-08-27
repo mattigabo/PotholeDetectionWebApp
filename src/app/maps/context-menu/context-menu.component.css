@@ -1,3 +1,4 @@
+@import "../maps.component.css";
 /**
  * CUSTOM CONTEXT MENU
  **/
@@ -28,15 +29,24 @@
   grid-column: 1;
 }
 
+.context-menu__icon {
+  padding-bottom: 3px;
+  padding-top: 3px;
+}
+
 .context-menu__items {
   grid-column: 2;
+}
+
+.context-menu__item {
+  border-bottom: solid 2px #818181;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
-  padding: 5px;
-  margin-bottom: 2px;
+  align-content: baseline;
+  margin: 5px;
 }
 
 .context-menu__link {
@@ -49,4 +59,8 @@
 
 .context-menu__icon {
   color: #f1f1f1;
+}
+
+#area-retrieve-icon, #area-retrieve-item {
+  display: none;
 }
