@@ -32,6 +32,17 @@ export class MapsComponent extends MapAddict{
         super.init(entry.value);
 
         console.log("Map Component Ready!")
+
+        this.restService.getAllMarkers()
+          .subscribe((potholes: Marker[]) => {
+              potholes
+                .map(m => m.coordinates)
+                .forEach(c => {
+                  console.log("Marker drawing...");
+                  Leaflet.marker([c.lat, c.lng]).addTo(this._fetched);
+                })
+            }
+          );
       }
     }));
   }
@@ -43,14 +54,7 @@ export class MapsComponent extends MapAddict{
   }
 
   ngAfterViewInit(): void {
-    this.restService.getAllMarkers()
-      .subscribe((potholes: Marker[]) => {
-          potholes.forEach((m: Marker) => {
-            console.log("Marker drawing...");
-            Leaflet.marker(m.coordinates).addTo(this._fetched);
-          })
-        }
-      );
+
   }
 
 

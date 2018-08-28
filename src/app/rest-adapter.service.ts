@@ -25,15 +25,15 @@ export class RestAdapterService {
 
   getAllMarkers(country?: string, region?: string, county?: string, town?: string, road?: string){
     var apiUrl = this.rootApiUrl;
-    if(country != undefined || country != "") {
+    if(country != undefined && country != "") {
       apiUrl = apiUrl + country + "/";
-      if(region != undefined || region != ""){
+      if(region != undefined && region != ""){
         apiUrl = apiUrl + region + "/";
-        if(county != undefined || county != ""){
+        if(county != undefined && county != ""){
           apiUrl = apiUrl + county + "/";
-          if(town != undefined || town != ""){
+          if(town != undefined && town != ""){
             apiUrl = apiUrl + town + "/";
-            if(road != undefined || road != ""){
+            if(road != undefined && road != ""){
               apiUrl = apiUrl + road + "/";
             }
           }

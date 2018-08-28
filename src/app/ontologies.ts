@@ -26,7 +26,7 @@ export class GeoCoordinates{
 }
 
 export interface OSMAddressNode{
-  houseNumber: number;
+  houseNumber: string;
   road: string;
   neighbourhood: string;
   town: string;
