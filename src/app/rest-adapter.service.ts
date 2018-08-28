@@ -16,7 +16,7 @@ export class RestAdapterService {
   constructor(private httpClient: HttpClient) { }
 
   getMarkerAt(coordinates: GeoCoordinates){
-    let requestUrl: string = this.rootApiUrl + "at?coordinates=["+ coordinates.lat + ", " +
+    let requestUrl: string = this.rootApiUrl + "at?coordinates=["+ coordinates.lat + "," +
       coordinates.lng +"]";
 
     return this.httpClient.get<RESTServiceBodyResponse<Marker>>(requestUrl, httpOptions)
