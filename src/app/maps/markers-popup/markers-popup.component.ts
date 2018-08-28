@@ -1,12 +1,11 @@
 import {Component, SecurityContext} from '@angular/core';
-import * as L from 'leaflet';
 import * as $ from 'jquery';
 import {RestAdapterService} from "../../rest-adapter.service";
-import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
+import {MapsWrapper} from "../maps.wrapper";
 import {DistributionService, Entry} from "../distribution.service";
 import {CoordinatesService} from "../coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
-import {MarkerComment, OSMAddressNode} from "../../Ontologies";
+import {GeoCoordinates, Marker, MarkerComment} from "../../ontologies";
 import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
@@ -19,6 +18,7 @@ export class MarkersPopupComponent extends MapAddict{
 
   commentText:string;
 
+  markerId:number;
   latitude: number;
   longitude: number;
   country: string;
@@ -97,14 +97,16 @@ export class MarkersPopupComponent extends MapAddict{
         display: 'flex'
       });
 
-      this.restService.getLocationInfo(lat, lng).subscribe((address: OSMAddressNode) => {
+      let markerCoodinates: GeoCoordinates = new GeoCoordinates(lat, lng);
+      this.restService.getMarkerAt(markerCoodinates).subscribe((marker: Marker) => {
 
-        this.country = address.country;
-        this.region = address.region;
-        this.county = address.county;
-        this.town = address.town;
-        this.place = address.place;
-        this.road = address.road;
+        this.markerId = marker.id;
+        this.country = marker.addressNode.country;
+        this.region = marker.addressNode.region;
+        this.county = marker.addressNode.county;
+        this.town = marker.addressNode.town;
+        this.place = marker.addressNode.place;
+        this.road = marker.addressNode.road;
       });
     }
   }
