@@ -86,9 +86,9 @@ export class RestAdapterService {
     return this.httpClient.post<MarkerForPost>(this.rootApiUrl, marker, httpOptions).subscribe(onSuccess, onError);
   }
 
-  addComment(comment: MarkerComment){
-    let url: string = this.rootApiUrl + comment.marker;
-    this.httpClient.put<MarkerComment>(url, comment, httpOptions);
+  addComment(comment: MarkerComment, onSuccess: (value: MarkerComment) => void, onError: (error: any) => void){
+    let url: string = this.rootApiUrl + comment.markerId;
+    this.httpClient.put<MarkerComment>(url, comment, httpOptions).subscribe(onSuccess, onError);
   }
 
   private handleError(error: HttpErrorResponse) {

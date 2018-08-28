@@ -7,6 +7,7 @@ import {CoordinatesService} from "../coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
 import {GeoCoordinates, Marker, MarkerComment} from "../../ontologies";
 import {DomSanitizer} from "@angular/platform-browser";
+import {Toast, ToasterService} from "angular2-toaster";
 
 @Component({
   selector: 'app-markers-popup',
@@ -30,7 +31,8 @@ export class MarkersPopupComponent extends MapAddict{
 
   constructor(private restService : RestAdapterService,
               private distributionService : DistributionService,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              private toasterService: ToasterService) {
 
     super();
 
@@ -68,10 +70,9 @@ export class MarkersPopupComponent extends MapAddict{
 
   addComment = (click: Event) => {
     this.sanitizer.sanitize(SecurityContext.HTML, this.commentText);
-    var comment: MarkerComment;
+    var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText)
 
-    comment.comment = this.commentText
-    //this.restService.addComment()
+    this.sendComment(mcomment);
   };
 
   public displayMarkerPopUp =  (event) => {
@@ -82,8 +83,8 @@ export class MarkersPopupComponent extends MapAddict{
       ));
 
     let
-      lat = event.latlng.lat.toFixed(4),
-      lng = event.latlng.lng.toFixed(4)
+      lat = event.latlng.lat.toFixed(7),
+      lng = event.latlng.lng.toFixed(7)
     ;
 
     if (event.latlng) {
@@ -111,4 +112,25 @@ export class MarkersPopupComponent extends MapAddict{
     }
   }
 
+  private sendComment(comment: MarkerComment){
+
+    let successToast: Toast = {
+      type: 'success',
+      title: 'Comment Added',
+      body: "Comment successfully added to the Marker with ID: " + comment.markerId,
+      showCloseButton: true
+    };
+
+    let errorToast: Toast = {
+      type: 'error',
+      title: 'Comment Not Added',
+      body: "Error occured during the comment adding to the Marker with ID:" + comment.markerId,
+      showCloseButton: true
+    };
+
+    this.restService.addComment(comment,
+      X =>  this.toasterService.pop(successToast),
+      err => this.toasterService.pop(errorToast),
+    );
+  }
 }
