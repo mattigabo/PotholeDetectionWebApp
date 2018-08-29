@@ -15,6 +15,14 @@ export class RestAdapterService {
 
   constructor(private httpClient: HttpClient) { }
 
+  getMarkerAt(coordinates: GeoCoordinates){
+    let requestUrl: string = this.rootApiUrl + "at?coordinates=["+ coordinates.lat + "," +
+      coordinates.lng +"]";
+
+    return this.httpClient.get<RESTServiceBodyResponse<Marker>>(requestUrl, httpOptions)
+      .pipe(map(response => response.content));
+  }
+
   getAllMarkers(country?: string, region?: string, county?: string, town?: string, road?: string){
     var apiUrl = this.rootApiUrl;
     if(country != undefined && country != "") {
@@ -42,19 +50,19 @@ export class RestAdapterService {
   }
 
   private doGETResourcesRequest = (apiUrl: string) : Observable<Marker[]> =>
-    this.httpClient.get<AllMarkersApiResponse>(apiUrl, httpOptions)
+    this.httpClient.get<RESTServiceBodyResponse<Marker[]>>(apiUrl, httpOptions)
       .pipe(map(response => response.content));
 
   getLocationInfo(lat: number, lng: number): Observable<OSMAddressNode>{
     let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lng + ", " + lat + "]"
-    return this.httpClient.get<GeoServiceResponse<OSMAddressNode>>(reverseGeoCodingServiceUrl, httpOptions)
+    return this.httpClient.get<RESTServiceBodyResponse<OSMAddressNode>>(reverseGeoCodingServiceUrl, httpOptions)
       .pipe(map(response => response.content));
   }
 
   getPlaceCoordinates(place: string): Observable<GeoCoordinates> {
     let geoCodingServiceUrl: string = this.rootApiUrl + "geodecode?place=" + place;
 
-    return this.httpClient.get<GeoServiceResponse<GeoCoordinates>>(geoCodingServiceUrl, httpOptions)
+    return this.httpClient.get<RESTServiceBodyResponse<GeoCoordinates>>(geoCodingServiceUrl, httpOptions)
       .pipe(map(response => response.content));
   }
 
@@ -88,9 +96,9 @@ export class RestAdapterService {
     return this.httpClient.post<Coordinates>(this.rootApiUrl, marker, httpOptions).subscribe(onSuccess, onError);
   }
 
-  addComment(comment: MarkerComment){
-    let url: string = this.rootApiUrl + comment.marker;
-    this.httpClient.put<MarkerComment>(url, comment, httpOptions);
+  addComment(comment: MarkerComment, onSuccess: (value: MarkerComment) => void, onError: (error: any) => void){
+    let url: string = this.rootApiUrl + comment.markerId;
+    this.httpClient.put<MarkerComment>(url, comment, httpOptions).subscribe(onSuccess, onError);
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -114,13 +122,8 @@ const httpOptions = {
   })
 };
 
-interface AllMarkersApiResponse {
-  id: number;
-  content: Marker[];
-  info: string;
-}
 
-interface GeoServiceResponse<T>{
+interface RESTServiceBodyResponse<T>{
   id: number;
   content: T;
   info: string;

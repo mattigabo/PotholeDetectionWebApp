@@ -61,4 +61,6 @@ export class MapsComponent extends MapAddict{
   ngAfterViewInit(): void {
 
   }
+
+
 }

@@ -43,8 +43,18 @@ export interface OSMAddressNode {
   houseNumber:string;
 }
 
-export interface MarkerComment {
-  marker: number,
-  comment: string,
+export class MarkerComment {
+  markerId: number;
+  text: string;
   date: number;
+
+  constructor(markerId:number, text: string, date?: number){
+    this.markerId = markerId;
+    this.text = text;
+    if(date != undefined){
+      this.date = date;
+    } else {
+      this.date = Date.now();
+    }
+  }
 }
