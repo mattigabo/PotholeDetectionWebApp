@@ -32,8 +32,6 @@ export class ContextMenuComponent extends MapAddict {
     showRadius: true,
   };
 
-  private _isHeatmapDisplayed: boolean = false;
-
   constructor(private restService: RestAdapterService,
               private toasterService: ToasterService,
               private coordinatesService: CoordinatesService,
@@ -128,9 +126,11 @@ export class ContextMenuComponent extends MapAddict {
 
     this.coordinatesService.coordinates = event.latlng;
 
+    let isMobile : boolean = window.matchMedia("(max-width: 480px)").matches;
+
     let
-      top = (event.containerPoint.y + 10),
-      left = (event.containerPoint.x + 10),
+      top = isMobile ? 0 : (event.containerPoint.y + 10),
+      left = isMobile ? 0 : (event.containerPoint.x + 10),
       contextMenu = $('.context-menu')
     ;
 
@@ -141,20 +141,21 @@ export class ContextMenuComponent extends MapAddict {
       left: left.toString() + "px"
     });
 
-    if (left + contextMenu.width() > $(window).width()) {
-      left -= (contextMenu.width() + 20);
-      contextMenu.css({
-        left: left.toString() + "px"
-      });
-    }
+    if (!isMobile) {
+      if (left + contextMenu.width() > $(window).width()) {
+        left -= (contextMenu.width() + 20);
+        contextMenu.css({
+          left: left.toString() + "px"
+        });
+      }
 
-    if (top + contextMenu.height() > $(window).height()) {
-      top -= (contextMenu.height() + 20);
-      contextMenu.css({
-        top: top.toString() + "px"
-      });
+      if (top + contextMenu.height() > $(window).height()) {
+        top -= (contextMenu.height() + 20);
+        contextMenu.css({
+          top: top.toString() + "px"
+        });
+      }
     }
-
   };
 
   addMarker(event : Event) {
@@ -236,23 +237,6 @@ export class ContextMenuComponent extends MapAddict {
       $(obj).toggle(300);
     });
 
-
-    if (this._isHeatmapDisplayed) {
-
-      this._isHeatmapDisplayed = false;
-
-      this._layers.addLayer(this._user_defined);
-      this._layers.addLayer(this._area_selected);
-      this._layers.addLayer(this._fetched);
-
-      this._index[LAYER_NAME.AREA_SELECTED] = this._layers.getLayerId(this._area_selected);
-      this._index[LAYER_NAME.FETCHED] = this._layers.getLayerId(this._fetched);
-      this._index[LAYER_NAME.USER_DEFINED] = this._layers.getLayerId(this._user_defined);
-
-    } else {
-
-      this._isHeatmapDisplayed = true;
-
       let data : {lat:number , lng:number, count:number}[] = [];
 
       this._user_defined.eachLayer(layer => {
@@ -290,8 +274,22 @@ export class ContextMenuComponent extends MapAddict {
       this._layers.removeLayer(this._fetched);
 
       // this._heatmap.setData({max: 1, data:data});
+  }
 
-    }
+  displayMarkers(event) {
+    ContextMenuComponent.hideContextMenu(event);
+
+    $('.toggle').each((idx, obj) => {
+      $(obj).toggle(300);
+    });
+
+    this._layers.addLayer(this._user_defined);
+    this._layers.addLayer(this._area_selected);
+    this._layers.addLayer(this._fetched);
+
+    this._index[LAYER_NAME.AREA_SELECTED] = this._layers.getLayerId(this._area_selected);
+    this._index[LAYER_NAME.FETCHED] = this._layers.getLayerId(this._fetched);
+    this._index[LAYER_NAME.USER_DEFINED] = this._layers.getLayerId(this._user_defined);
   }
 
   private static showRetrieveArea(event?) {

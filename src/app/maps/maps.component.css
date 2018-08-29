@@ -9,16 +9,16 @@
 
 .overlay {
   position: fixed;
+  display: none;
   z-index: 2;
   background-color: #444444;
-  color: white;
+  color: #f1f1f1;
   /*border-radius: 5px;*/
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
-  font-size: medium;
-  opacity: 0.8;
+  /*font-size: medium;*/
+  opacity: 0.9;
   padding: 5px;
-  display: none;
-  /*overflow: hidden;*/
-  /*text-overflow: ellipsis;*/
-  /*white-space: nowrap;*/
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

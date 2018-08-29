@@ -26,11 +26,15 @@ export class AppComponent implements OnInit {
 
         if (key === "ESCAPE") {
           $('.close-on-esc').each(function (idx, obj) {
-            $(obj).hide();
+            $(obj).css({
+              display:'none'
+            })
           });
 
           $('.open-on-esc').each(function (idx, obj) {
-            $(obj).show();
+            $(obj).css({
+              display:'flex'
+            })
           });
         }
       });

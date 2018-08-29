@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../rest-adapter.service";
 import {Marker} from "../ontologies";
 
-import * as $ from "jquery";
-import {LAYER_NAME, MapsWrapper} from "./maps.wrapper";
+import {MapsWrapper} from "./maps.wrapper";
 import {DistributionService} from "./distribution.service";
 import {MapAddict} from "../map-addict";
 
@@ -22,34 +21,40 @@ export class MapsComponent extends MapAddict{
   };
 
   constructor(private restService: RestAdapterService,
-              private distributionService: DistributionService) {
+              private distService: DistributionService) {
     super();
 
-    distributionService.subscribe((entry => {
+    distService.subscribe(entry => {
       if (entry.key === MapsWrapper.name &&
           entry.value instanceof MapsWrapper) {
 
         super.init(entry.value);
 
-        console.log("Map Component Ready!")
+        console.log("Map Component Ready!");
 
         this.restService.getAllMarkers()
           .subscribe((potholes: Marker[]) => {
-              potholes
-                .map(m => m.coordinates)
-                .forEach(c => {
-                  console.log("Marker drawing...");
+            console.log(potholes);
+            potholes.map(m => m.coordinates)
+              .forEach(c => {
+                  console.log("Marker drawing...", c);
                   Leaflet.marker([c.lat, c.lng]).addTo(this._fetched);
                 })
-            }
-          );
+          });
       }
-    }));
+    });
+
+    distService.subscribe(entry => {
+      if (entry.value === MapsWrapper.ACTION.CLEAR) {
+        this._wrapper.clearAll();
+      }
+    });
+
   }
 
   ngOnInit() {
 
-    this._wrapper = new MapsWrapper("osm-map", this.options, this.distributionService);
+    this._wrapper = new MapsWrapper("osm-map", this.options, this.distService);
 
   }
 

@@ -46,7 +46,7 @@ export class RestAdapterService {
       .pipe(map(response => response.content));
 
   getLocationInfo(lat: number, lng: number): Observable<OSMAddressNode>{
-    let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lat + ", " + lng + "]"
+    let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lng + ", " + lat + "]"
     return this.httpClient.get<GeoServiceResponse<OSMAddressNode>>(reverseGeoCodingServiceUrl, httpOptions)
       .pipe(map(response => response.content));
   }
@@ -58,24 +58,34 @@ export class RestAdapterService {
       .pipe(map(response => response.content));
   }
 
-  getMarkerInThePath(pointA: GeoCoordinates, pointB: GeoCoordinates, maxMetersFromPath: number){
-    let requestUrl: string = this.rootApiUrl + "route?from=["  + pointA.lat + ", " +  pointA.lng
-      + "]&to=[" + pointB.lat + ", " + pointB.lng
+  getMarkerOnRouteByCoordinates(origin: GeoCoordinates, destination: GeoCoordinates, maxMetersFromPath: number){
+    let requestUrl: string = this.rootApiUrl + "route?from=["  + origin.lng + ", " +  origin.lat
+      + "]&to=[" + destination.lng + ", " + destination.lat
       + "]&dist=" + maxMetersFromPath;
 
     return this.doGETResourcesRequest(requestUrl);
   }
 
+  getMarkerOnRouteByPlace(origin: string, destination: string, maxMetersFromPath: number){
+    let requestUrl: string = this.rootApiUrl + "route?" +
+      "from=" + origin +
+      "&to=" + destination +
+      "&dist=" + maxMetersFromPath;
+
+    return this.doGETResourcesRequest(requestUrl);
+  }
+
   getAllMarkersInTheArea(origin: GeoCoordinates, radius: number){
-    let requestUrl: string = this.rootApiUrl + "area?origin=["+ origin.lat + ", " + origin.lng
+    let requestUrl: string = this.rootApiUrl + "area?origin=["+ origin.lng + ", " + origin.lat
       + "]&radius=" + radius;
 
     return this.doGETResourcesRequest(requestUrl);
   }
 
-  addMarker(coordinates: GeoCoordinates, onSuccess: (value: MarkerForPost) => void, onError: (error: any) => void){
-    let marker: MarkerForPost = new MarkerForPost(coordinates.lat, coordinates.lng);
-    return this.httpClient.post<MarkerForPost>(this.rootApiUrl, marker, httpOptions).subscribe(onSuccess, onError);
+  addMarker(coordinates: GeoCoordinates, onSuccess: (value: Coordinates) => void, onError: (error: any) => void){
+    let marker: Coordinates = new Coordinates(coordinates.lat, coordinates.lng);
+    console.log(marker);
+    return this.httpClient.post<Coordinates>(this.rootApiUrl, marker, httpOptions).subscribe(onSuccess, onError);
   }
 
   addComment(comment: MarkerComment){
@@ -116,7 +126,7 @@ interface GeoServiceResponse<T>{
   info: string;
 }
 
-class MarkerForPost{
+class Coordinates{
   lat: number;
   lng: number;
 

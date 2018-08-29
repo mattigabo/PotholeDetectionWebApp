@@ -21,9 +21,12 @@ export class MarkersPopupComponent extends MapAddict{
   country: string;
   region: string;
   county: string;
+  city: string;
   town: string;
   place: string;
   road: string;
+  suburb: string;
+  district: string;
 
   constructor(private restService : RestAdapterService,
               private distributionService : DistributionService) {
@@ -89,15 +92,19 @@ export class MarkersPopupComponent extends MapAddict{
         display: 'flex'
       });
 
-      this.restService.getLocationInfo(lat, lng).subscribe((address: OSMAddressNode) => {
+      this.restService.getLocationInfo(lat, lng)
+        .subscribe((address: OSMAddressNode) => {
 
-        this.country = address.country;
-        this.region = address.region;
-        this.county = address.county;
-        this.town = address.town;
-        this.place = address.place;
-        this.road = address.road;
-      });
+          this.country = address.country;
+          this.region = address.region;
+          this.county = address.county;
+          this.town = address.town;
+          this.place = address.place;
+          this.road = address.road;
+          this.city = address.city;
+          this.suburb = address.suburb;
+          this.district = address.district;
+        });
     }
   }
 

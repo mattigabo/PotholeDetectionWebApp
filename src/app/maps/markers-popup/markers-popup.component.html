@@ -1,38 +1,60 @@
 <div id="marker-popup" class="close-on-esc overlay">
-  <div id="marker-popup-header"><p><strong>Marker Information</strong></p>
-    <a id="marker-popup-close-button" class="close-button" (click)="fadeMarkerPopUp($event)">
-      <i class="fas fa-times-circle fa-xl"></i>
+  <div class="marker-popup--header">
+    <a id="marker-popup-close-button"
+       class="close-button"
+       (click)="fadeMarkerPopUp($event)">
+      <i class="fas fa-times-circle fa-1x"></i>
+    </a>
+    <a><strong>Marker</strong></a>
+    <a id="marker-popup--coordinates">
+      [{{latitude}} <strong>N</strong>, {{longitude}} <strong>E</strong>]
     </a>
   </div>
-  <div id="marker-popup-info">
-    <label id="marker-popup-label--coordinates">
-      <strong>Coordinates</strong>:
-      {{latitude}} <strong>N</strong>,
-      {{longitude}}<strong>E</strong>
-    </label>
-    <label id="marker-popup-label--country">
+  <div class="marker-popup--info">
+    <label id="marker-popup-label--country" class="primary">
       <strong>Country</strong>: {{country}}
     </label>
-    <label id="marker-popup-label--region">
+    <label id="marker-popup-label--region" class="primary">
       <strong>Region</strong>: {{region}}
     </label>
-    <label id="marker-popup-label--county">
+    <label id="marker-popup-label--county" class="primary">
       <strong>County</strong>: {{county}}
     </label>
-    <label id="marker-popup-label--town">
+    <label *ngIf="(town == undefined || town == 'null') && (city !=undefined || city == 'null')"
+           id="marker-popup-label--city" class="primary">
+      <strong>City</strong>: {{city}}
+    </label>
+    <label *ngIf="district != undefined && district != 'null'"
+           id="marker-popup-label--district" class="secondary">
+      <strong>District</strong>: {{district}}
+    </label>
+    <label *ngIf="suburb != undefined && suburb != 'null'"
+           id="marker-popup-label--suburb" class="secondary">
+      <strong>Suburb</strong>: {{suburb}}
+    </label>
+    <label *ngIf="town != undefined && town != 'null'"
+           id="marker-popup-label--town" class="primary">
       <strong>Town</strong>: {{town}}
     </label>
-    <label id="marker-popup-label--place">
+    <label *ngIf="place != undefined && place != 'null'"
+           id="marker-popup-label--place" class="secondary">
       <strong>Place</strong>: {{place}}
     </label>
-    <label id="marker-popup-label--road">
+    <label *ngIf="road != undefined && road != 'null'"
+           id="marker-popup-label--road" class="primary">
       <strong>Road</strong>: {{road}}
     </label>
   </div>
-  <textarea id="marker-popup-comment"
-            placeholder="Insert here your comment! (max.: 500 chars)"
-            maxlength="500" rows="10" cols="30"></textarea>
-  <a id="marker-popup-send-button" class="marker-send-button" (click)="addComment($event)">
-    <i class="fas fa-arrow-circle-right fa-2x"></i>
-  </a>
+  <div class="marker-popup--comment">
+      <textarea id="marker-popup-comment--text-area"
+                placeholder="Insert here your comment! (max.: 500 chars)"
+                maxlength="500" rows="10" cols="30"></textarea>
+  </div>
+  <div class="marker-popup--footer">
+    <a class="hidden"><strong></strong></a>
+    <a id="marker-popup-send-button" class="marker-send-button" (click)="addComment($event)">
+      <i class="fas fa-arrow-circle-right fa-2x"></i>
+    </a>
+  </div>
 </div>
+
