@@ -1,103 +1,196 @@
 @import "../maps.component.css";
 
+:host{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-content: space-around;
+  /*background-color: #818181;*/
+  z-index: 3;
+  pointer-events: none;
+}
+
 #marker-popup {
   flex-direction: column;
-  top: 15%;
-  left: 33%;
-  /*width: 33%;*/
-  /*height: 60%;*/
-  min-width: 400px;
-  min-height: 300px;
-  max-height: 70%;
-  max-width: 50%;
+  min-width: 25%;
+  min-height: 15%;
+  /*max-width: 480px;*/
+  /*max-height: 640px;*/
+  margin-top: auto;
+  margin-bottom: auto;
+  pointer-events: all;
+  padding: 10px;
+  justify-content: flex-start;
+  position: relative;
+  opacity: 0.90;
 }
 
-#marker-popup-form {
-  background-color: inherit;
-}
-
-#marker-popup-header {
+.marker-popup--header {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-#marker-popup-header > * {
-  margin: 1%;
+  border-bottom: solid 2px #818181;
+  padding: 5px 10px 10px 10px;
+  margin: 0 5px 5px;
 }
 
 #marker-popup-close-button {
   color: #818181;
+  cursor: pointer;
 }
 
 #marker-popup-close-button:hover {
   color: #f1f1f1;
 }
 
-#marker-popup-info {
+.marker-popup--info {
   display: flex;
   flex-direction: column;
   border: none;
   border-bottom: solid 2px #818181;
-  border-top: solid 2px #818181;
-  margin: 1%;
-  padding: 2%;
+  /*border-top: solid 2px #818181;*/
+  margin: 5px;
+  padding: 10px;
 }
 
-#marker-popup-comment {
+.marker-popup--info > * {
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
+.marker-popup--comment {
+  padding: 10px;
+  border-bottom: solid 2px #818181;
+  /*margin: 5px;*/
+}
+
+#marker-popup-comment--text-area {
   background: whitesmoke;
   color: #444444;
-  min-height: 100px;
+  width: 95%;
+  min-height: 30%;
+  max-width: 95%;
   resize: none;
-  margin: 2%;
+  margin: 5px;
 }
 
-#marker-popup-info > * {
-  padding-bottom: 5px;
-}
-#marker-popup-info > * > *{
-  padding-left: 10px;
+.marker-popup--footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+  margin: 5px 5px 0;
+  align-self: flex-end;
 }
 
 #marker-popup-send-button {
   position: relative;
   color: #818181;
-  margin: 2% 10% 5% 85%;
+  cursor: pointer;
 }
 
 #marker-popup-send-button:hover {
   color: #f1f1f1;
 }
 
-@media only screen and (max-width: 480px){
+@media (max-width: 480px){
   #marker-popup {
-    position: absolute;
-    z-index: 3;
+    margin-top: 0;
     left:0;
     top: 0;
-    width: 20%;
-    height: 120%;
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+    /*font-size: small;*/
+    opacity: 0.95;
+    justify-content: flex-start;
   }
 
-  #marker-popup-send-button {
-    margin: 0;
-    top: 4%;
-    left: 80%;
+  .marker-popup--header {
+    /*border: none;*/
+  }
+
+  .marker-popup--info {
+    /*border:none*/
+  }
+
+  .marker-popup--comment {
+    /*border:none;*/
+  }
+
+  .secondary {
+    display: none;
   }
 }
 
-/*@media only screen and (max-height: 480px){*/
-  /*#marker-popup {*/
-    /*position: absolute;*/
-    /*left: 0;*/
-    /*right: 0;*/
-    /*width: 100%;*/
-    /*height: 100%;*/
+@media (max-height: 480px) {
+  #marker-popup {
+    margin-top: 0;
+    left:0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /*min-width: 100%;*/
+    /*min-height: 100%;*/
+    /*font-size: small;*/
+    opacity: 0.95;
+    /*flex-direction: unset;*/
+    justify-content: flex-start;
+  }
+
+  .secondary {
+    display: none;
+  }
+
+  .marker-popup--header {
+    border: none;
+  }
+
+  .marker-popup--info {
+    flex-direction: row;
+    border:none
+  }
+
+  .marker-popup--comment {
+    /*border:none;*/
+  }
+
+  /*#marker-popup-comment--text-area {*/
+    /*background: whitesmoke;*/
+    /*color: #444444;*/
+    /*width: 40%;*/
+    /*min-height: 30%;*/
+    /*max-width: 40%;*/
+    /*resize: none;*/
+    /*margin: 5px;*/
+  /*}*/
+}
+
+/*@media (max-height: 640px){*/
+
+  /*.secondary {*/
+    /*display: none;*/
   /*}*/
 
-  /*#marker-popup-send-button {*/
-    /*margin: 0;*/
-    /*top: 4%;*/
-    /*left: 80%;*/
+  /*#marker-popup {*/
+    /*min-width: 50%;*/
+    /*min-height: 95%;*/
+    /*max-height: 95%;*/
+    /*height: 95%;*/
+    /*margin-top: 0;*/
+    /*font-size: small;*/
+    /*justify-content: flex-start;*/
+  /*}*/
+
+  /*.marker-popup-body {*/
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*justify-content: space-between;*/
   /*}*/
 /*}*/

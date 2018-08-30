@@ -14,6 +14,10 @@ export enum LAYER_NAME {
 
 export class MapsWrapper {
 
+  public static ACTION = {
+    CLEAR: "CLEAR",
+  };
+
   private _map : Leaflet.Map;
   private _index : number[] = [];
   private _layers : Leaflet.LayerGroup;
@@ -81,6 +85,12 @@ export class MapsWrapper {
 
   public layer (id: string) : Leaflet.FeatureGroup{
     return this.layers.getLayer(this.index[id]) as Leaflet.FeatureGroup;
+  }
+
+  public clearAll() {
+    this.layer(LAYER_NAME.AREA_SELECTED).clearLayers();
+    this.layer(LAYER_NAME.FETCHED).clearLayers();
+    this.layer(LAYER_NAME.USER_DEFINED).clearLayers();
   }
 }
 

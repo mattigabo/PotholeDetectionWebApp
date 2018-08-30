@@ -7,6 +7,7 @@ import {DistributionService, Entry} from "../../maps/distribution.service";
 import {CoordinatesService} from "../../maps/coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
 import {Marker} from "../../ontologies";
+import {marker} from "leaflet";
 
 @Component({
   selector: 'app-navigator',
@@ -26,41 +27,17 @@ export class NavigatorComponent extends MapAddict{
 
         super.init(entry.value);
 
-        $('#filter-by-place-send-button').on('click', function () {
-
-          let country = $('#filter-field--country').val(),
-            region = $('#filter-field--region').val(),
-            county = $('#filter-field--county').val(),
-            town = $('#filter-field--town').val(),
-            road = $('#filter-field--road').val();
-
-          let that = this;
-
-          _restService.getAllMarkers(country, region, county, town, road)
-            .subscribe(markers => that.addFetchedMarkersToMap(markers));
-        });
-
-        $('#filter-by-route-send-button').on('click', function () {
-          let origin = $('#filter-field--origin').val(),
-            destination = $('#filter-field--destination').val(),
-            radius = $('#filter-field--search-radius').val();
-
-          let that = this;
-
-          _restService.getPlaceCoordinates(origin)
-            .subscribe(ogc => {
-
-              _restService.getPlaceCoordinates(destination)
-                .subscribe(dgc => {
-
-                  _restService.getMarkerInThePath(ogc, dgc, radius)
-                    .subscribe(markers => that.addFetchedMarkersToMap(markers));
-                });
-            })
-        });
-
         console.log("Navigator Component Ready!");
       }
+    });
+
+    $('#filter-by-place-send-button').on('click', function () {
+
+
+    });
+
+    $('#filter-by-route-send-button').on('click', function () {
+
     });
 
   }
@@ -80,12 +57,22 @@ export class NavigatorComponent extends MapAddict{
     });
 
     $('#filters-nav').animate({
-      width:"toggle",
-      display: "none"
+      width:'toggle',
+      // display: 'none'
     }, 500, () => {
       $('#filters-button').fadeIn(100);
     });
   };
+
+  private toggle (el) {
+    if (el.css('display') === 'none') {
+      el.show(300, () => {
+        el.css({display:'flex'});
+      });
+    } else {
+      el.hide(300);
+    }
+  }
 
   displayPlaceFilters = (event) => {
     $('#filter-by-route-form').hide(300);
@@ -99,24 +86,35 @@ export class NavigatorComponent extends MapAddict{
     this.toggle($('#filter-by-route-form'))
   };
 
-
-
-  private toggle (el) {
-    if (el.css('display') === "none") {
-      el.show(300, () => {
-        el.css({display:"flex"});
-      });
-    } else {
-      el.hide(300);
-    }
-  }
-
-  private addFetchedMarkersToMap(markers: Marker[]) {
-    this._fetched.clearLayers();
+  private fetchMarkers = (markers: Marker[]) => {
+    this._distService.submit(
+      new Entry<string, MapsWrapper>(MapsWrapper.ACTION.CLEAR, this._wrapper)
+    );
     markers
       .map(m => m.coordinates)
       .map(c => Leaflet.marker([c.lat, c.lng]))
       .forEach(m => this._fetched.addLayer(m));
-  }
+  };
+
+  onClickFetchMarkersByPlace = ($event) => {
+    let country = $('#filter-field--country').val(),
+      region = $('#filter-field--region').val(),
+      county = $('#filter-field--county').val(),
+      town = $('#filter-field--town').val(),
+      road = $('#filter-field--road').val();
+
+    this._restService.getAllMarkers(country, region, county, town, road)
+      .subscribe(markers => this.fetchMarkers(markers));
+  };
+
+
+  onClickFetchMarkersByRoute = ($event) => {
+    let origin = $('#filter-field--origin').val(),
+      destination = $('#filter-field--destination').val(),
+      radius = $('#filter-field--search-radius').val();
+
+    this._restService.getMarkerOnRouteByPlace(origin, destination, radius)
+      .subscribe(markers => this.fetchMarkers(markers));
+  };
 
 }

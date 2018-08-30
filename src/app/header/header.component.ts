@@ -54,16 +54,20 @@ export class HeaderComponent extends MapAddict {
 
     $('#filters-button').fadeOut(100, function () {
       $('#filters-nav').animate({
-        width:"toggle",
-        display:"flex"
+        width:'toggle',
+        display:'flex'
       }, 500, () => {
 
         let nav_header = $('#filters-nav--header');
 
-        nav_header.show(() => {nav_header.css({display: "flex"})});
+        nav_header.show(500, () => {
+          nav_header.css({display: 'flex'});
+        });
 
         $('.filters-nav--entry').each(function (idx, obj) {
-          $(obj).show(() => {$(obj).css({display: "flex"})});
+          $(obj).show(500, () => {
+            $(obj).css({display: 'flex'})
+          });
         });
       });
     });

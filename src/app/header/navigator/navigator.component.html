@@ -1,5 +1,5 @@
 <div id="filters-nav" class="nav close-on-esc">
-  <div id="filters-nav--header">
+  <div id="filters-nav--header" class="close-on-esc">
     <a class="hidden"><strong></strong></a>
     <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
       <i class="fas fa-arrow-left fa-2x"></i>
@@ -20,7 +20,9 @@
         </div>
         <div id="filter-by-place-send-button" class="filters-nav-form--buttons">
           <a class="hidden"><strong></strong></a>
-          <a id="filter-by-place-send--button" class="filters-nav-form--send-button">
+          <a id="filter-by-place-send--button"
+             class="filters-nav-form--send-button"
+             (click)="onClickFetchMarkersByPlace($event)">
             <i class="fas fa-arrow-circle-right fa-2x"></i>
           </a>
         </div>
@@ -39,7 +41,9 @@
         </div>
         <div id="filter-by-route--buttons" class="filters-nav-form--buttons">
           <a class="hidden"><strong></strong></a>
-          <a id="filter-by-route-send--button" class="filters-nav-form--send-button">
+          <a id="filter-by-route-send--button"
+             class="filters-nav-form--send-button"
+             (click)="onClickFetchMarkersByRoute($event)">
             <i class="fas fa-arrow-circle-right fa-2x"></i>
           </a>
         </div>

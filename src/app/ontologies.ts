@@ -9,9 +9,9 @@ export interface Marker {
   addressNode: OSMAddressNode;
 }
 
-export class GeoCoordinates{
-  lat: number;
+export class GeoCoordinates {
   lng: number;
+  lat: number;
   radius: number;
 
   constructor(lat:number, lng:number, radius?: number){
@@ -25,17 +25,22 @@ export class GeoCoordinates{
   }
 }
 
-export interface OSMAddressNode{
-  houseNumber: string;
-  road: string;
-  neighbourhood: string;
-  town: string;
-  county: string;
-  region: string;
-  postcode: string;
-  country: string;
-  countryCode: string;
-  place: string;
+export interface OSMAddressNode {
+
+  country:string;
+  countryCode:string;
+  region:string; // like "Emilia-Romagna"
+  county:string; // like "RN"
+  city:string;
+  district:string;
+  suburb:string;
+  town:string;
+  village:string;
+  neighbourhood:string;
+  place:string; // address29
+  postcode:string;
+  road:string;
+  houseNumber:string;
 }
 
 export class MarkerComment {

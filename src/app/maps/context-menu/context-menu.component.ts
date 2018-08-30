@@ -32,8 +32,6 @@ export class ContextMenuComponent extends MapAddict {
     showRadius: true,
   };
 
-  private _isHeatmapDisplayed: boolean = false;
-
   constructor(private restService: RestAdapterService,
               private toasterService: ToasterService,
               private coordinatesService: CoordinatesService,
@@ -128,9 +126,11 @@ export class ContextMenuComponent extends MapAddict {
 
     this.coordinatesService.coordinates = event.latlng;
 
+    let isMobile : boolean = window.matchMedia("(max-width: 480px)").matches;
+
     let
-      top = (event.containerPoint.y + 10),
-      left = (event.containerPoint.x + 10),
+      top = isMobile ? 0 : (event.containerPoint.y + 10),
+      left = isMobile ? 0 : (event.containerPoint.x + 10),
       contextMenu = $('.context-menu')
     ;
 
@@ -141,20 +141,21 @@ export class ContextMenuComponent extends MapAddict {
       left: left.toString() + "px"
     });
 
-    if (left + contextMenu.width() > $(window).width()) {
-      left -= (contextMenu.width() + 20);
-      contextMenu.css({
-        left: left.toString() + "px"
-      });
-    }
+    if (!isMobile) {
+      if (left + contextMenu.width() > $(window).width()) {
+        left -= (contextMenu.width() + 20);
+        contextMenu.css({
+          left: left.toString() + "px"
+        });
+      }
 
-    if (top + contextMenu.height() > $(window).height()) {
-      top -= (contextMenu.height() + 20);
-      contextMenu.css({
-        top: top.toString() + "px"
-      });
+      if (top + contextMenu.height() > $(window).height()) {
+        top -= (contextMenu.height() + 20);
+        contextMenu.css({
+          top: top.toString() + "px"
+        });
+      }
     }
-
   };
 
   addMarker(event : Event) {
@@ -238,20 +239,18 @@ export class ContextMenuComponent extends MapAddict {
       $(obj).toggle(300);
     });
 
+    this.hideAllMarkers();
+    // this._heatmap.setData({max: 1, data:data});
+  }
 
-    if (this._isHeatmapDisplayed) {
+  displayMarkers(event) {
+    ContextMenuComponent.hideContextMenu(event);
 
-      this._isHeatmapDisplayed = false;
+    $('.toggle').each((idx, obj) => {
+      $(obj).toggle(300);
+    });
 
-      this.showAllMarkers();
-    } else {
-
-      this._isHeatmapDisplayed = true;
-
-      this.hideAllMarkers();
-      // this._heatmap.setData({max: 1, data:data});
-
-    }
+    this.showAllMarkers();
   }
 
   private static showRetrieveArea(event?) {

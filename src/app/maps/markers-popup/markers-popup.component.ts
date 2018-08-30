@@ -25,9 +25,12 @@ export class MarkersPopupComponent extends MapAddict{
   country: string;
   region: string;
   county: string;
+  city: string;
   town: string;
   place: string;
   road: string;
+  suburb: string;
+  district: string;
 
   constructor(private restService : RestAdapterService,
               private distributionService : DistributionService,
@@ -108,6 +111,10 @@ export class MarkersPopupComponent extends MapAddict{
         this.town = marker.addressNode.town;
         this.place = marker.addressNode.place;
         this.road = marker.addressNode.road;
+
+        this.city = marker.addressNode.city;
+        this.suburb = marker.addressNode.suburb;
+        this.district = marker.addressNode.district;
       });
     }
   }
