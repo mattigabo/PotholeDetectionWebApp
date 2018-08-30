@@ -1,23 +1,36 @@
 import { Component} from '@angular/core';
 import * as $ from 'jquery';
 import * as Leaflet from 'leaflet';
-import {RestAdapterService} from "../../rest-adapter.service";
+import {RestAdapterService} from "../../services/rest/rest-adapter.service";
 import {MapsWrapper} from "../../maps/maps.wrapper";
-import {DistributionService, Entry} from "../../maps/distribution.service";
-import {CoordinatesService} from "../../maps/coordinates/coordinates.service";
+import {DistributionService, Entry} from "../../services/distribution/distribution.service";
+import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
 import {Marker} from "../../ontologies";
 import {marker} from "leaflet";
+import {WindowService} from "../../services/window/window.service";
+import {ToasterService} from "angular2-toaster";
 
 @Component({
   selector: 'app-navigator',
   templateUrl: './navigator.component.html',
   styleUrls: ['./navigator.component.css']
 })
-export class NavigatorComponent extends MapAddict{
+export class NavigatorComponent extends MapAddict {
+
+  observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => this._toaster.pop({
+      type:"info",
+      title: mutation.toString()
+    }));
+  });
+
+  private _focused_input;
 
   constructor(private _restService : RestAdapterService,
-              private _distService: DistributionService) {
+              private _distService: DistributionService,
+              private _toaster: ToasterService,
+              private _windower: WindowService) {
 
     super();
 
@@ -26,25 +39,67 @@ export class NavigatorComponent extends MapAddict{
         entry.value instanceof MapsWrapper) {
 
         super.init(entry.value);
-
+        console.log(_windower.height, _windower.width);
         console.log("Navigator Component Ready!");
       }
     });
-
-    $('#filter-by-place-send-button').on('click', function () {
-
-
-    });
-
-    $('#filter-by-route-send-button').on('click', function () {
-
-    });
-
   }
 
   ngOnInit() {
 
   }
+
+  ngAfterViewInit() {
+
+    let node = document.querySelector('#osm-map') as Node;
+    this.observer.observe(node, {
+      attributes: true,
+      characterData: true
+    });
+  }
+
+  private _displayEntries = (keyEvent) => {
+    let key = keyEvent.key ? keyEvent.key.toUpperCase() : keyEvent.which;
+
+    if (key == "ENTER") {
+      this._focused_input.blur();
+    }
+  };
+
+  onInputFocus = (event) => {
+    console.log("Focus:", event);
+    if(window.matchMedia("(max-width:480px)").matches) {
+      let entry = $(event.target).parent().parent().parent().attr("id");
+
+      this._focused_input = $(event.target);
+
+      $(document).on('keyup', this._displayEntries);
+
+      $(window).on('popstate', () => {
+        alert("POP");
+      });
+
+      $('#filters-nav--header').hide();
+      if (entry === "filter-by-place") {
+        $('#filter-by-route').hide();
+      } else {
+        $('#filter-by-place').hide();
+      }
+    }
+  };
+
+  onInputBlur = (event) => {
+    console.log("Blur:", event);
+
+    if(window.matchMedia("(max-width:480px)").matches) {
+
+      $('#filters-nav--header').show();
+      $('#filter-by-route').show();
+      $('#filter-by-place').show();
+      $(document).off('keyup', this._displayEntries);
+      $(window).off('resize', this._displayEntries);
+    }
+  };
 
   closeFiltersNav = (clickEvent : Event) => {
 
@@ -52,9 +107,7 @@ export class NavigatorComponent extends MapAddict{
 
     $('#filters-nav--header').hide();
 
-    $('.filters-nav--entry').each((idx, obj) => {
-      $(obj).hide();
-    });
+    $('#filters-nav--entries').hide();
 
     $('#filters-nav').animate({
       width:'toggle',
@@ -66,11 +119,10 @@ export class NavigatorComponent extends MapAddict{
 
   private toggle (el) {
     if (el.css('display') === 'none') {
-      el.show(300, () => {
-        el.css({display:'flex'});
-      });
+      el.css({display:'flex'}).hide().show(300);
     } else {
       el.hide(300);
+      el.removeClass("active");
     }
   }
 

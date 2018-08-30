@@ -1,5 +1,5 @@
 import * as Leaflet from 'leaflet';
-import {DistributionService, Entry} from "./distribution.service";
+import {DistributionService, Entry} from "../services/distribution/distribution.service";
 
 export enum LAYER_NAME {
   OSM = "osm-map",
@@ -37,7 +37,6 @@ export class MapsWrapper {
             '&copy; <a href="https://www.mapbox.com/">Mapbox</a> | ' +
             '<a href="https://www.linkedin.com/in/alessandro-cevoli/">Xander</a>&' +
             '<a href="https://www.linkedin.com/in/matteogabellini/">Gabe</a>',
-          maxZoom: 20,
           minZoom: 5,
           id: 'mapbox.streets',
           accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'

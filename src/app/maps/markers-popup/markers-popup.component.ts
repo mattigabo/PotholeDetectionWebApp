@@ -1,9 +1,9 @@
 import {Component, SecurityContext} from '@angular/core';
 import * as $ from 'jquery';
-import {RestAdapterService} from "../../rest-adapter.service";
+import {RestAdapterService} from "../../services/rest/rest-adapter.service";
 import {MapsWrapper} from "../maps.wrapper";
-import {DistributionService, Entry} from "../distribution.service";
-import {CoordinatesService} from "../coordinates/coordinates.service";
+import {DistributionService, Entry} from "../../services/distribution/distribution.service";
+import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
 import {GeoCoordinates, Marker, MarkerComment} from "../../ontologies";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -67,10 +67,6 @@ export class MarkersPopupComponent extends MapAddict{
     // ToDo
   }
 
-  fadeMarkerPopUp = (click: Event) => {
-    $('#marker-popup').fadeOut(300);
-  };
-
   addComment = (click: Event) => {
     this.sanitizer.sanitize(SecurityContext.HTML, this.commentText);
     var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText)
@@ -96,13 +92,21 @@ export class MarkersPopupComponent extends MapAddict{
       this.longitude = lng;
 
       let marker_popup = $('#marker-popup');
-      marker_popup.fadeIn(300);
-      marker_popup.css({
-        display: 'flex'
-      });
 
-      let markerCoodinates: GeoCoordinates = new GeoCoordinates(lat, lng);
-      this.restService.getMarkerAt(markerCoodinates).subscribe((marker: Marker) => {
+      if (!window.matchMedia("(max-width: 480px)").matches) {
+        marker_popup.css({display: 'flex'}).hide().fadeIn(300);
+      } else {
+        marker_popup.css({display: 'flex'}).hide().animate({
+          height:"toggle",
+        },500, () => {
+          $('.marker-popup-entry').each((idx, obj) => {
+            $(obj).css({display: 'flex'});
+          })
+        });
+      }
+
+      let markerCoordinates: GeoCoordinates = new GeoCoordinates(lat, lng);
+      this.restService.getMarkerAt(markerCoordinates).subscribe((marker: Marker) => {
 
         this.markerId = marker.id;
         this.country = marker.addressNode.country;
@@ -117,7 +121,32 @@ export class MarkersPopupComponent extends MapAddict{
         this.district = marker.addressNode.district;
       });
     }
-  }
+  };
+
+  hideMarkerPopup = (click: Event) => {
+    let marker_popup = $('#marker-popup');
+
+    if (!window.matchMedia("(max-width: 480px)").matches) {
+      marker_popup.fadeOut(300);
+    } else {
+      $('.marker-popup-entry').each((idx, obj) => {
+        $(obj).css({display: 'none'});
+      });
+      marker_popup.animate({height:"toggle",},500);
+    }
+  };
+
+  onFocusHideMarkerPopup = (event) => {
+    if(!window.matchMedia("(max-width:480px)")){
+      $("#marker-popup").css();
+    }
+  };
+
+  onBlurBringBackMarkerPopup = ($event) => {
+    if(!window.matchMedia("(max-width:480px)")){
+      $("#marker-popup-comment--text-area").focus();
+    }
+  };
 
   private sendComment(comment: MarkerComment){
 

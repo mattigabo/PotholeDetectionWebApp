@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import * as Leaflet from 'leaflet';
-import {RestAdapterService} from "../rest-adapter.service";
+import {RestAdapterService} from "../services/rest/rest-adapter.service";
 import {Marker} from "../ontologies";
 
 import {MapsWrapper} from "./maps.wrapper";
-import {DistributionService} from "./distribution.service";
+import {DistributionService} from "../services/distribution/distribution.service";
 import {MapAddict} from "../map-addict";
 
 @Component({

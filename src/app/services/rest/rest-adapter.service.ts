@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "./ontologies";
+import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "../../ontologies";
 import {Observable , throwError} from "rxjs/index";
 import { map , catchError } from 'rxjs/operators'
 import {tap} from "rxjs/internal/operators";

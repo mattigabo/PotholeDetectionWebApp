@@ -3,11 +3,11 @@ import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
 import * as $ from "jquery";
 import * as Leaflet from 'leaflet';
 import 'leaflet-draw';
-import {RestAdapterService} from "../../rest-adapter.service";
+import {RestAdapterService} from "../../services/rest/rest-adapter.service";
 import {Toast, ToasterService} from "angular2-toaster";
 import {GeoCoordinates} from "../../ontologies";
-import {CoordinatesService} from "../coordinates/coordinates.service";
-import {DistributionService, Entry} from "../distribution.service";
+import {CoordinatesService} from "../../services/coordinates/coordinates.service";
+import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {MapAddict} from "../../map-addict";
 
 @Component({
@@ -126,22 +126,20 @@ export class ContextMenuComponent extends MapAddict {
 
     this.coordinatesService.coordinates = event.latlng;
 
-    let isMobile : boolean = window.matchMedia("(max-width: 480px)").matches;
+    let contextMenu = $('.context-menu');
 
-    let
-      top = isMobile ? 0 : (event.containerPoint.y + 10),
-      left = isMobile ? 0 : (event.containerPoint.x + 10),
-      contextMenu = $('.context-menu')
-    ;
+    if (!window.matchMedia("(max-width: 480px)").matches) {
 
-    contextMenu.css({
-      display: "grid",
-      transaction: 0.5,
-      top: top.toString() + "px",
-      left: left.toString() + "px"
-    });
+      let
+        top = (event.containerPoint.y + 10),
+        left = (event.containerPoint.x + 10);
 
-    if (!isMobile) {
+      contextMenu.css({
+        display: "grid",
+        top: top.toString() + "px",
+        left: left.toString() + "px"
+      });
+
       if (left + contextMenu.width() > $(window).width()) {
         left -= (contextMenu.width() + 20);
         contextMenu.css({
@@ -155,6 +153,24 @@ export class ContextMenuComponent extends MapAddict {
           top: top.toString() + "px"
         });
       }
+    } else {
+
+      contextMenu.animate({
+        height:'toggle'
+      }, 500, () => {
+        contextMenu.css({display:"grid"});
+        $('.col').each((idx, obj) => {$(obj).css({display:"flex"})});
+      });
+
+    }
+  };
+
+  public static hideContextMenu (event) {
+    if (!window.matchMedia("(max-width: 480px)").matches) {
+      $('.context-menu').each((idx, obj) => $(obj).css({display: "none"}));
+    } else {
+      $('.context-menu').each((idx, obj) => $(obj).animate({height:'toggle'}, 500));
+      $('.col').each((idx, obj) => {$(obj).css({display:"none"})});
     }
   };
 
@@ -305,10 +321,6 @@ export class ContextMenuComponent extends MapAddict {
   private static hideRetrieveArea(event?) {
     $('#area-retrieve-icon').hide();
     $('#area-retrieve-item').hide();
-  };
-
-  public static hideContextMenu (event) {
-    $('.context-menu').each((idx, obj) => $(obj).fadeOut(100));
   };
 
   private static _addMarker(coordinates, restService: RestAdapterService, toasterService: ToasterService){

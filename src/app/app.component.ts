@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
 import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
+import {WindowService} from "./services/window/window.service";
 
 @Component({
   selector: 'app-root',
@@ -17,24 +18,35 @@ export class AppComponent implements OnInit {
     showCloseButton: true
   });
 
-  constructor(private toaster: ToasterService) {
+  constructor(private toaster: ToasterService,
+              private windower: WindowService) {
   }
 
   ngOnInit(): void {
-      $(document).on('keyup', (keyEvent) => {
+
+    if(/Android/.test(navigator.appVersion)) {
+      window.addEventListener("resize", function() {
+        if(document.activeElement.tagName=="INPUT"
+          || document.activeElement.tagName=="TEXTAREA") {
+          document.activeElement.scrollIntoView(true);
+        }
+      })
+    }
+
+    this.windower.setWindowMaxDimensions($(window).height(), $(window).width());
+
+    $(document).on('keyup', (keyEvent) => {
+
         let key = keyEvent.key ? keyEvent.key.toUpperCase() : keyEvent.which;
 
         if (key === "ESCAPE") {
           $('.close-on-esc').each(function (idx, obj) {
-            $(obj).css({
-              display:'none'
-            })
+            console.log(obj);
+            $(obj).hide();
           });
 
           $('.open-on-esc').each(function (idx, obj) {
-            $(obj).css({
-              display:'flex'
-            })
+            $(obj).show();
           });
         }
       });

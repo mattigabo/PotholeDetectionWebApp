@@ -3,8 +3,8 @@ import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
 import * as Leaflet from 'leaflet';
 import * as $ from 'jquery';
 import {Toast, ToasterService} from "angular2-toaster";
-import {DistributionService, Entry} from "../distribution.service";
-import {CoordinatesService} from "./coordinates.service";
+import {DistributionService, Entry} from "../../services/distribution/distribution.service";
+import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
 import {instantiationError} from "@angular/core/src/di/reflective_errors";
 

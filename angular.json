@@ -26,7 +26,8 @@
               "src/styles.css"
             ],
             "scripts": [
-              "./node_modules/jquery/dist/jquery.js"
+              "./node_modules/jquery/dist/jquery.js",
+              "./node_modules/jquery-backdetect/jquery.backDetect.js"
             ]
           },
           "configurations": {
@@ -56,7 +57,7 @@
             "ssl":true,
             "sslKey":"../ssl/server.key",
             "sslCert":"../ssl/server.crt",
-            "host": "192.168.0.10",
+            "host": "192.168.1.11",
             "port":8443
           },
           "configurations": {

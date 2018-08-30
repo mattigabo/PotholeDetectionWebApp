@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import * as $ from 'jquery';
 import * as Leaflet from 'leaflet';
-import {RestAdapterService} from "../rest-adapter.service";
+import {RestAdapterService} from "../services/rest/rest-adapter.service";
 import {MapsWrapper} from "../maps/maps.wrapper";
-import {DistributionService, Entry} from "../maps/distribution.service";
-import {CoordinatesService} from "../maps/coordinates/coordinates.service";
+import {DistributionService, Entry} from "../services/distribution/distribution.service";
+import {CoordinatesService} from "../services/coordinates/coordinates.service";
 import {MapAddict} from "../map-addict";
 
 @Component({
@@ -52,23 +52,16 @@ export class HeaderComponent extends MapAddict {
 
     this.distributionService.submit(new Entry(CoordinatesService.ACTIONS.HIDE_ALL, true));
 
-    $('#filters-button').fadeOut(100, function () {
+    $('#filters-button').fadeOut(100, () => {
       $('#filters-nav').animate({
-        width:'toggle',
-        display:'flex'
+        width:'toggle'
       }, 500, () => {
 
-        let nav_header = $('#filters-nav--header');
+        $('#filters-nav').css({display:'flex'});
 
-        nav_header.show(500, () => {
-          nav_header.css({display: 'flex'});
-        });
+        $('#filters-nav--header').css({display: 'flex'});
 
-        $('.filters-nav--entry').each(function (idx, obj) {
-          $(obj).show(500, () => {
-            $(obj).css({display: 'flex'})
-          });
-        });
+        $('#filters-nav--entries').css({display: 'flex'});
       });
     });
   };

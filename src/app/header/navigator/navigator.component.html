@@ -5,18 +5,23 @@
       <i class="fas fa-arrow-left fa-2x"></i>
     </a>
   </div>
-  <div class="filters-nav--entries">
+  <div id="filters-nav--entries" class="close-on-esc">
     <div id="filter-by-place" class="filters-nav--entry">
-      <div id="filter-by-place-form--header" class="filters-nav-form--header">
-        <a style="color: #f1f1f1" (click)="displayPlaceFilters($event)"><strong>Filters potholes by place</strong></a>
+      <div id="filter-by-place-form--header" class="filters-nav-form--header inactive">
+        <a (click)="displayPlaceFilters($event)"><strong>Filters potholes by place</strong></a>
       </div>
-      <div id="filter-by-place-form" class="filters-nav-form">
+      <div id="filter-by-place-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-place-fields" class="filters-nav--fields">
-          <input id="filter-field--country" placeholder="Country (optional)" value="">
-          <input id="filter-field--region" placeholder="Region (optional)" value="">
-          <input id="filter-field--county" placeholder="County (optional)" value="">
-          <input id="filter-field--town" placeholder="Town (optional)" value="">
-          <input id="filter-field--road" placeholder="Road (optional)" value="">
+          <input id="filter-field--country" type="text" placeholder="Country (optional)" value=""
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input id="filter-field--region" type="text" placeholder="Region (optional)" value=""
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input id="filter-field--county" type="text" placeholder="County (optional)" value=""
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input id="filter-field--town" type="text" placeholder="Town (optional)" value=""
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input id="filter-field--road" type="text" placeholder="Road (optional)" value=""
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
         </div>
         <div id="filter-by-place-send-button" class="filters-nav-form--buttons">
           <a class="hidden"><strong></strong></a>
@@ -30,14 +35,17 @@
     </div>
 
     <div id="filter-by-route" class="filters-nav--entry">
-      <div id="filter-by-route-form--header" class="filters-nav-form--header">
-        <a style="color: #f1f1f1;" (click)="displayRouteFilters($event)"> <strong>Filters potholes by route</strong></a>
+      <div id="filter-by-route-form--header" class="filters-nav-form--header inactive">
+        <a (click)="displayRouteFilters($event)"> <strong>Filters potholes by route</strong></a>
       </div>
-      <div id="filter-by-route-form" class="filters-nav-form">
+      <div id="filter-by-route-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-route--fields" class="filters-nav--fields">
-          <input id="filter-field--origin" placeholder="Origin">
-          <input id="filter-field--destination" placeholder="Destination">
-          <input id="filter-field--search-radius" placeholder="Search Radius (default: 100m)">
+          <input id="filter-field--origin" type="text" placeholder="Origin"
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input id="filter-field--destination" type="text" placeholder="Destination"
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input id="filter-field--search-radius" type="text" placeholder="Search Radius (default: 100m)"
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
         </div>
         <div id="filter-by-route--buttons" class="filters-nav-form--buttons">
           <a class="hidden"><strong></strong></a>
