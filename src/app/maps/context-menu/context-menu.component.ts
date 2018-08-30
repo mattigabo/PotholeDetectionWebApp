@@ -202,8 +202,10 @@ export class ContextMenuComponent extends MapAddict {
       });
 
     $('#area-retrieve-icon').hide();
-
     $('#area-retrieve-item').hide();
+
+    this.hideAllMarkers();
+    this.showAreaSelectedMarkers();
 
     this.clearSelection(event);
   }
@@ -241,54 +243,12 @@ export class ContextMenuComponent extends MapAddict {
 
       this._isHeatmapDisplayed = false;
 
-      this._layers.addLayer(this._user_defined);
-      this._layers.addLayer(this._area_selected);
-      this._layers.addLayer(this._fetched);
-
-      this._index[LAYER_NAME.AREA_SELECTED] = this._layers.getLayerId(this._area_selected);
-      this._index[LAYER_NAME.FETCHED] = this._layers.getLayerId(this._fetched);
-      this._index[LAYER_NAME.USER_DEFINED] = this._layers.getLayerId(this._user_defined);
-
+      this.showAllMarkers();
     } else {
 
       this._isHeatmapDisplayed = true;
 
-      let data : {lat:number , lng:number, count:number}[] = [];
-
-      this._user_defined.eachLayer(layer => {
-        if (layer instanceof Leaflet.Marker) {
-          data.push({
-            lat: layer.getLatLng().lat,
-            lng: layer.getLatLng().lng,
-            count: 1
-          });
-        }
-      });
-
-      this._fetched.eachLayer(layer => {
-        if (layer instanceof Leaflet.Marker) {
-          data.push({
-            lat: layer.getLatLng().lat,
-            lng: layer.getLatLng().lng,
-            count: 1
-          });
-        }
-      });
-
-      this._area_selected.eachLayer(layer => {
-        if (layer instanceof Leaflet.Marker) {
-          data.push({
-            lat: layer.getLatLng().lat,
-            lng: layer.getLatLng().lng,
-            count: 1
-          });
-        }
-      });
-
-      this._layers.removeLayer(this._user_defined);
-      this._layers.removeLayer(this._area_selected);
-      this._layers.removeLayer(this._fetched);
-
+      this.hideAllMarkers();
       // this._heatmap.setData({max: 1, data:data});
 
     }
@@ -343,4 +303,89 @@ export class ContextMenuComponent extends MapAddict {
       err => toasterService.pop(errorToast),
     );
   }
+
+
+  private showAllMarkers(){
+    this.showUserDefinedMarkers();
+    this.showAreaSelectedMarkers();
+    this.showFetchedMarkers();
+  }
+
+  private showUserDefinedMarkers(){
+    this._layers.addLayer(this._user_defined);
+    this._index[LAYER_NAME.USER_DEFINED] = this._layers.getLayerId(this._user_defined);
+  }
+
+  private showAreaSelectedMarkers(){
+    this._layers.addLayer(this._area_selected);
+    this._index[LAYER_NAME.AREA_SELECTED] = this._layers.getLayerId(this._area_selected);
+  }
+
+  private showFetchedMarkers(){
+    this._layers.addLayer(this._fetched);
+    this._index[LAYER_NAME.FETCHED] = this._layers.getLayerId(this._fetched);
+  }
+
+  private hideAllMarkers(){
+    let data : {lat:number , lng:number, count:number}[] = [];
+
+    this.hideUserDifinedMarkers().forEach(X => data.push(X));
+    this.hideFetchedMarkers().forEach(X=> data.push(X));
+    this.hideAreaSelectedMarkers().forEach(X => data.push(X));
+  }
+
+  private hideUserDifinedMarkers():  {lat:number , lng:number, count:number}[]{
+    let result : {lat:number , lng:number, count:number}[] = [];
+
+    this._user_defined.eachLayer(layer => {
+      if (layer instanceof Leaflet.Marker) {
+        result.push({
+          lat: layer.getLatLng().lat,
+          lng: layer.getLatLng().lng,
+          count: 1
+        });
+      }
+    });
+
+    this._layers.removeLayer(this._user_defined);
+
+    return result;
+  }
+
+  private hideFetchedMarkers(): {lat:number , lng:number, count:number}[]{
+    let result : {lat:number , lng:number, count:number}[] = [];
+
+    this._fetched.eachLayer(layer => {
+      if (layer instanceof Leaflet.Marker) {
+        result.push({
+          lat: layer.getLatLng().lat,
+          lng: layer.getLatLng().lng,
+          count: 1
+        });
+      }
+    });
+
+    this._layers.removeLayer(this._fetched);
+
+    return result;
+  }
+
+  private hideAreaSelectedMarkers(): {lat:number , lng:number, count:number}[]{
+    let result : {lat:number , lng:number, count:number}[] = [];
+
+    this._area_selected.eachLayer(layer => {
+      if (layer instanceof Leaflet.Marker) {
+        result.push({
+          lat: layer.getLatLng().lat,
+          lng: layer.getLatLng().lng,
+          count: 1
+        });
+      }
+    });
+
+    this._layers.removeLayer(this._area_selected);
+
+    return result;
+  }
+
 }
