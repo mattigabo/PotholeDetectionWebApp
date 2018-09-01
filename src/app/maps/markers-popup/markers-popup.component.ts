@@ -5,7 +5,7 @@ import {MapsWrapper} from "../maps.wrapper";
 import {DistributionService, Entry} from "../distribution.service";
 import {CoordinatesService} from "../coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
-import {GeoCoordinates, Marker, MarkerComment} from "../../ontologies";
+import {GeoCoordinates, Marker, MarkerComment} from "../../ontologies/DataStructures";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Toast, ToasterService} from "angular2-toaster";
 

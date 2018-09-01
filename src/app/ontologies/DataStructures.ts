@@ -46,15 +46,16 @@ export interface OSMAddressNode {
 export class MarkerComment {
   markerId: number;
   text: string;
-  date: number;
+  posting_date: number;
 
   constructor(markerId:number, text: string, date?: number){
     this.markerId = markerId;
     this.text = text;
     if(date != undefined){
-      this.date = date;
+      this.posting_date = date;
     } else {
-      this.date = Date.now();
+      this.posting_date = Date.now();
     }
   }
 }
+

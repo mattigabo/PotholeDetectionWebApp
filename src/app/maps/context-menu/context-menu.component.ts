@@ -5,7 +5,7 @@ import * as Leaflet from 'leaflet';
 import 'leaflet-draw';
 import {RestAdapterService} from "../../rest-adapter.service";
 import {Toast, ToasterService} from "angular2-toaster";
-import {GeoCoordinates} from "../../ontologies";
+import {GeoCoordinates} from "../../ontologies/DataStructures";
 import {CoordinatesService} from "../coordinates/coordinates.service";
 import {DistributionService, Entry} from "../distribution.service";
 import {MapAddict} from "../../map-addict";
