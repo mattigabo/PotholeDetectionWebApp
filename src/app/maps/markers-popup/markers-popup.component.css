@@ -15,17 +15,16 @@
 }
 
 #marker-popup {
+  position: relative;
   flex-direction: column;
-  min-width: 25%;
-  min-height: 15%;
-  /*max-width: 480px;*/
-  /*max-height: 640px;*/
+  min-width: 480px;
+  min-height: 480px;
+  width: 25%;
   margin-top: auto;
   margin-bottom: auto;
   pointer-events: all;
   padding: 10px;
   justify-content: flex-start;
-  position: relative;
   opacity: 0.90;
 }
 
@@ -71,7 +70,7 @@
   /*margin: 5px;*/
 }
 
-#marker-popup-comment--text-area {
+.marker-popup-text {
   background: whitesmoke;
   color: #444444;
   width: 95%;
@@ -79,6 +78,8 @@
   max-width: 95%;
   resize: none;
   margin: 5px;
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-style: italic;
 }
 
 #marker-popup--footer {
@@ -99,20 +100,41 @@
   color: #f1f1f1;
 }
 
+.stub {
+  display: none;
+}
+
 @media (max-width: 480px){
+  :host{
+    position: unset;
+    left: unset;
+    top: unset;
+    width: unset;
+    height: unset;
+    display: unset;
+    justify-content: unset;
+    align-content: unset;
+    /*background-color: #818181;*/
+    z-index: unset;
+    pointer-events: unset;
+  }
+
   #marker-popup {
-    margin-top: 0;
+    position: fixed;
+    margin-top: unset;
+    margin-bottom: unset;
     left:0;
     top: 0;
     min-width: 0;
     min-height: 0;
-    max-width: unset;
-    max-height: unset;
+    max-width: 100%;
+    max-height: 100%;
     width: 100%;
     height: 100%;
     /*font-size: small;*/
     opacity: 0.95;
     justify-content: flex-start;
+    z-index: 3;
   }
 
   .marker-popup-entry {
@@ -123,55 +145,42 @@
     display: unset;
   }
 
-  #marker-popup-comment--text-area:focus {
-    position: absolute;
+  #marker-popup--footer {
+    padding: 25px;
+  }
+
+  .marker-popup-text {
+    width: 90%;
+    height: auto;
+  }
+
+  .stub {
+    display: none;
+    position: fixed;
     left: 0;
     top: 0;
+    padding: 15px;
     width: 100%;
-    height: auto;
-    display: block;
+    height: 100%;
+    background-color: #333333;
+    z-index: 3;
+  }
 
+  #text-stub {
+    margin-left: 0;
+    width: 90%;
+    height: 90%;
+    font-size: medium;
   }
 }
 
-/*@media (max-height: 480px) {*/
-  /*#marker-popup {*/
-    /*margin-top: 0;*/
-    /*left:0;*/
-    /*top: 0;*/
-    /*width: 100%;*/
-    /*height: 100%;*/
-    /*!*min-width: 100%;*!*/
-    /*!*min-height: 100%;*!*/
-    /*!*font-size: small;*!*/
-    /*opacity: 0.95;*/
-    /*!*flex-direction: unset;*!*/
-    /*justify-content: flex-start;*/
-  /*}*/
+@media (max-height: 480px) {
 
-  /*.secondary {*/
-    /*display: none;*/
-  /*}*/
+  .marker-popup-text {
+    height: auto;
+  }
 
-  /*.marker-popup--header {*/
-    /*border: none;*/
-  /*}*/
-
-  /*.marker-popup--info {*/
-    /*flex-direction: row;*/
-    /*border:none*/
-  /*}*/
-
-  /*.marker-popup--comment {*/
-    /*!*border:none;*!*/
-  /*}*/
-
-  /*#marker-popup-comment--text-area:focus {*/
-    /*position: absolute;*/
-    /*display: block;*/
-    /*left: 0;*/
-    /*top: 0;*/
-    /*width: 100%;*/
-    /*height: auto;*/
-  /*}*/
-/*}*/
+  #marker-popup {
+    height: auto;
+  }
+}

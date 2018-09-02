@@ -138,7 +138,7 @@ export class ContextMenuComponent extends MapAddict {
         display: "grid",
         top: top.toString() + "px",
         left: left.toString() + "px"
-      });
+      }).hide();
 
       if (left + contextMenu.width() > $(window).width()) {
         left -= (contextMenu.width() + 20);
@@ -153,12 +153,13 @@ export class ContextMenuComponent extends MapAddict {
           top: top.toString() + "px"
         });
       }
+
+      contextMenu.fadeIn(200);
     } else {
 
-      contextMenu.animate({
+      contextMenu.css({display:"grid"}).hide().animate({
         height:'toggle'
       }, 500, () => {
-        contextMenu.css({display:"grid"});
         $('.col').each((idx, obj) => {$(obj).css({display:"flex"})});
       });
 
@@ -167,10 +168,10 @@ export class ContextMenuComponent extends MapAddict {
 
   public static hideContextMenu (event) {
     if (!window.matchMedia("(max-width: 480px)").matches) {
-      $('.context-menu').each((idx, obj) => $(obj).css({display: "none"}));
+      $('.context-menu').each((idx, obj) => $(obj).hide());
     } else {
       $('.context-menu').each((idx, obj) => $(obj).animate({height:'toggle'}, 500));
-      $('.col').each((idx, obj) => {$(obj).css({display:"none"})});
+      $('.col').each((idx, obj) => {$(obj).hide()});
     }
   };
 

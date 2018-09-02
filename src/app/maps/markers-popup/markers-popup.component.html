@@ -46,14 +46,13 @@
     </label>
   </div>
   <div id="marker-popup--comment" class="marker-popup-entry">
-      <textarea id="marker-popup-comment--text-area"
+      <textarea id="marker-popup-comment--text"
+                class="marker-popup-text"
                 placeholder="Insert here your comment! (max.: 500 chars)"
                 maxlength="500" rows="10" cols="30"
-                contenteditable="true"
                 readonly
                 (input)="commentText = $event.target.value"
-                (focus)="onFocusHideMarkerPopup($event)"
-                (blur)="onBlurBringBackMarkerPopup($event)"></textarea>
+                (focus)="onFocusHideMarkerPopup($event)"></textarea>
   </div>
   <div id="marker-popup--footer" class="marker-popup-entry">
     <a class="hidden"><strong></strong></a>
@@ -61,4 +60,14 @@
       <i class="fas fa-arrow-circle-right fa-2x"></i>
     </a>
   </div>
+</div>
+
+<div id="comment-stub" class="stub close-on-esc" hidden>
+  <textarea id="text-stub"
+            class="marker-popup-text"
+            placeholder="Insert here your comment! (max.: 500 chars)"
+            maxlength="500" rows="10" cols="30"
+            (input)="commentText = $event.target.value"
+            (blur)="onBlurDisplayMarkerPopup($event)"></textarea>
+
 </div>

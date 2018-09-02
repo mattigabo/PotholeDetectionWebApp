@@ -8,6 +8,7 @@ import {MapAddict} from "../../map-addict";
 import {GeoCoordinates, Marker, MarkerComment} from "../../ontologies";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Toast, ToasterService} from "angular2-toaster";
+import {WindowService} from "../../services/window/window.service";
 
 @Component({
   selector: 'app-markers-popup',
@@ -32,14 +33,15 @@ export class MarkersPopupComponent extends MapAddict{
   suburb: string;
   district: string;
 
-  constructor(private restService : RestAdapterService,
-              private distributionService : DistributionService,
-              private sanitizer: DomSanitizer,
-              private toasterService: ToasterService) {
+  constructor(private _restService : RestAdapterService,
+              private _distributionService : DistributionService,
+              private _sanitizer: DomSanitizer,
+              private _toasterService: ToasterService,
+              private _windower: WindowService) {
 
     super();
 
-    distributionService.subscribe(entry => {
+    _distributionService.subscribe(entry => {
       if (entry.key === MapsWrapper.name &&
           entry.value instanceof MapsWrapper) {
 
@@ -68,7 +70,7 @@ export class MarkersPopupComponent extends MapAddict{
   }
 
   addComment = (click: Event) => {
-    this.sanitizer.sanitize(SecurityContext.HTML, this.commentText);
+    this._sanitizer.sanitize(SecurityContext.HTML, this.commentText);
     var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText)
 
     this.sendComment(mcomment);
@@ -76,7 +78,7 @@ export class MarkersPopupComponent extends MapAddict{
 
   public displayMarkerPopUp =  (event) => {
 
-    this.distributionService.submit(
+    this._distributionService.submit(
       new Entry(CoordinatesService.ACTIONS.DISPLAY,
         new Entry(event.latlng, true )
       ));
@@ -93,20 +95,20 @@ export class MarkersPopupComponent extends MapAddict{
 
       let marker_popup = $('#marker-popup');
 
-      if (!window.matchMedia("(max-width: 480px)").matches) {
-        marker_popup.css({display: 'flex'}).hide().fadeIn(300);
-      } else {
+      if (window.matchMedia("(max-width: 480px)").matches) {
         marker_popup.css({display: 'flex'}).hide().animate({
           height:"toggle",
-        },500, () => {
+        }, 500, () => {
           $('.marker-popup-entry').each((idx, obj) => {
-            $(obj).css({display: 'flex'});
+            $(obj).css({display: 'flex'}).hide().fadeIn(300);
           })
         });
+      } else {
+        marker_popup.css({display: 'flex'}).hide().fadeIn(300);
       }
 
       let markerCoordinates: GeoCoordinates = new GeoCoordinates(lat, lng);
-      this.restService.getMarkerAt(markerCoordinates).subscribe((marker: Marker) => {
+      this._restService.getMarkerAt(markerCoordinates).subscribe((marker: Marker) => {
 
         this.markerId = marker.id;
         this.country = marker.addressNode.country;
@@ -130,21 +132,36 @@ export class MarkersPopupComponent extends MapAddict{
       marker_popup.fadeOut(300);
     } else {
       $('.marker-popup-entry').each((idx, obj) => {
-        $(obj).css({display: 'none'});
+        $(obj).hide();
       });
-      marker_popup.animate({height:"toggle",},500);
+      marker_popup.animate({height:"toggle"}, 500);
+    }
+  };
+
+  private _onResizeBlur = (input) => (event) => {
+
+    if (event.target.innerHeight >= this._windower.height) {
+      input.blur();
     }
   };
 
   onFocusHideMarkerPopup = (event) => {
-    if(!window.matchMedia("(max-width:480px)")){
-      $("#marker-popup").css();
+    if(window.matchMedia("(max-width:480px)").matches){
+      $("#marker-popup").fadeOut(200);
+      $(event.target).blur();
+      let stub = $("#text-stub");
+      $("#comment-stub").fadeIn(200, () => stub.focus());
+      $(window).on('resize', this._onResizeBlur(stub));
     }
   };
 
-  onBlurBringBackMarkerPopup = ($event) => {
-    if(!window.matchMedia("(max-width:480px)")){
-      $("#marker-popup-comment--text-area").focus();
+  onBlurDisplayMarkerPopup = ($event) => {
+    if(window.matchMedia("(max-width:480px)").matches){
+      $("#comment-stub").fadeOut(300, () => {
+        $("#marker-popup").fadeIn(300);
+        $("#marker-popup-comment--text").val($("#text-stub").val());
+      });
+      $(window).off('resize', this._onResizeBlur);
     }
   };
 
@@ -164,9 +181,9 @@ export class MarkersPopupComponent extends MapAddict{
       showCloseButton: true
     };
 
-    this.restService.addComment(comment,
-      X =>  this.toasterService.pop(successToast),
-      err => this.toasterService.pop(errorToast),
+    this._restService.addComment(comment,
+      X =>  this._toasterService.pop(successToast),
+      err => this._toasterService.pop(errorToast),
     );
   }
 }
