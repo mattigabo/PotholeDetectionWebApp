@@ -45,16 +45,6 @@ export class ContextMenuComponent extends MapAddict {
         super.init(entry.value as MapsWrapper);
 
         // @ts-ignore
-        // this._heatmap = new Leaflet.HeatMap({
-        //   minOpacity: 0.8,
-        //   radius: 10,
-        //   scaleRadius: true,
-        //   useLocalExtrema: true,
-        // }).addTo(this._layers);
-
-        // this._index[LAYER_NAME.HEAT_MAP] = this._layers.getLayerId(this._heatmap);
-
-        // @ts-ignore
         Leaflet.drawLocal.draw.handlers.circle.tooltip.start = "";
         // @ts-ignore
         Leaflet.drawLocal.edit.handlers.edit.tooltip.text = "";
