@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "./ontologies/DataStructures";
+import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "../../ontologies/DataStructures";
 import {Observable , throwError} from "rxjs/index";
 import { map , catchError } from 'rxjs/operators';
-import {RouteAPIResponse} from "./ontologies/RouteData";
+import {RouteAPIResponse} from "../../ontologies/RouteData";
 
 @Injectable({
   providedIn: 'root'
