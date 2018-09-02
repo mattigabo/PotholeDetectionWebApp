@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
     }
 
     this.windower.setWindowMaxDimensions($(window).height(), $(window).width());
+    // this.windower.setWindowMaxDimensions(screen.height, screen.width);
 
     $(document).on('keyup', (keyEvent) => {
 

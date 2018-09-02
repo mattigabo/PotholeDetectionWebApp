@@ -18,15 +18,6 @@ import {ToasterService} from "angular2-toaster";
 })
 export class NavigatorComponent extends MapAddict {
 
-  observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => this._toaster.pop({
-      type:"info",
-      title: mutation.toString()
-    }));
-  });
-
-  private _focused_input;
-
   constructor(private _restService : RestAdapterService,
               private _distService: DistributionService,
               private _toaster: ToasterService,
@@ -40,44 +31,38 @@ export class NavigatorComponent extends MapAddict {
 
         super.init(entry.value);
         console.log(_windower.height, _windower.width);
+
         console.log("Navigator Component Ready!");
       }
     });
   }
 
-  ngOnInit() {
+  ngOnInit() {}
 
-  }
+  ngAfterViewInit() {}
 
-  ngAfterViewInit() {
-
-    let node = document.querySelector('#osm-map') as Node;
-    this.observer.observe(node, {
-      attributes: true,
-      characterData: true
-    });
-  }
-
-  private _displayEntries = (keyEvent) => {
+  private _onEnterBlur = (input) => (keyEvent : KeyboardEvent) => {
     let key = keyEvent.key ? keyEvent.key.toUpperCase() : keyEvent.which;
 
     if (key == "ENTER") {
-      this._focused_input.blur();
+      input.blur();
+    }
+  };
+
+  private _onResizeBlur = (input) => (event) => {
+    if (event.target.innerHeight >= this._windower.height) {
+      input.blur()
     }
   };
 
   onInputFocus = (event) => {
     console.log("Focus:", event);
-    if(window.matchMedia("(max-width:480px)").matches) {
+    if(window.matchMedia('(max-width:480px)').matches) {
       let entry = $(event.target).parent().parent().parent().attr("id");
 
-      this._focused_input = $(event.target);
+      $(document).on('keyup', this._onEnterBlur($(event.target)));
 
-      $(document).on('keyup', this._displayEntries);
-
-      $(window).on('popstate', () => {
-        alert("POP");
-      });
+      $(window).on('resize', this._onResizeBlur($(event.target)));
 
       $('#filters-nav--header').hide();
       if (entry === "filter-by-place") {
@@ -96,8 +81,8 @@ export class NavigatorComponent extends MapAddict {
       $('#filters-nav--header').show();
       $('#filter-by-route').show();
       $('#filter-by-place').show();
-      $(document).off('keyup', this._displayEntries);
-      $(window).off('resize', this._displayEntries);
+      $(document).off('keyup', this._onEnterBlur);
+      $(window).off('resize', this._onResizeBlur);
     }
   };
 
