@@ -9,7 +9,8 @@ export enum LAYER_NAME {
   USER_DEFINED = "user-defined",
   AREA_SELECTED = "area-selected",
   GEOMETRY = "geometry",
-  HEAT_MAP = "heat-map"
+  HEAT_MAP = "heat-map",
+  ROUTE_PATH = "route-path"
 }
 
 export class MapsWrapper {
@@ -46,9 +47,10 @@ export class MapsWrapper {
       let fetched : Leaflet.FeatureGroup = Leaflet.featureGroup();
       let area_selected : Leaflet.FeatureGroup = Leaflet.featureGroup();
       let geometry : Leaflet.FeatureGroup = Leaflet.featureGroup();
+      let routePath : Leaflet.FeatureGroup = Leaflet.featureGroup();
 
       this._layers =
-        Leaflet.layerGroup([mapbox, user_defined, fetched, area_selected, geometry]);
+        Leaflet.layerGroup([mapbox, user_defined, fetched, area_selected, geometry, routePath]);
 
       options["layers"] = [this._layers];
 
@@ -73,6 +75,7 @@ export class MapsWrapper {
       this._index[LAYER_NAME.FETCHED] = this.layers.getLayerId(fetched);
       this._index[LAYER_NAME.USER_DEFINED] = this.layers.getLayerId(user_defined);
       this._index[LAYER_NAME.GEOMETRY] = this.layers.getLayerId(geometry);
+      this._index[LAYER_NAME.ROUTE_PATH] = this.layers.getLayerId(routePath);
 
       this._map.whenReady(() => {
         emitter.submit(new Entry<string, any>(MapsWrapper.name, this))
@@ -90,6 +93,7 @@ export class MapsWrapper {
     this.layer(LAYER_NAME.AREA_SELECTED).clearLayers();
     this.layer(LAYER_NAME.FETCHED).clearLayers();
     this.layer(LAYER_NAME.USER_DEFINED).clearLayers();
+    this.layer(LAYER_NAME.ROUTE_PATH).clearLayers();
   }
 }
 

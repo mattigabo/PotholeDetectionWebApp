@@ -6,7 +6,7 @@ import {MapsWrapper} from "../../maps/maps.wrapper";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
-import {Marker} from "../../ontologies";
+import {Marker} from "../../ontologies/DataStructures";
 import {marker} from "leaflet";
 import {WindowService} from "../../services/window/window.service";
 import {ToasterService} from "angular2-toaster";
@@ -151,7 +151,10 @@ export class NavigatorComponent extends MapAddict {
       radius = $('#filter-field--search-radius').val();
 
     this._restService.getMarkerOnRouteByPlace(origin, destination, radius)
-      .subscribe(markers => this.fetchMarkers(markers));
+      .subscribe(response => {
+        //this.fetchMarkers(response.content);
+        this.drawRoutePath(response.content.routeServiceResponse.routes[0].geometry.coordinates);
+      });
   };
 
 }

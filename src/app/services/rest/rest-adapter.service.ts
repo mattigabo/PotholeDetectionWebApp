@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "../../ontologies";
+import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "./ontologies/DataStructures";
 import {Observable , throwError} from "rxjs/index";
-import { map , catchError } from 'rxjs/operators'
-import {tap} from "rxjs/internal/operators";
+import { map , catchError } from 'rxjs/operators';
+import {RouteAPIResponse} from "./ontologies/RouteData";
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,8 @@ export class RestAdapterService {
   constructor(private httpClient: HttpClient) { }
 
   getMarkerAt(coordinates: GeoCoordinates){
-    let requestUrl: string = this.rootApiUrl + "at?coordinates=["+ coordinates.lat + "," +
-      coordinates.lng +"]";
+    let requestUrl: string = this.rootApiUrl + "at?coordinates=["+ coordinates.lng + "," +
+      coordinates.lat +"]";
 
     return this.httpClient.get<RESTServiceBodyResponse<Marker>>(requestUrl, httpOptions)
       .pipe(map(response => response.content));
@@ -80,7 +80,7 @@ export class RestAdapterService {
       "&to=" + destination +
       "&dist=" + maxMetersFromPath;
 
-    return this.doGETResourcesRequest(requestUrl);
+    return this.httpClient.get<RESTServiceBodyResponse<RouteAPIResponse>>(requestUrl, httpOptions)
   }
 
   getAllMarkersInTheArea(origin: GeoCoordinates, radius: number){

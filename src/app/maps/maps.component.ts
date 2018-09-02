@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
 import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../services/rest/rest-adapter.service";
-import {Marker} from "../ontologies";
+import {Marker} from "../ontologies/DataStructures";
 
 import {MapsWrapper} from "./maps.wrapper";
 import {DistributionService} from "../services/distribution/distribution.service";
 import {MapAddict} from "../map-addict";
+import {LatLngExpression} from "leaflet";
 
 @Component({
   selector: 'app-maps',
@@ -61,6 +62,4 @@ export class MapsComponent extends MapAddict{
   ngAfterViewInit(): void {
 
   }
-
-
 }
