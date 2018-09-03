@@ -59,6 +59,7 @@ export class ContextMenuComponent extends MapAddict {
         });
 
         this._map.on('contextmenu', this.onMapContextMenuShowContextMenu);
+        this._route_path.on('contextmenu', this.onMapContextMenuShowContextMenu);
 
         this._geometry.on('contextmenu', (event) => {
 
