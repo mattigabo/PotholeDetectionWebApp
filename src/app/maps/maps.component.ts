@@ -7,6 +7,7 @@ import {MapsWrapper} from "./maps.wrapper";
 import {DistributionService} from "../services/distribution/distribution.service";
 import {MapAddict} from "../map-addict";
 import {LatLngExpression} from "leaflet";
+import {ToasterService} from "angular2-toaster";
 
 @Component({
   selector: 'app-maps',
@@ -22,7 +23,8 @@ export class MapsComponent extends MapAddict{
   };
 
   constructor(private restService: RestAdapterService,
-              private distService: DistributionService) {
+              private distService: DistributionService,
+              private toasterService: ToasterService) {
     super();
 
     distService.subscribe(entry => {
@@ -55,7 +57,7 @@ export class MapsComponent extends MapAddict{
 
   ngOnInit() {
 
-    this._wrapper = new MapsWrapper("osm-map", this.options, this.distService);
+    this._wrapper = new MapsWrapper("osm-map", this.options, this.distService, this.toasterService);
 
   }
 

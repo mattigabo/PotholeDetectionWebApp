@@ -1,5 +1,6 @@
 import * as Leaflet from 'leaflet';
 import {DistributionService, Entry} from "../services/distribution/distribution.service";
+import {Toast, ToasterService} from "angular2-toaster";
 
 export enum LAYER_NAME {
   OSM = "osm-map",
@@ -27,7 +28,7 @@ export class MapsWrapper {
   public get layers() : Leaflet.LayerGroup {return this._layers}
   public get index() : number[] { return this._index}
 
-  constructor(map_id : string, options : Leaflet.MapOptions, emitter: DistributionService) {
+  constructor(map_id : string, options : Leaflet.MapOptions, emitter: DistributionService, toasterService: ToasterService) {
 
       let mapbox = Leaflet.tileLayer(
         'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
@@ -57,15 +58,32 @@ export class MapsWrapper {
       this._map = Leaflet.map(map_id, options);
 
       this._map.on('locationerror', () => {
-        alert("Couldn't establish user position!");
+        let infoToast: Toast = {
+          type: 'info',
+          title: 'User Location',
+          body: "Couldn't establish user position!",
+          showCloseButton: true
+        };
+        toasterService.pop(infoToast);
+        //alert("Couldn't establish user position!");
       });
 
       this._map.on('locationfound', (event : Leaflet.LocationEvent) => {
         // this._map.setView(event.latlng, options.zoom);
-        alert("User found @["+
-          event.latlng.lat.toFixed(4) + " N, " +
-          event.latlng.lng.toFixed(4) + " E" +
-          "]!");
+        // alert("User found @["+
+        //   event.latlng.lat.toFixed(4) + " N, " +
+        //   event.latlng.lng.toFixed(4) + " E" +
+        //   "]!");
+        let infoToast: Toast = {
+          type: 'info',
+          title: 'User Location',
+          body: "User found @["+
+            event.latlng.lat.toFixed(4) + " N, " +
+            event.latlng.lng.toFixed(4) + " E" +
+            "]!",
+          showCloseButton: true
+        };
+        toasterService.pop(infoToast);
       });
 
       this._map.locate({setView: true, enableHighAccuracy: true});
