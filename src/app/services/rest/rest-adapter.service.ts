@@ -16,8 +16,8 @@ export class RestAdapterService {
   constructor(private httpClient: HttpClient) { }
 
   getMarkerAt(coordinates: GeoCoordinates){
-    let requestUrl: string = this.rootApiUrl + "at?coordinates="+ coordinates.lng + " N," +
-      coordinates.lat +" E";
+    let requestUrl: string = this.rootApiUrl + "at?coordinates="+ coordinates.lng + " E," +
+      coordinates.lat +" N";
 
     return this.httpClient.get<RESTServiceBodyResponse<Marker>>(requestUrl, httpOptions)
       .pipe(map(response => response.content));
@@ -54,7 +54,7 @@ export class RestAdapterService {
       .pipe(map(response => response.content));
 
   getLocationInfo(lat: number, lng: number): Observable<OSMAddressNode>{
-    let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=" + lng + "N, " + lat + "E"
+    let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=" + lng + "E, " + lat + "N"
     return this.httpClient.get<RESTServiceBodyResponse<OSMAddressNode>>(reverseGeoCodingServiceUrl, httpOptions)
       .pipe(map(response => response.content));
   }
@@ -67,9 +67,9 @@ export class RestAdapterService {
   }
 
   getMarkerOnRouteByCoordinates(origin: GeoCoordinates, destination: GeoCoordinates, maxMetersFromPath: number){
-    let requestUrl: string = this.rootApiUrl + "route?from="  + origin.lng + "N, " +  origin.lat
-      + "E&to=" + destination.lng + "N, " + destination.lat
-      + "E&dist=" + maxMetersFromPath;
+    let requestUrl: string = this.rootApiUrl + "route?from="  + origin.lng + "E, " +  origin.lat
+      + "N&to=" + destination.lng + "E, " + destination.lat
+      + "N&dist=" + maxMetersFromPath;
 
     return this.doGETResourcesRequest(requestUrl);
   }
@@ -84,8 +84,8 @@ export class RestAdapterService {
   }
 
   getAllMarkersInTheArea(origin: GeoCoordinates, radius: number){
-    let requestUrl: string = this.rootApiUrl + "area?origin="+ origin.lng + "N, " + origin.lat
-      + "E&radius=" + radius;
+    let requestUrl: string = this.rootApiUrl + "area?origin="+ origin.lng + "E, " + origin.lat
+      + "N&radius=" + radius;
 
     return this.doGETResourcesRequest(requestUrl);
   }
