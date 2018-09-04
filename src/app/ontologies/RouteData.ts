@@ -7,7 +7,7 @@ import {LatLngExpression} from "leaflet";
 
 export interface RouteAPIResponse{
   markers: Marker[];
-  routeServiceResponse: RouteServiceResponse;
+  routingServiceResponse: RouteServiceResponse;
 }
 
 export interface RouteServiceResponse{

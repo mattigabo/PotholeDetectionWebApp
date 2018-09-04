@@ -88,7 +88,7 @@ export class MapsWrapper {
         toasterService.pop(infoToast);
       });
 
-      this._map.locate({setView: true, enableHighAccuracy: true});
+      //this._map.locate({setView: true, enableHighAccuracy: true});
 
       this._index[LAYER_NAME.MAP_BOX] = this.layers.getLayerId(mapbox);
       this._index[LAYER_NAME.AREA_SELECTED] = this.layers.getLayerId(area_selected);
