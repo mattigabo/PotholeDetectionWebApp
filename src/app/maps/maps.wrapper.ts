@@ -1,6 +1,7 @@
 import * as Leaflet from 'leaflet';
 import {DistributionService, Entry} from "../services/distribution/distribution.service";
 import {Toast, ToasterService} from "angular2-toaster";
+import {Heatmap} from "./heatmap.overlay.wrapper";
 
 export enum LAYER_NAME {
   OSM = "osm-map",
@@ -48,10 +49,11 @@ export class MapsWrapper {
       let fetched : Leaflet.FeatureGroup = Leaflet.featureGroup();
       let area_selected : Leaflet.FeatureGroup = Leaflet.featureGroup();
       let geometry : Leaflet.FeatureGroup = Leaflet.featureGroup();
-      let routePath : Leaflet.FeatureGroup = Leaflet.featureGroup();
+      let route_path : Leaflet.FeatureGroup = Leaflet.featureGroup();
+      // let heat_map : Heatmap.HeatLayer = Heatmap.heatOverlay();
 
       this._layers =
-        Leaflet.layerGroup([mapbox, user_defined, fetched, area_selected, geometry, routePath]);
+        Leaflet.layerGroup([mapbox, user_defined, fetched, area_selected, geometry, route_path]);
 
       options["layers"] = [this._layers];
 
@@ -93,7 +95,8 @@ export class MapsWrapper {
       this._index[LAYER_NAME.FETCHED] = this.layers.getLayerId(fetched);
       this._index[LAYER_NAME.USER_DEFINED] = this.layers.getLayerId(user_defined);
       this._index[LAYER_NAME.GEOMETRY] = this.layers.getLayerId(geometry);
-      this._index[LAYER_NAME.ROUTE_PATH] = this.layers.getLayerId(routePath);
+      this._index[LAYER_NAME.ROUTE_PATH] = this.layers.getLayerId(route_path);
+      // this._index[LAYER_NAME.HEAT_MAP] = this.layers.getLayerId(heat_map);
 
       this._map.whenReady(() => {
         emitter.submit(new Entry<string, any>(MapsWrapper.name, this))
@@ -103,7 +106,7 @@ export class MapsWrapper {
 
   }
 
-  public layer (id: string) : Leaflet.FeatureGroup{
+  public layer(id: string) : Leaflet.FeatureGroup{
     return this.layers.getLayer(this.index[id]) as Leaflet.FeatureGroup;
   }
 

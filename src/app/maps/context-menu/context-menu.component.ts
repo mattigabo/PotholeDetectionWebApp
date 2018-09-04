@@ -9,6 +9,7 @@ import {CoordinatesService} from "../../services/coordinates/coordinates.service
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {GeoCoordinates} from "../../ontologies/DataStructures";
 import {MapAddict} from "../../map-addict";
+import {Heatmap} from "../heatmap.overlay.wrapper";
 
 @Component({
   selector: 'app-context-menu',
@@ -17,7 +18,7 @@ import {MapAddict} from "../../map-addict";
 })
 export class ContextMenuComponent extends MapAddict {
 
-  private _heatmap : Leaflet.Layer;
+  private _heatmap : Heatmap.HeatLayer;
 
   private _circleMaker: Leaflet.Draw.Circle;
   private _circleEditor: Leaflet.EditToolbar.Edit;
@@ -43,6 +44,8 @@ export class ContextMenuComponent extends MapAddict {
           entry.value instanceof MapsWrapper) {
 
         super.init(entry.value as MapsWrapper);
+
+        this._heatmap = Heatmap.heatOverlay();
 
         // @ts-ignore
         Leaflet.drawLocal.draw.handlers.circle.tooltip.start = "";
@@ -239,6 +242,10 @@ export class ContextMenuComponent extends MapAddict {
     this._wrapper.layer(LAYER_NAME.AREA_SELECTED).clearLayers();
   }
 
+  clearAll(event: Event) {
+    this._wrapper.clearAll();
+  }
+
   displayHeatMap(event) {
 
     ContextMenuComponent.hideContextMenu(event);
@@ -247,8 +254,18 @@ export class ContextMenuComponent extends MapAddict {
       $(obj).toggle(300);
     });
 
+    let heat_data : Heatmap.HeatData[] = [];
+
+    this._map.eachLayer(layer => {
+      if (layer instanceof Leaflet.Marker) {
+        console.log("pushing ${0} in heatmap", layer.getLatLng());
+        heat_data.push({latlng: layer.getLatLng(), radius: 1})
+      }
+    });
+
     this.hideAllMarkers();
-    // this._heatmap.setData({max: 1, data:data});
+
+    this._heatmap.setData(heat_data).addTo(this._layers);
   }
 
   displayMarkers(event) {
@@ -258,6 +275,7 @@ export class ContextMenuComponent extends MapAddict {
       $(obj).toggle(300);
     });
 
+    this._layers.removeLayer(this._heatmap as Heatmap.HeatLayer);
     this.showAllMarkers();
   }
 
@@ -329,65 +347,22 @@ export class ContextMenuComponent extends MapAddict {
   }
 
   private hideAllMarkers(){
-    let data : {lat:number , lng:number, count:number}[] = [];
 
-    this.hideUserDifinedMarkers().forEach(X => data.push(X));
-    this.hideFetchedMarkers().forEach(X=> data.push(X));
-    this.hideAreaSelectedMarkers().forEach(X => data.push(X));
+    this.hideUserDefinedMarkers();
+    this.hideFetchedMarkers();
+    this.hideAreaSelectedMarkers();
   }
 
-  private hideUserDifinedMarkers():  {lat:number , lng:number, count:number}[]{
-    let result : {lat:number , lng:number, count:number}[] = [];
-
-    this._user_defined.eachLayer(layer => {
-      if (layer instanceof Leaflet.Marker) {
-        result.push({
-          lat: layer.getLatLng().lat,
-          lng: layer.getLatLng().lng,
-          count: 1
-        });
-      }
-    });
-
+  private hideUserDefinedMarkers() {
     this._layers.removeLayer(this._user_defined);
-
-    return result;
   }
 
-  private hideFetchedMarkers(): {lat:number , lng:number, count:number}[]{
-    let result : {lat:number , lng:number, count:number}[] = [];
-
-    this._fetched.eachLayer(layer => {
-      if (layer instanceof Leaflet.Marker) {
-        result.push({
-          lat: layer.getLatLng().lat,
-          lng: layer.getLatLng().lng,
-          count: 1
-        });
-      }
-    });
-
+  private hideFetchedMarkers() {
     this._layers.removeLayer(this._fetched);
-
-    return result;
   }
 
-  private hideAreaSelectedMarkers(): {lat:number , lng:number, count:number}[]{
-    let result : {lat:number , lng:number, count:number}[] = [];
-
-    this._area_selected.eachLayer(layer => {
-      if (layer instanceof Leaflet.Marker) {
-        result.push({
-          lat: layer.getLatLng().lat,
-          lng: layer.getLatLng().lng,
-          count: 1
-        });
-      }
-    });
-
+  private hideAreaSelectedMarkers() {
     this._layers.removeLayer(this._area_selected);
-
-    return result;
   }
 
 }

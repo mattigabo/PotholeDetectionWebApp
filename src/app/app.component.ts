@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
 import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
 import {WindowService} from "./services/window/window.service";
@@ -9,7 +9,7 @@ import {WindowService} from "./services/window/window.service";
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
   public potholeSystemToastConfig : ToasterConfig = new ToasterConfig({
     positionClass: 'toast-bottom-left',
@@ -25,13 +25,17 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
 
     if(/Android/.test(navigator.appVersion)) {
-      window.addEventListener("resize", function() {
+      $(window).on("resize", () => {
         if(document.activeElement.tagName=="INPUT"
           || document.activeElement.tagName=="TEXTAREA") {
           document.activeElement.scrollIntoView(true);
         }
-      })
+      });
+
+      $(window).on('orientationchange', this.onOrientationChange);
     }
+
+    $("#landscape").css({display:"flex"}).hide();
 
     this.windower.setWindowMaxDimensions($(window).height(), $(window).width());
     // this.windower.setWindowMaxDimensions(screen.height, screen.width);
@@ -51,5 +55,34 @@ export class AppComponent implements OnInit {
           });
         }
       });
+  }
+
+  onOrientationChange = (event?) => {
+
+    let landscape = $("#landscape"),
+        portrait = $("#portrait");
+
+    switch(window.orientation)
+    {
+      case -90:
+        portrait.hide(100, () => {
+          landscape.show();
+        });
+        break;
+      case 90:
+        portrait.hide(100, () => {
+          landscape.show();
+        });
+        break;
+      default:
+        landscape.hide(100, () => {
+          portrait.show();
+        });
+        break;
+    }
+  };
+
+  ngAfterViewInit() {
+    this.onOrientationChange();
   }
 }

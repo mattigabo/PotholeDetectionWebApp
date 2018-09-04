@@ -1,1 +1,25 @@
 @import url('https://npmcdn.com/angular2-toaster@6.1.0/toaster.css');
+
+#landscape {
+  display: none;
+  color: #f1f1f1;
+  background-color: #333333;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+}
+
+#landscape > * {
+  font-size: x-large;
+  margin: auto;
+}
+
+#portrait {
+  display: block;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+}
