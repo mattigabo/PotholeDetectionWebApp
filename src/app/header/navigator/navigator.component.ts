@@ -153,9 +153,7 @@ export class NavigatorComponent extends MapAddict {
     this._restService.getMarkerOnRouteByPlace(origin, destination, radius)
       .subscribe(response => {
         //this.fetchMarkers(response.content);
-        let coordinates = response.content.routeServiceResponse.routes[0].geometry.coordinates;
-        let markers = response.content.markers;
-        this.drawRoutePath(coordinates, markers);
+        this.drawRoutePath(response.content);
       });
   };
 

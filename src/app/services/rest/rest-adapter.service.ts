@@ -11,13 +11,13 @@ import {RouteAPIResponse} from "../../ontologies/RouteData";
 })
 export class RestAdapterService {
 
-  rootApiUrl: string = "http://localhost:8080/api/pothole/";
+  rootApiUrl: string = "http://192.168.0.9:8080/api/pothole/";
 
   constructor(private httpClient: HttpClient) { }
 
   getMarkerAt(coordinates: GeoCoordinates){
-    let requestUrl: string = this.rootApiUrl + "at?coordinates=["+ coordinates.lng + "," +
-      coordinates.lat +"]";
+    let requestUrl: string = this.rootApiUrl + "at?coordinates="+ coordinates.lng + " N," +
+      coordinates.lat +" E";
 
     return this.httpClient.get<RESTServiceBodyResponse<Marker>>(requestUrl, httpOptions)
       .pipe(map(response => response.content));
@@ -54,7 +54,7 @@ export class RestAdapterService {
       .pipe(map(response => response.content));
 
   getLocationInfo(lat: number, lng: number): Observable<OSMAddressNode>{
-    let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=[" + lng + ", " + lat + "]"
+    let reverseGeoCodingServiceUrl: string = this.rootApiUrl + "reverse?coordinates=" + lng + "N, " + lat + "E"
     return this.httpClient.get<RESTServiceBodyResponse<OSMAddressNode>>(reverseGeoCodingServiceUrl, httpOptions)
       .pipe(map(response => response.content));
   }
@@ -67,9 +67,9 @@ export class RestAdapterService {
   }
 
   getMarkerOnRouteByCoordinates(origin: GeoCoordinates, destination: GeoCoordinates, maxMetersFromPath: number){
-    let requestUrl: string = this.rootApiUrl + "route?from=["  + origin.lng + ", " +  origin.lat
-      + "]&to=[" + destination.lng + ", " + destination.lat
-      + "]&dist=" + maxMetersFromPath;
+    let requestUrl: string = this.rootApiUrl + "route?from="  + origin.lng + "N, " +  origin.lat
+      + "E&to=" + destination.lng + "N, " + destination.lat
+      + "E&dist=" + maxMetersFromPath;
 
     return this.doGETResourcesRequest(requestUrl);
   }
@@ -84,8 +84,8 @@ export class RestAdapterService {
   }
 
   getAllMarkersInTheArea(origin: GeoCoordinates, radius: number){
-    let requestUrl: string = this.rootApiUrl + "area?origin=["+ origin.lng + ", " + origin.lat
-      + "]&radius=" + radius;
+    let requestUrl: string = this.rootApiUrl + "area?origin="+ origin.lng + "N, " + origin.lat
+      + "E&radius=" + radius;
 
     return this.doGETResourcesRequest(requestUrl);
   }

@@ -53,11 +53,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "PotholeDetectionWebApp:build",
-            "ssl":true,
+            "ssl":false,
             "sslKey":"../ssl/server.key",
             "sslCert":"../ssl/server.crt",
-            "host": "192.168.0.10",
-            "port":8443
+            "host": "192.168.0.9",
+            "port": 8443
           },
           "configurations": {
             "production": {

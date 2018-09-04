@@ -3,7 +3,7 @@ import {LAYER_NAME, MapsWrapper} from "./maps/maps.wrapper";
 import * as Leaflet from 'leaflet';
 import {AfterViewInit, OnInit} from "@angular/core";
 import {LatLng, LatLngExpression, LatLngLiteral} from "leaflet";
-import {LngLat} from "./ontologies/RouteData";
+import {LngLat, RouteAPIResponse} from "./ontologies/RouteData";
 import * as LeafletHotline from '../../node_modules/leaflet-hotline';
 import {Marker} from "./ontologies/DataStructures";
 
@@ -20,6 +20,21 @@ export class MapAddict implements OnInit, AfterViewInit  {
   protected _area_selected: Leaflet.FeatureGroup;
   protected _geometry: Leaflet.FeatureGroup;
   protected _route_path: Leaflet.FeatureGroup;
+
+  private hotlineOption =  {
+    min: 30,
+    max: 350,
+    palette: {
+      0.0: '#ff0000',
+      0.5: '#ffff00',
+      1.0: '#008800'
+    },
+    weight: 5,
+    outlineColor: '#000000',
+    outlineWidth: 1,
+    smoothFactor: 0
+  }
+
 
   protected init (mapWrapper: MapsWrapper) {
 
@@ -43,33 +58,23 @@ export class MapAddict implements OnInit, AfterViewInit  {
   ngOnInit(): void {
   }
 
-  public drawRoutePath(lngLats: LngLat[], markers: Marker[]){
+  public drawRoutePath(responseContent: RouteAPIResponse){
+    let lngLats: LngLat[] = responseContent.routingServiceResponse.routes[0].geometry.coordinates;
+    let  markers: Marker[] = responseContent.markers;
 
-    let hotlineOption =  {
-      min: 30,
-      max: 350,
-      palette: {
-        0.0: '#ff0000',
-        0.5: '#ffff00',
-        1.0: '#008800'
-      },
-      weight: 5,
-      outlineColor: '#000000',
-      outlineWidth: 1,
-      smoothFactor: 0
-    }
+    let hotLineData = this.createHotlineData(lngLats, markers);
+    var routePathHotline = LeafletHotline.hotline(hotLineData, this.hotlineOption);
 
-    let hotLineData = this.createHotLineData(lngLats, markers);
-    console.log(hotLineData);
-    var hotline = LeafletHotline.hotline(hotLineData, hotlineOption);
-    hotline.addTo(this._route_path);
+    routePathHotline.bindPopup("Potholes founded along this route:" + markers.length +
+      + " Route calculated by " + responseContent.routingServiceResponse.info.attribution);
+    routePathHotline.addTo(this._route_path);
     // zoom the map to the polyline
-    this._map.fitBounds(hotline.getBounds());
+    this._map.fitBounds(routePathHotline.getBounds());
   }
 
 
-  private createHotLineData(lngLats: LngLat[], markers: Marker[]): number[][]{
-    let latLngs: LatLngLiteral[] = this.invertValues(lngLats);
+  private createHotlineData(lngLats: LngLat[], markers: Marker[]): number[][]{
+    let latLngs: LatLngLiteral[] = this.generateLatLngLiteralsFormat(lngLats);
     var result:  number[][] = [];
     latLngs.forEach(value => {
       result.push([
@@ -90,7 +95,7 @@ export class MapAddict implements OnInit, AfterViewInit  {
     return distances[0];
   }
 
-  private invertValues(lngLats: LngLat[]): LatLngLiteral[]{
+  private generateLatLngLiteralsFormat(lngLats: LngLat[]): LatLngLiteral[]{
     console.log(lngLats);
     var latLngs: LatLngLiteral[] = [];
     lngLats.forEach((value: LngLat) => {
