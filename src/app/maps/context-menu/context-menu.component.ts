@@ -172,7 +172,7 @@ export class ContextMenuComponent extends MapAddict {
     }
   };
 
-  public static hideContextMenu (event) {
+  public static hideContextMenu (event?) {
     if (!window.matchMedia("(max-width: 480px)").matches) {
       $('.context-menu').each((idx, obj) => $(obj).hide());
     } else {
@@ -255,6 +255,7 @@ export class ContextMenuComponent extends MapAddict {
 
   clearAll(event: Event) {
     this.wrapper.clearAll();
+    ContextMenuComponent.hideContextMenu(event);
   }
 
   displayHeatMap(event) {

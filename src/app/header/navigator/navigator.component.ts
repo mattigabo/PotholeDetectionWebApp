@@ -10,10 +10,10 @@ import {Marker} from "../../ontologies/DataStructures";
 import {marker} from "leaflet";
 import {WindowService} from "../../services/window/window.service";
 import {ToasterService} from "angular2-toaster";
-import {LngLat, RouteAPIResponse} from "../../ontologies/RouteData";
+import {LngLat, RouteAPIResponse, Route, RouteServiceResponse} from "../../ontologies/RouteData";
 import {LatLngLiteral} from "leaflet";
 import {LatLng} from "leaflet";
-import * as LeafletHotline from 'leaflet-hotline';
+import * as LeafletHeatLine from 'leaflet-hotline';
 
 @Component({
   selector: 'app-navigator',
@@ -175,17 +175,18 @@ export class NavigatorComponent extends MapAddict {
     this._restService.getMarkerOnRouteByPlace(origin, destination, radius)
       .subscribe(response => {
         //this.fetchMarkers(response.content);
+        console.log(response);
         this.drawRoutePath(response.content);
       });
   };
 
   public drawRoutePath(responseContent: RouteAPIResponse){
-    console.log("Routing Resp ", responseContent);
-    let lngLats: LngLat[] = responseContent.routingServiceResponse.routes[0].geometry.coordinates;
-    let  markers: Marker[] = responseContent.markers;
+
+    let lngLats: LngLat[] = responseContent.routingServiceResponse.routes[0].geometry.coordinates,
+        markers: Marker[] = responseContent.markers;
 
     let hotLineData = this.createHeatLineData(lngLats, markers);
-    var routePathHotline = LeafletHotline.hotline(hotLineData, this.heatLineOptions);
+    var routePathHotline = LeafletHeatLine.hotline(hotLineData, this.heatLineOptions);
 
     routePathHotline.bindPopup("Potholes founded along this route:" + markers.length +
       + " Route calculated by " + responseContent.routingServiceResponse.info.attribution);
