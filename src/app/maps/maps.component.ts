@@ -19,7 +19,8 @@ export class MapsComponent extends MapAddict{
   options = {
     zoomControl: false,
     center: new Leaflet.LatLng(44, 12),
-    zoom: 10
+    zoom: 8,
+    minZoom: 5,
   };
 
   constructor(private restService: RestAdapterService,
@@ -41,7 +42,7 @@ export class MapsComponent extends MapAddict{
             potholes.map(m => m.coordinates)
               .forEach(c => {
                   console.log("Marker drawing...", c);
-                  Leaflet.marker([c.lat, c.lng]).addTo(this._fetched);
+                  Leaflet.marker([c.lat, c.lng]).addTo(this.fetched);
                 })
           });
       }
@@ -49,7 +50,7 @@ export class MapsComponent extends MapAddict{
 
     distService.subscribe(entry => {
       if (entry.value === MapsWrapper.ACTION.CLEAR) {
-        this._wrapper.clearAll();
+        this.wrapper.clearAll();
       }
     });
 
@@ -57,7 +58,7 @@ export class MapsComponent extends MapAddict{
 
   ngOnInit() {
 
-    this._wrapper = new MapsWrapper("osm-map", this.options, this.distService, this.toasterService);
+    new MapsWrapper("osm-map", this.options, this.distService, this.toasterService);
 
   }
 

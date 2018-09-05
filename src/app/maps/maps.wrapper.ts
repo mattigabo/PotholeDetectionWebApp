@@ -1,12 +1,10 @@
 import * as Leaflet from 'leaflet';
 import {DistributionService, Entry} from "../services/distribution/distribution.service";
 import {Toast, ToasterService} from "angular2-toaster";
-import {Heatmap} from "./heatmap.overlay.wrapper";
+import {LayerGroup} from "leaflet";
 
 export enum LAYER_NAME {
-  OSM = "osm-map",
   MAP_BOX = "map-box",
-  MASTER = "master",
   FETCHED = "fetched",
   USER_DEFINED = "user-defined",
   AREA_SELECTED = "area-selected",
@@ -29,92 +27,98 @@ export class MapsWrapper {
   public get layers() : Leaflet.LayerGroup {return this._layers}
   public get index() : number[] { return this._index}
 
-  constructor(map_id : string, options : Leaflet.MapOptions, emitter: DistributionService, toasterService: ToasterService) {
+  constructor(private _map_id : string,
+              private _options : Leaflet.MapOptions,
+              private _emitter: DistributionService,
+              private _toasterService: ToasterService) {
 
-      let mapbox = Leaflet.tileLayer(
-        'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> | ' +
-            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
-            '&copy; <a href="https://www.mapbox.com/">Mapbox</a> | ' +
-            '<a href="https://www.linkedin.com/in/alessandro-cevoli/">Xander</a>&' +
-            '<a href="https://www.linkedin.com/in/matteogabellini/">Gabe</a>',
-          minZoom: 5,
-          id: 'mapbox.streets',
-          accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
-        });
+    this._layers = Leaflet.layerGroup();
 
-      let user_defined : Leaflet.FeatureGroup = Leaflet.featureGroup();
-      let fetched : Leaflet.FeatureGroup = Leaflet.featureGroup();
-      let area_selected : Leaflet.FeatureGroup = Leaflet.featureGroup();
-      let geometry : Leaflet.FeatureGroup = Leaflet.featureGroup();
-      let route_path : Leaflet.FeatureGroup = Leaflet.featureGroup();
-      // let heat_map : Heatmap.HeatLayer = Heatmap.heatOverlay();
+    this.add(LAYER_NAME.MAP_BOX, Leaflet.tileLayer(
+      'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> | ' +
+          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
+          '&copy; <a href="https://www.mapbox.com/">Mapbox</a> | ' +
+          '<a href="https://www.linkedin.com/in/alessandro-cevoli/">Xander</a>&' +
+          '<a href="https://www.linkedin.com/in/matteogabellini/">Gabe</a>',
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
+      })
+    );
 
-      this._layers =
-        Leaflet.layerGroup([mapbox, user_defined, fetched, area_selected, geometry, route_path]);
-
-      options["layers"] = [this._layers];
-
-      this._map = Leaflet.map(map_id, options);
-
-      this._map.on('locationerror', () => {
-        let infoToast: Toast = {
-          type: 'info',
-          title: 'User Location',
-          body: "Couldn't establish user position!",
-          showCloseButton: true
-        };
-        toasterService.pop(infoToast);
-        //alert("Couldn't establish user position!");
+    Object.values(LAYER_NAME)
+      .filter(x => x != LAYER_NAME.MAP_BOX)
+      .forEach(layer => {
+        this.add(layer, Leaflet.featureGroup());
       });
 
-      this._map.on('locationfound', (event : Leaflet.LocationEvent) => {
-        // this._map.setView(event.latlng, options.zoom);
-        // alert("User found @["+
-        //   event.latlng.lat.toFixed(4) + " N, " +
-        //   event.latlng.lng.toFixed(4) + " E" +
-        //   "]!");
-        let infoToast: Toast = {
-          type: 'info',
-          title: 'User Location',
-          body: "User found @["+
-            event.latlng.lat.toFixed(4) + " N, " +
-            event.latlng.lng.toFixed(4) + " E" +
-            "]!",
-          showCloseButton: true
-        };
-        toasterService.pop(infoToast);
-      });
+    _options["layers"] = [this._layers];
 
-      //this._map.locate({setView: true, enableHighAccuracy: true});
+    this._map = Leaflet.map(_map_id, _options);
 
-      this._index[LAYER_NAME.MAP_BOX] = this.layers.getLayerId(mapbox);
-      this._index[LAYER_NAME.AREA_SELECTED] = this.layers.getLayerId(area_selected);
-      this._index[LAYER_NAME.FETCHED] = this.layers.getLayerId(fetched);
-      this._index[LAYER_NAME.USER_DEFINED] = this.layers.getLayerId(user_defined);
-      this._index[LAYER_NAME.GEOMETRY] = this.layers.getLayerId(geometry);
-      this._index[LAYER_NAME.ROUTE_PATH] = this.layers.getLayerId(route_path);
-      // this._index[LAYER_NAME.HEAT_MAP] = this.layers.getLayerId(heat_map);
+    this._map.on('locationerror', this.onLocationError);
 
-      this._map.whenReady(() => {
-        emitter.submit(new Entry<string, any>(MapsWrapper.name, this))
-      });
+    this._map.on('locationfound', this.onLocationFound);
 
-      console.log("Map Wrapper Instance Ready!");
+    //this._map.locate({setView: true, enableHighAccuracy: true});
+
+    this._map.whenReady(() => {
+      _emitter.submit(new Entry<string, any>(MapsWrapper.name, this))
+    });
+
+    console.log("Map Wrapper Instance Ready!");
 
   }
 
-  public layer(id: string) : Leaflet.FeatureGroup{
-    return this.layers.getLayer(this.index[id]) as Leaflet.FeatureGroup;
+  public layer<T extends Leaflet.Layer>(id: string) : T {
+    return this.layers.getLayer(this.index[id]) as T;
+  }
+
+  public readonly featureGroup = (id:string) : Leaflet.FeatureGroup => this.layer(id);
+
+  public readonly tileLayer = (id:string) : Leaflet.TileLayer => this.layer(id);
+
+  public add<T extends Leaflet.Layer>(id : string, layer: T) : MapsWrapper {
+
+    this._layers.addLayer(layer as T);
+    this._index[id] = this._layers.getLayerId(layer as T);
+    console.log("Added layer %s to master @ index %d", id, this._index[id]);
+    return this;
+  }
+
+  public remove<T extends Leaflet.Layer>(layer: T | number) {
+    this._layers.removeLayer(layer);
   }
 
   public clearAll() {
-    this.layer(LAYER_NAME.AREA_SELECTED).clearLayers();
-    this.layer(LAYER_NAME.FETCHED).clearLayers();
-    this.layer(LAYER_NAME.USER_DEFINED).clearLayers();
-    this.layer(LAYER_NAME.ROUTE_PATH).clearLayers();
+    this.featureGroup(LAYER_NAME.AREA_SELECTED).clearLayers();
+    this.featureGroup(LAYER_NAME.FETCHED).clearLayers();
+    this.featureGroup(LAYER_NAME.USER_DEFINED).clearLayers();
+    this.featureGroup(LAYER_NAME.ROUTE_PATH).clearLayers();
+  }
+
+  private onLocationFound(event : Leaflet.LocationEvent) {
+
+    this._toasterService.pop({
+      type: 'info',
+      title: 'User Location',
+      body: "User found @["+
+        event.latlng.lat.toFixed(4) + " N, " +
+        event.latlng.lng.toFixed(4) + " E" +
+        "]!",
+      showCloseButton: true
+    });
+  }
+
+  private onLocationError(event: Leaflet.LocationEvent) {
+    this._toasterService.pop({
+      type: 'error',
+      title: 'User Location',
+      body: "Couldn't establish user position!",
+      showCloseButton: true
+    });
   }
 }
 

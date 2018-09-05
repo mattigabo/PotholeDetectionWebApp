@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { CoordinatesService } from '../../services/coordinates/coordinates.service';
+import { CoordinatesService } from './coordinates.service';
 
 describe('CoordinatesService', () => {
   beforeEach(() => {

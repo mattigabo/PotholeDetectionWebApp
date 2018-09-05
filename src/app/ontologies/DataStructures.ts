@@ -1,5 +1,5 @@
 /**
- *  In this file are defined the data structures of Objects returned by RestApi call in order to use the http client
+ *  In this file are defined the setData structures of Objects returned by RestApi call in order to use the http client
  *  automatic binding of json proprieties
  */
 export interface Marker {

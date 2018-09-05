@@ -1,5 +1,5 @@
 /**
- *  In this file are defined the data structures that rappresents the route data returned by the RestAPI
+ *  In this file are defined the setData structures that rappresents the route setData returned by the RestAPI
  *  used to calculate the route from a point A to point B
  */
 import {Marker} from "./DataStructures";

@@ -1,7 +1,7 @@
 import {Component, SecurityContext} from '@angular/core';
 import * as $ from 'jquery';
 import {RestAdapterService} from "../../services/rest/rest-adapter.service";
-import {MapsWrapper} from "../maps.wrapper";
+import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {MapAddict} from "../../map-addict";
@@ -47,14 +47,11 @@ export class MarkersPopupComponent extends MapAddict{
 
         super.init(entry.value);
 
-        this._layers.getLayer(this._index["user-defined"])
-          .on('click', this.displayMarkerPopUp);
+        this.user_defined.on('click', this.displayMarkerPopUp);
 
-        this._layers.getLayer(this._index["fetched"])
-          .on('click', this.displayMarkerPopUp);
+        this.fetched.on('click', this.displayMarkerPopUp);
 
-        this._layers.getLayer(this._index["area-selected"])
-          .on('click', this.displayMarkerPopUp);
+        this.area_selected.on('click', this.displayMarkerPopUp);
 
         console.log("Marker Popup Component Ready!")
       }

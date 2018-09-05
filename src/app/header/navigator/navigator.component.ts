@@ -10,6 +10,10 @@ import {Marker} from "../../ontologies/DataStructures";
 import {marker} from "leaflet";
 import {WindowService} from "../../services/window/window.service";
 import {ToasterService} from "angular2-toaster";
+import {LngLat, RouteAPIResponse} from "../../ontologies/RouteData";
+import {LatLngLiteral} from "leaflet";
+import {LatLng} from "leaflet";
+import * as LeafletHotline from 'leaflet-hotline';
 
 @Component({
   selector: 'app-navigator',
@@ -17,6 +21,20 @@ import {ToasterService} from "angular2-toaster";
   styleUrls: ['./navigator.component.css']
 })
 export class NavigatorComponent extends MapAddict {
+
+  private heatLineOptions =  {
+    min: 30,
+    max: 350,
+    palette: {
+      0.0: '#ff0000',
+      0.5: '#ffff00',
+      1.0: '#008800'
+    },
+    weight: 5,
+    outlineColor: '#000000',
+    outlineWidth: 1,
+    smoothFactor: 0
+  };
 
   constructor(private _restService : RestAdapterService,
               private _distService: DistributionService,
@@ -86,7 +104,7 @@ export class NavigatorComponent extends MapAddict {
     }
   };
 
-  closeFiltersNav = (clickEvent : Event) => {
+  closeFiltersNav = (clickEvent? : Event) => {
 
     this._distService.submit(new Entry(CoordinatesService.ACTIONS.HIDE_ALL, true));
 
@@ -125,12 +143,12 @@ export class NavigatorComponent extends MapAddict {
 
   private fetchMarkers = (markers: Marker[]) => {
     this._distService.submit(
-      new Entry<string, MapsWrapper>(MapsWrapper.ACTION.CLEAR, this._wrapper)
+      new Entry<string, MapsWrapper>(MapsWrapper.ACTION.CLEAR, this.wrapper)
     );
     markers
       .map(m => m.coordinates)
       .map(c => Leaflet.marker([c.lat, c.lng]))
-      .forEach(m => this._fetched.addLayer(m));
+      .forEach(m => this.fetched.addLayer(m));
   };
 
   onClickFetchMarkersByPlace = ($event) => {
@@ -139,6 +157,8 @@ export class NavigatorComponent extends MapAddict {
       county = $('#filter-field--county').val(),
       town = $('#filter-field--town').val(),
       road = $('#filter-field--road').val();
+
+    this.closeFiltersNav();
 
     this._restService.getAllMarkers(country, region, county, town, road)
       .subscribe(markers => this.fetchMarkers(markers));
@@ -150,11 +170,60 @@ export class NavigatorComponent extends MapAddict {
       destination = $('#filter-field--destination').val(),
       radius = $('#filter-field--search-radius').val();
 
+    this.closeFiltersNav();
+
     this._restService.getMarkerOnRouteByPlace(origin, destination, radius)
       .subscribe(response => {
         //this.fetchMarkers(response.content);
         this.drawRoutePath(response.content);
       });
   };
+
+  public drawRoutePath(responseContent: RouteAPIResponse){
+    console.log("Routing Resp ", responseContent);
+    let lngLats: LngLat[] = responseContent.routingServiceResponse.routes[0].geometry.coordinates;
+    let  markers: Marker[] = responseContent.markers;
+
+    let hotLineData = this.createHeatLineData(lngLats, markers);
+    var routePathHotline = LeafletHotline.hotline(hotLineData, this.heatLineOptions);
+
+    routePathHotline.bindPopup("Potholes founded along this route:" + markers.length +
+      + " Route calculated by " + responseContent.routingServiceResponse.info.attribution);
+    routePathHotline.addTo(this.route_path);
+    // zoom the map to the polyline
+    this.map.fitBounds(routePathHotline.getBounds());
+  }
+
+  private createHeatLineData(lngLats: LngLat[], markers: Marker[]): number[][]{
+    let latLngs: LatLngLiteral[] = this.generateLatLngLiteralsFormat(lngLats);
+    var result:  number[][] = [];
+    latLngs.forEach(value => {
+      result.push([
+        value.lat,
+        value.lng,
+        this.calculatePaletteColor(new LatLng(value.lat,value.lng), markers)
+      ]);
+    });
+    console.log(result);
+    return result;
+  }
+
+  private calculatePaletteColor(currPoint: LatLng, markers: Marker[]): number{
+    var distances: number[] = markers.map(m => currPoint.distanceTo(new LatLng(m.coordinates.lat, m.coordinates.lng)))
+      .sort((a,b) => a - b);
+    console.log(distances);
+
+    return distances[0];
+  }
+
+  private generateLatLngLiteralsFormat(lngLats: LngLat[]): LatLngLiteral[]{
+    console.log(lngLats);
+    var latLngs: LatLngLiteral[] = [];
+    lngLats.forEach((value: LngLat) => {
+      var formatCorrected: LatLngLiteral = { lat: value[1], lng: value[0] }
+      latLngs.push(formatCorrected);
+    });
+    return latLngs;
+  }
 
 }

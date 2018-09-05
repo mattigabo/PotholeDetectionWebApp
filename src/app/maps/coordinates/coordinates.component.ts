@@ -27,9 +27,9 @@ export class CoordinatesComponent extends MapAddict {
 
         super.init(entry.value);
 
-        this._map.on('click', (event : Leaflet.LeafletMouseEvent) => this.showCoordinates(event.latlng));
+        this.map.on('click', (event : Leaflet.LeafletMouseEvent) => this.showCoordinates(event.latlng));
 
-        this._map.on('move', this.hideOverlays);
+        this.map.on('move', this.hideOverlays);
 
         console.log("Coordinates Component Ready!");
       }

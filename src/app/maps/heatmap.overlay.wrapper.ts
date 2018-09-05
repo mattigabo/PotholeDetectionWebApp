@@ -10,16 +10,11 @@ import h337 from 'heatmap.js/build/heatmap.js';
  * for personal usage feel free to email
  * me with some improvements
  * 
- * remember to npm/yarn heatmap.js and leaflet !
+ * remember to npm/yarn heat_group.js and leaflet !
  * gl bois!
  *
  *
  */
-// declare var h337: {
-//   create: Function,
-//   register: Function
-// };
-
 export namespace Heatmap {
   export interface HTMLElementEx extends HTMLElement {
     _leaflet_pos?: L.Point;
@@ -60,10 +55,13 @@ export namespace Heatmap {
     private heatmap;
 
     constructor(config = {
-      scaleRadius: true,
-      radius: 4,
-      valueField:"meters",
-      useLocalExtrema: true
+      "scaleRadius": true,
+      "radius": 2,
+      "valueField":"count",
+      "useLocalExtrema": true,
+      "latField": 'lat',
+      "lngField": 'lng',
+      "maxOpacity": 0.75
     }) {
       super();
       this.cfg = config;
@@ -162,7 +160,7 @@ export namespace Heatmap {
           radius = (this.cfg.radius || 2) * radiusMultiplier;
         }
 
-        console.log(radius, this.cfg.radius, radiusMultiplier);
+        // console.log(radius, this.cfg.radius, radiusMultiplier);
 
         latlngPoint.radius = radius;
         latLngPoints.push(latlngPoint);
