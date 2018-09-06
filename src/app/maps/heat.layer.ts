@@ -2,6 +2,7 @@
 import * as L from "leaflet";
 import {simpleheat, SimpleHeat} from "./simpleheat";
 import "jquery"
+import {LatLng} from "leaflet";
 
 export interface HeatOptions {
   minOpacity?: number,
@@ -23,6 +24,8 @@ export let defaultOptions : HeatOptions = {
 
 export class HeatLayer extends L.Layer {
 
+  private _batch: L.LatLng[];
+  private _isVisible: boolean = false;
   private _frame: number;
   private _heat: SimpleHeat;
   private _canvas: HTMLCanvasElement;
@@ -44,7 +47,8 @@ export class HeatLayer extends L.Layer {
     L.Util.setOptions(this, options || defaultOptions);
   }
 
-  public setLatLngs(latlngs){
+  public display(latlngs: LatLng[]){
+    this._isVisible = true;
     this._points = latlngs;
     return this.redraw();
   }
@@ -146,7 +150,7 @@ export class HeatLayer extends L.Layer {
     }
   }
 
-  _reset() {
+  private _reset() {
     let topLeft = this._map.containerPointToLayerPoint([0, 0]);
     L.DomUtil.setPosition(this._canvas, topLeft);
 
@@ -248,6 +252,26 @@ export class HeatLayer extends L.Layer {
       // @ts-ignore
       this._canvas.style[L.DomUtil.TRANSFORM] = L.DomUtil.getTranslateString(offset) + ' scale(' + scale + ')';
     }
+  }
+
+  public show() {
+    this._points = this._batch;
+    this._batch = [];
+  }
+
+  public hide() {
+    this._batch = this._points;
+    this._points = [];
+  }
+
+  public get isVisible() {
+    return this._isVisible;
+  }
+
+  public clear() {
+    this._isVisible = false;
+    this._points = [];
+    this.redraw();
   }
 }
 

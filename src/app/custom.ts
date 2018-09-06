@@ -1,11 +1,10 @@
 import * as Leaflet from "leaflet";
-import {LatLng, LatLngExpression, LatLngLiteral} from "leaflet";
-import {LatLngTuple} from "leaflet";
+import {LatLngExpression} from "leaflet";
 
 export class Custom {
 
   public static readonly  userColor : string = '#00ccff';
-  public static readonly fetchedColor: string = '#00ffaa';
+  public static readonly fetchedColor: string = '#76197b';
 
   static readonly  setMarkerColor = (color: string) => `
     background-color: ${color};
@@ -17,7 +16,7 @@ export class Custom {
     position: relative;
     border-radius: 3rem 3rem 0;
     transform: rotate(45deg);
-    border: 2px solid #111111
+    border: 2px solid #333333
   `;
 
   public static readonly userMarkerIcon : Leaflet.DivIcon = Leaflet.divIcon({

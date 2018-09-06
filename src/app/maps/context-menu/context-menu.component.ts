@@ -13,6 +13,7 @@ import {MapAddict} from "../../map-addict";
 // import "leaflet.area/dist/leaflet-area.js"
 import {heatLayer, HeatOptions, HeatLayer} from "../heat.layer";
 import {Custom} from "../../custom";
+import {latLng, LatLng, LatLngTuple} from "leaflet";
 
 @Component({
   selector: 'app-context-menu',
@@ -114,8 +115,15 @@ export class ContextMenuComponent extends MapAddict {
         });
 
         console.log("Context Menu Component Ready!");
+      } else if (entry.key === MapsWrapper.ACTION.UPDATE_HEATMAP
+        && entry.value instanceof Array && this._heatLayer.isVisible) {
+
+        console.log("updating heatmap");
+
+        this._heatLayer.display(entry.value as LatLng[]);
       }
     });
+
   }
 
   ngOnInit() {
@@ -196,6 +204,9 @@ export class ContextMenuComponent extends MapAddict {
 
     Custom.userMarker(this._coordinatesService.coordinates).addTo(this.fetched);
     ContextMenuComponent._addMarker(this._coordinatesService.coordinates, this._restService, this._toasterService);
+    if (this._heatLayer.isVisible) {
+      this._heatLayer.add(this._coordinatesService.coordinates);
+    }
   }
 
   onClickAddAreaSelector(event : Event) {
@@ -212,6 +223,8 @@ export class ContextMenuComponent extends MapAddict {
 
   retrieveArea(event: Event){
 
+    let data: LatLng[] = [];
+
     this.geometry.eachLayer((layer) => {
         let circle = layer as Leaflet.Circle,
             gc = new GeoCoordinates(
@@ -220,19 +233,14 @@ export class ContextMenuComponent extends MapAddict {
             );
         this._restService.getAllMarkersInTheArea(gc, circle.getRadius())
           .subscribe(markers => {
-            this.populateLayer(
-              markers.map(m => this.toLatLng(m.coordinates)),
-              this.fetched,
-              Custom.serverMarker
-            );
+            data = markers.map(m => this.toLatLng(m.coordinates));
+            this.populateLayer(data, this.fetched, Custom.serverMarker);
+            this._distService.submit(new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, data));
           });
       });
 
     $('#area-retrieve-icon').hide();
     $('#area-retrieve-item').hide();
-
-    // this.hideUserDefinedMarkers();
-    this.showFetchedMarkers();
 
     this.clearSelection(event);
   }
@@ -251,12 +259,26 @@ export class ContextMenuComponent extends MapAddict {
 
     ContextMenuComponent.hideContextMenu(event);
 
-    this.clearAll(event);
+    this.fetched.clearLayers();
   }
 
   clearAll(event?: Event) {
     this.wrapper.clearAll();
     ContextMenuComponent.hideContextMenu(event);
+  }
+
+  private getMarkersCoordinates(from: Leaflet.Map | Leaflet.LayerGroup) : LatLng[] {
+    let coordinates : Leaflet.LatLng[] = [];
+
+    this.map.eachLayer(layer => {
+      if (layer instanceof Leaflet.Marker) {
+        // console.log("pushing %s in heat_group", layer.getLatLng().toString());
+        let c = layer.getLatLng();
+        coordinates.push(latLng(c.lat, c.lng, 1.0))
+      }
+    });
+
+    return coordinates;
   }
 
   displayHeatMap(event) {
@@ -267,29 +289,16 @@ export class ContextMenuComponent extends MapAddict {
       $(obj).toggle(300);
     });
 
-    let heat_data : Leaflet.LatLng[] = [];
-
-    this.map.eachLayer(layer => {
-      if (layer instanceof Leaflet.Marker) {
-        console.log("pushing %s in heat_group", layer.getLatLng().toString());
-        let c = layer.getLatLng();
-        heat_data.push(Leaflet.latLng(c.lat, c.lng, 1.0))
-      }
-    });
-
+    this._heatLayer.display(this.getMarkersCoordinates(this.map));
     this.hideAllMarkers();
-
-    this._heatLayer.setLatLngs(heat_data);
   }
 
   displayMarkers(event) {
     ContextMenuComponent.hideContextMenu(event);
 
-    $('.toggle').each((idx, obj) => {
-      $(obj).toggle(300);
-    });
+    $('.toggle').each((idx, obj) => {$(obj).toggle(300);});
 
-    this._heatLayer.setLatLngs([]);
+    this._heatLayer.clear();
     this.showAllMarkers();
   }
 
