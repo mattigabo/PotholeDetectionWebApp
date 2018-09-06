@@ -182,10 +182,14 @@ export class NavigatorComponent extends MapAddict {
 
   public drawRoutePath(responseContent: RouteAPIResponse){
 
+    this.route_path.clearLayers();
+
     let lngLats: LngLat[] = responseContent.routingServiceResponse.routes[0].geometry.coordinates,
         markers: Marker[] = responseContent.markers;
 
-    let hotLineData = this.createHeatLineData(lngLats, markers);
+    this.fetchMarkers(markers);
+
+    let hotLineData = this.createHotlineData(lngLats, markers);
     var routePathHotline = LeafletHeatLine.hotline(hotLineData, this.heatLineOptions);
 
     routePathHotline.bindPopup("Potholes founded along this route:" + markers.length +
@@ -195,7 +199,7 @@ export class NavigatorComponent extends MapAddict {
     this.map.fitBounds(routePathHotline.getBounds());
   }
 
-  private createHeatLineData(lngLats: LngLat[], markers: Marker[]): number[][]{
+  private createHotlineData(lngLats: LngLat[], markers: Marker[]): number[][]{
     let latLngs: LatLngLiteral[] = this.generateLatLngLiteralsFormat(lngLats);
     var result:  number[][] = [];
     latLngs.forEach(value => {
