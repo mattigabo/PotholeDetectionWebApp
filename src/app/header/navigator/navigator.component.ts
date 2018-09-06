@@ -14,6 +14,7 @@ import {LngLat, RouteAPIResponse, Route, RouteServiceResponse} from "../../ontol
 import {LatLngLiteral} from "leaflet";
 import {LatLng} from "leaflet";
 import * as LeafletHeatLine from 'leaflet-hotline';
+import {Custom} from "../../custom";
 
 
 @Component({
@@ -142,14 +143,13 @@ export class NavigatorComponent extends MapAddict {
     this.toggle($('#filter-by-route-form'))
   };
 
-  private fetchMarkers = (markers: Marker[]) => {
-    this._distService.submit(
-      new Entry<string, MapsWrapper>(MapsWrapper.ACTION.CLEAR, this.wrapper)
+  private addFetchedMarkersToLayer = (markers: Marker[]) => {
+
+    this.populateLayer(
+      markers.map(m => this.toLatLng(m.coordinates)),
+      this.fetched,
+      Custom.serverMarker
     );
-    markers
-      .map(m => m.coordinates)
-      .map(c => Leaflet.marker([c.lat, c.lng]))
-      .forEach(m => this.fetched.addLayer(m));
   };
 
   onClickFetchMarkersByPlace = ($event) => {
@@ -162,7 +162,7 @@ export class NavigatorComponent extends MapAddict {
     this.closeFiltersNav();
 
     this._restService.getAllMarkers(country, region, county, town, road)
-      .subscribe(markers => this.fetchMarkers(markers));
+      .subscribe(markers => this.addFetchedMarkersToLayer(markers));
   };
 
 
@@ -188,7 +188,7 @@ export class NavigatorComponent extends MapAddict {
     let lngLats: LngLat[] = responseContent.routingServiceResponse.routes[0].geometry.coordinates,
         markers: Marker[] = responseContent.markers;
 
-    this.fetchMarkers(markers);
+    this.addFetchedMarkersToLayer(markers);
 
     let hotLineData = this.createHotlineData(lngLats, markers);
     var routePathHotline = LeafletHeatLine.hotline(hotLineData, this.heatLineOptions);

@@ -7,7 +7,7 @@ export enum LAYER_NAME {
   MAP_BOX = "map-box",
   FETCHED = "fetched",
   USER_DEFINED = "user-defined",
-  AREA_SELECTED = "area-selected",
+  // AREA_SELECTED = "area-selected",
   GEOMETRY = "geometry",
   HEAT_MAP = "heat-map",
   ROUTE_PATH = "route-path"
@@ -93,7 +93,7 @@ export class MapsWrapper {
   }
 
   public clearAll() {
-    this.featureGroup(LAYER_NAME.AREA_SELECTED).clearLayers();
+    // this.featureGroup(LAYER_NAME.AREA_SELECTED).clearLayers();
     this.featureGroup(LAYER_NAME.FETCHED).clearLayers();
     this.featureGroup(LAYER_NAME.USER_DEFINED).clearLayers();
     this.featureGroup(LAYER_NAME.ROUTE_PATH).clearLayers();
