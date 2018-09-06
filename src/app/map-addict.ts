@@ -80,4 +80,30 @@ export class MapAddict implements OnInit, AfterViewInit  {
     return [c.lat, c.lng] as LatLngTuple;
   }
 
+
+  protected showUserDefinedMarkers(){
+    this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
+  }
+
+  protected showFetchedMarkers(){
+    this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
+  }
+
+  protected showRoute(){
+    this.wrapper.add(LAYER_NAME.ROUTE_PATH, this.route_path);
+  }
+
+
+  protected hideUserDefinedMarkers() {
+    this.layers.removeLayer(this.user_defined);
+  }
+
+  protected hideFetchedMarkers() {
+    this.layers.removeLayer(this.fetched);
+  }
+
+  protected hideRoute() {
+    this.layers.removeLayer(this.route_path);
+  }
+
 }

@@ -374,25 +374,9 @@ export class ContextMenuComponent extends MapAddict {
     this.showFetchedMarkers();
   }
 
-  private showUserDefinedMarkers(){
-    this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
-  }
-
-  private showFetchedMarkers(){
-    this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
-  }
-
   private hideAllMarkers(){
 
     this.hideUserDefinedMarkers();
     this.hideFetchedMarkers();
-  }
-
-  private hideUserDefinedMarkers() {
-    this.layers.removeLayer(this.user_defined);
-  }
-
-  private hideFetchedMarkers() {
-    this.layers.removeLayer(this.fetched);
   }
 }
