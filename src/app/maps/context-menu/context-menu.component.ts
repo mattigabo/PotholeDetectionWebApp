@@ -220,15 +220,15 @@ export class ContextMenuComponent extends MapAddict {
             markers
               .map(m => m.coordinates)
               .map(c => Leaflet.marker([c.lat, c.lng]))
-              .forEach(m => this.area_selected.addLayer(m))
+              .forEach(m => this.fetched.addLayer(m))
           });
       });
 
     $('#area-retrieve-icon').hide();
     $('#area-retrieve-item').hide();
 
-    this.hideAllMarkers();
-    this.showAreaSelectedMarkers();
+    this.hideUserDefinedMarkers();
+    this.showFetchedMarkers();
 
     this.clearSelection(event);
   }
@@ -250,7 +250,6 @@ export class ContextMenuComponent extends MapAddict {
 
     this.user_defined.clearLayers();
     this.fetched.clearLayers();
-    this.area_selected.clearLayers();
   }
 
   clearAll(event: Event) {
@@ -340,16 +339,11 @@ export class ContextMenuComponent extends MapAddict {
 
   private showAllMarkers(){
     this.showUserDefinedMarkers();
-    this.showAreaSelectedMarkers();
     this.showFetchedMarkers();
   }
 
   private showUserDefinedMarkers(){
     this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
-  }
-
-  private showAreaSelectedMarkers(){
-    this.wrapper.add(LAYER_NAME.AREA_SELECTED,this.area_selected);
   }
 
   private showFetchedMarkers(){
@@ -360,7 +354,6 @@ export class ContextMenuComponent extends MapAddict {
 
     this.hideUserDefinedMarkers();
     this.hideFetchedMarkers();
-    this.hideAreaSelectedMarkers();
   }
 
   private hideUserDefinedMarkers() {
@@ -369,10 +362,6 @@ export class ContextMenuComponent extends MapAddict {
 
   private hideFetchedMarkers() {
     this.layers.removeLayer(this.fetched);
-  }
-
-  private hideAreaSelectedMarkers() {
-    this.layers.removeLayer(this.area_selected);
   }
 
 }

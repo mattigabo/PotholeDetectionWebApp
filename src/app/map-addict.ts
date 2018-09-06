@@ -12,7 +12,7 @@ export class MapAddict implements OnInit, AfterViewInit  {
 
   private _user_defined: Leaflet.FeatureGroup;
   private _fetched: Leaflet.FeatureGroup;
-  private _area_selected: Leaflet.FeatureGroup;
+  // private _area_selected: Leaflet.FeatureGroup;
   private _geometry: Leaflet.FeatureGroup;
   private _route_path: Leaflet.FeatureGroup;
   private _heat_group: Leaflet.FeatureGroup;
@@ -27,7 +27,7 @@ export class MapAddict implements OnInit, AfterViewInit  {
 
       this._user_defined = this._wrapper.featureGroup(LAYER_NAME.USER_DEFINED);
       this._fetched = this._wrapper.featureGroup(LAYER_NAME.FETCHED);
-      this._area_selected = this._wrapper.featureGroup(LAYER_NAME.AREA_SELECTED);
+      // this._area_selected = this._wrapper.featureGroup(LAYER_NAME.AREA_SELECTED);
       this._geometry = this._wrapper.featureGroup(LAYER_NAME.GEOMETRY);
       this._route_path = this._wrapper.featureGroup(LAYER_NAME.ROUTE_PATH);
       this._heat_group = this._wrapper.featureGroup(LAYER_NAME.HEAT_MAP);
@@ -52,7 +52,7 @@ export class MapAddict implements OnInit, AfterViewInit  {
 
   get fetched(): Leaflet.FeatureGroup { return this._fetched; }
 
-  get area_selected(): Leaflet.FeatureGroup { return this._area_selected; }
+  // get area_selected(): Leaflet.FeatureGroup { return this._area_selected; }
 
   get geometry(): Leaflet.FeatureGroup { return this._geometry; }
 
