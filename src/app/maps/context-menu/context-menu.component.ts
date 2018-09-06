@@ -202,7 +202,7 @@ export class ContextMenuComponent extends MapAddict {
 
     ContextMenuComponent.hideContextMenu(event);
 
-    Custom.userMarker(this._coordinatesService.coordinates).addTo(this.fetched);
+    Custom.userMarker(this._coordinatesService.coordinates).addTo(this.user_defined);
     ContextMenuComponent._addMarker(this._coordinatesService.coordinates, this._restService, this._toasterService);
     if (this._heatLayer.isVisible) {
       this._heatLayer.add(this._coordinatesService.coordinates);
