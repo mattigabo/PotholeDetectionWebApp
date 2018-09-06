@@ -15,6 +15,7 @@ import {LatLngLiteral} from "leaflet";
 import {LatLng} from "leaflet";
 import * as LeafletHeatLine from 'leaflet-hotline';
 
+
 @Component({
   selector: 'app-navigator',
   templateUrl: './navigator.component.html',

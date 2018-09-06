@@ -1,5 +1,6 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import {FormsModule} from "@angular/forms";
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -17,6 +18,7 @@ import {DistributionService} from "./services/distribution/distribution.service"
 import { NavigatorComponent } from './header/navigator/navigator.component';
 import {CoordinatesService} from "./services/coordinates/coordinates.service";
 import {WindowService} from "./services/window/window.service";
+import { CheckboxGroupComponent } from './maps/checkbox-group/checkbox-group.component';
 
 @NgModule({
   declarations: [
@@ -28,9 +30,11 @@ import {WindowService} from "./services/window/window.service";
     CoordinatesComponent,
     MarkersPopupComponent,
     NavigatorComponent,
+    CheckboxGroupComponent,
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     ToasterModule.forRoot()
