@@ -144,12 +144,10 @@ export class NavigatorComponent extends MapAddict {
   };
 
   private addFetchedMarkersToLayer = (markers: Marker[]) => {
-
-    this.populateLayer(
-      markers.map(m => this.toLatLng(m.coordinates)),
-      this.fetched,
-      Custom.serverMarker
-    );
+    let data : LatLng[] = markers.map(m => this.toLatLng(m.coordinates));
+    this.populateLayer(data, this.fetched, Custom.serverMarker);
+    // console.log(data);
+    this._distService.submit(new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, data));
   };
 
   onClickFetchMarkersByPlace = ($event) => {

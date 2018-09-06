@@ -16,7 +16,8 @@ export enum LAYER_NAME {
 export class MapsWrapper {
 
   public static ACTION = {
-    CLEAR: "CLEAR",
+    CLEAR_LAYER: "CLEAR_LAYER",
+    UPDATE_HEATMAP: "UPDATE_HEATMAP",
   };
 
   private _map : Leaflet.Map;

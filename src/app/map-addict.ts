@@ -1,13 +1,15 @@
 import {LAYER_NAME, MapsWrapper} from "./maps/maps.wrapper";
 import * as Leaflet from 'leaflet';
 import {AfterViewInit, OnInit} from "@angular/core";
-import {LayerGroup} from "leaflet";
+import {DomUtil, latLng, LayerGroup} from "leaflet";
 import {LatLng} from "leaflet";
 import {LatLngLiteral} from "leaflet";
 import {LatLngTuple} from "leaflet";
 import {Marker} from "leaflet";
 import {LatLngExpression} from "leaflet";
 import {GeoCoordinates} from "./ontologies/DataStructures";
+import {HeatLayer} from "./maps/heat.layer";
+import hasClass = DomUtil.hasClass;
 
 export class MapAddict implements OnInit, AfterViewInit  {
 
@@ -73,11 +75,10 @@ export class MapAddict implements OnInit, AfterViewInit  {
     group.clearLayers();
 
     latLngs.forEach(p => markerGenerator(p).addTo(group));
-
   }
 
-  protected toLatLng(c: GeoCoordinates) {
-    return [c.lat, c.lng] as LatLngTuple;
+  protected toLatLng(c: GeoCoordinates) : LatLng{
+    return latLng([c.lat, c.lng]);
   }
 
 
