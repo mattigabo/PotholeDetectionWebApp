@@ -2,6 +2,8 @@
  *  In this file are defined the setData structures of Objects returned by RestApi call in order to use the http client
  *  automatic binding of json proprieties
  */
+import {LatLngExpression, LatLngTuple} from "leaflet";
+
 export interface Marker {
   id: number;
   nDetections: number;

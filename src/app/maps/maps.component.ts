@@ -6,8 +6,9 @@ import {Marker} from "../ontologies/DataStructures";
 import {MapsWrapper} from "./maps.wrapper";
 import {DistributionService} from "../services/distribution/distribution.service";
 import {MapAddict} from "../map-addict";
-import {LatLngExpression} from "leaflet";
 import {ToasterService} from "angular2-toaster";
+import {Custom} from "../custom";
+import {LatLng, LatLngExpression, LayerGroup} from "leaflet";
 
 @Component({
   selector: 'app-maps',
@@ -38,19 +39,14 @@ export class MapsComponent extends MapAddict{
 
         this.restService.getAllMarkers()
           .subscribe((potholes: Marker[]) => {
-            console.log(potholes);
-            potholes.map(m => m.coordinates)
-              .forEach(c => {
-                  console.log("Marker drawing...", c);
-                  Leaflet.marker([c.lat, c.lng]).addTo(this.fetched);
-                })
-          });
-      }
-    });
+            // console.log(potholes);
 
-    distService.subscribe(entry => {
-      if (entry.value === MapsWrapper.ACTION.CLEAR) {
-        this.wrapper.clearAll();
+            this.populateLayer(
+              potholes.map(m => this.toLatLng(m.coordinates)),
+              this.fetched,
+              Custom.serverMarker
+            );
+          });
       }
     });
 

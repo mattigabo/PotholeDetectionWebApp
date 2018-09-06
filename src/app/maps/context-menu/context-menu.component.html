@@ -4,13 +4,13 @@
     <div class="context-menu__icon row">
       <i class="fas fa-map-marker-alt"></i>
     </div>
-    <div class="context-menu__icon row">
+    <div id="area-select-icon" class="context-menu__icon row">
       <i class="fas fa-vector-square"></i>
     </div>
     <div id="area-retrieve-icon" class="context-menu__icon row">
       <i class="fas fa-vector-square"></i>
     </div>
-    <div class="context-menu__icon row">
+    <div id="clear-selection-icon" class="context-menu__icon row">
       <i class="fas fa-trash-alt"></i>
     </div>
     <div class="context-menu__icon row">
@@ -26,21 +26,21 @@
 
   <div class="context-menu__items col">
     <div class="context-menu__item row">
-      <a id="add-marker" class="context-menu__link" (click)="addMarker($event)">
+      <a id="add-marker" class="context-menu__link" (click)="onClickAddUserMarker($event)">
         <strong>Add Marker</strong>
       </a>
     </div>
-    <div class="context-menu__item row">
-      <a id="add-area-selector" class="context-menu__link" (click)="addArea($event)">
+    <div id="area-select-item" class="context-menu__item row">
+      <a id="add-area-selector" class="context-menu__link" (click)="onClickAddAreaSelector($event)">
         <strong>Select Area</strong>
       </a>
     </div>
     <div id="area-retrieve-item" class="context-menu__item row">
       <a id="retrieve-selected-area" class="context-menu__link" (click)="retrieveArea($event)">
-          <strong>Retrieve Area</strong>
+          <strong>Retrieve in Area</strong>
       </a>
     </div>
-    <div class="context-menu__item row">
+    <div id="clear-selection-item" class="context-menu__item row">
       <a id="clear-layers-selection" class="context-menu__link" (click)="clearSelection($event)">
         <strong>Clear Selection</strong>
       </a>

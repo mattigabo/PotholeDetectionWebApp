@@ -1,6 +1,13 @@
 import {LAYER_NAME, MapsWrapper} from "./maps/maps.wrapper";
 import * as Leaflet from 'leaflet';
 import {AfterViewInit, OnInit} from "@angular/core";
+import {LayerGroup} from "leaflet";
+import {LatLng} from "leaflet";
+import {LatLngLiteral} from "leaflet";
+import {LatLngTuple} from "leaflet";
+import {Marker} from "leaflet";
+import {LatLngExpression} from "leaflet";
+import {GeoCoordinates} from "./ontologies/DataStructures";
 
 export class MapAddict implements OnInit, AfterViewInit  {
 
@@ -39,7 +46,6 @@ export class MapAddict implements OnInit, AfterViewInit  {
   ngOnInit(): void {
   }
 
-
   get wrapper(): MapsWrapper { return this._wrapper; }
 
   get map(): Leaflet.Map { return this._map; }
@@ -59,5 +65,19 @@ export class MapAddict implements OnInit, AfterViewInit  {
   get route_path(): Leaflet.FeatureGroup { return this._route_path; }
 
   get heat_group(): Leaflet.FeatureGroup { return this._heat_group; }
+
+  protected populateLayer(latLngs: LatLngExpression[],
+                          group: LayerGroup,
+                          markerGenerator: (LatLngExpression) => Marker) {
+
+    group.clearLayers();
+
+    latLngs.forEach(p => markerGenerator(p).addTo(group));
+
+  }
+
+  protected toLatLng(c: GeoCoordinates) {
+    return [c.lat, c.lng] as LatLngTuple;
+  }
 
 }
