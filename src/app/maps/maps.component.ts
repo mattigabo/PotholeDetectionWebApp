@@ -3,12 +3,11 @@ import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../services/rest/rest-adapter.service";
 import {Marker} from "../ontologies/DataStructures";
 
-import {MapsWrapper} from "./maps.wrapper";
+import {MapsWrapper} from "../core/maps.wrapper";
 import {DistributionService} from "../services/distribution/distribution.service";
-import {MapAddict} from "../map-addict";
+import {MapAddict} from "../core/map-addict";
 import {ToasterService} from "angular2-toaster";
-import {Custom} from "../custom";
-import {LatLng, LatLngExpression, LayerGroup} from "leaflet";
+import {Custom} from "../core/custom";
 
 @Component({
   selector: 'app-maps',
@@ -39,7 +38,6 @@ export class MapsComponent extends MapAddict{
 
         this.restService.getAllMarkers()
           .subscribe((potholes: Marker[]) => {
-            // console.log(potholes);
 
             this.populateLayer(
               potholes.map(m => this.toLatLng(m.coordinates)),

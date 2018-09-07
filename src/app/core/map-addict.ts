@@ -1,17 +1,10 @@
-import {LAYER_NAME, MapsWrapper} from "./maps/maps.wrapper";
+import {LAYER_NAME, MapsWrapper} from "./maps.wrapper";
 import * as Leaflet from 'leaflet';
+import {DomUtil, latLng, LatLng, LatLngExpression, LayerGroup, Marker} from 'leaflet';
 import {AfterViewInit, OnInit} from "@angular/core";
-import {DomUtil, latLng, LayerGroup} from "leaflet";
-import {LatLng} from "leaflet";
-import {LatLngLiteral} from "leaflet";
-import {LatLngTuple} from "leaflet";
-import {Marker} from "leaflet";
-import {LatLngExpression} from "leaflet";
-import {GeoCoordinates} from "./ontologies/DataStructures";
-import {HeatLayer} from "./maps/heat.layer";
-import hasClass = DomUtil.hasClass;
+import {GeoCoordinates} from "../ontologies/DataStructures";
 
-export class MapAddict implements OnInit, AfterViewInit  {
+export class MapAddict implements OnInit, AfterViewInit {
 
   private _wrapper: MapsWrapper;
 
@@ -81,7 +74,6 @@ export class MapAddict implements OnInit, AfterViewInit  {
     return latLng([c.lat, c.lng]);
   }
 
-
   protected showUserDefinedMarkers(){
     this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
   }
@@ -93,7 +85,6 @@ export class MapAddict implements OnInit, AfterViewInit  {
   protected showRoute(){
     this.wrapper.add(LAYER_NAME.ROUTE_PATH, this.route_path);
   }
-
 
   protected hideUserDefinedMarkers() {
     this.layers.removeLayer(this.user_defined);
@@ -107,4 +98,13 @@ export class MapAddict implements OnInit, AfterViewInit  {
     this.layers.removeLayer(this.route_path);
   }
 
+  protected showAllMarkers(){
+    this.showUserDefinedMarkers();
+    this.showFetchedMarkers();
+  }
+
+  protected hideAllMarkers(){
+    this.hideUserDefinedMarkers();
+    this.hideFetchedMarkers();
+  }
 }
