@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
+import {LAYER_NAME, MapsWrapper} from "../../core/maps.wrapper";
 import * as $ from "jquery";
 import * as Leaflet from 'leaflet';
 import 'leaflet-draw';
@@ -8,19 +8,17 @@ import {Toast, ToasterService} from "angular2-toaster";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {GeoCoordinates} from "../../ontologies/DataStructures";
-import {MapAddict} from "../../map-addict";
-// import {Heatmap} from "../heat_group.overlay.wrapper";
-// import "leaflet.area/dist/leaflet-area.js"
-import {heatLayer, HeatOptions, HeatLayer} from "../heat.layer";
-import {Custom} from "../../custom";
-import {latLng, LatLng, LatLngTuple} from "leaflet";
+import {heatLayer, HeatOptions, HeatLayer} from "../../core/heat.layer";
+import {Custom} from "../../core/custom";
+import {latLng, LatLng} from "leaflet";
+import {HeatmapUpdater} from "../../core/heatmap-updater";
 
 @Component({
   selector: 'app-context-menu',
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.css']
 })
-export class ContextMenuComponent extends MapAddict {
+export class ContextMenuComponent extends HeatmapUpdater {
 
   private _heatLayer : HeatLayer;
 
@@ -50,7 +48,7 @@ export class ContextMenuComponent extends MapAddict {
               private _toasterService: ToasterService,
               private _coordinatesService: CoordinatesService,
               private _distService: DistributionService) {
-    super();
+    super(_distService);
 
     _distService.subscribe(entry => {
       if (entry.key === MapsWrapper.name &&
@@ -59,7 +57,6 @@ export class ContextMenuComponent extends MapAddict {
         super.init(entry.value as MapsWrapper);
 
         this._heatLayer = heatLayer().setOptions(this._heatmapOptions);
-        this.heat_group.addLayer(this._heatLayer);
 
         // @ts-ignore
         Leaflet.drawLocal.draw.handlers.circle.tooltip.start = "";
@@ -77,12 +74,7 @@ export class ContextMenuComponent extends MapAddict {
 
         this.map.on('contextmenu', this.onMapContextMenuShowContextMenu);
         this.route_path.on('contextmenu', this.onMapContextMenuShowContextMenu);
-
-        this.geometry.on('contextmenu', (event) => {
-
-          this._circleEditor.save();
-
-        });
+        this.geometry.on('contextmenu', (event) => {this._circleEditor.save();});
 
         this.map.on(Leaflet.Draw.Event.CREATED, (event : Leaflet.DrawEvents.Created) => {
           let type = event.layerType,
@@ -235,7 +227,6 @@ export class ContextMenuComponent extends MapAddict {
           .subscribe(markers => {
             data = markers.map(m => this.toLatLng(m.coordinates));
             this.populateLayer(data, this.fetched, Custom.serverMarker);
-            this._distService.submit(new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, data));
           });
       });
 
@@ -258,13 +249,45 @@ export class ContextMenuComponent extends MapAddict {
   clearMarkers(event? : Event){
 
     ContextMenuComponent.hideContextMenu(event);
-
     this.fetched.clearLayers();
+    this.user_defined.clearLayers();
+    if (this._heatLayer.isVisible) {
+      this._heatLayer.display([]);
+    }
   }
 
   clearAll(event?: Event) {
-    this.wrapper.clearAll();
+
     ContextMenuComponent.hideContextMenu(event);
+    if (this._heatLayer.isVisible) {
+      this.displayMarkers(event)
+    }
+    this.wrapper.clearAll();
+  }
+
+  displayHeatMap(event) {
+
+    ContextMenuComponent.hideContextMenu(event);
+
+    $('.toggle').each((idx, obj) => {
+      $(obj).toggle(300);
+    });
+
+    this._heatLayer
+      .display(this.getMarkersCoordinates(this.map))
+      .addTo(this.heat_group);
+    this.hideAllMarkers();
+  }
+
+  displayMarkers(event) {
+    ContextMenuComponent.hideContextMenu(event);
+
+    $('.toggle').each((idx, obj) => {$(obj).toggle(300);});
+
+    this.heat_group
+      .removeLayer(this._heatLayer.clear());
+
+    this.showAllMarkers();
   }
 
   private getMarkersCoordinates(from: Leaflet.Map | Leaflet.LayerGroup) : LatLng[] {
@@ -279,27 +302,6 @@ export class ContextMenuComponent extends MapAddict {
     });
 
     return coordinates;
-  }
-
-  displayHeatMap(event) {
-
-    ContextMenuComponent.hideContextMenu(event);
-
-    $('.toggle').each((idx, obj) => {
-      $(obj).toggle(300);
-    });
-
-    this._heatLayer.display(this.getMarkersCoordinates(this.map));
-    this.hideAllMarkers();
-  }
-
-  displayMarkers(event) {
-    ContextMenuComponent.hideContextMenu(event);
-
-    $('.toggle').each((idx, obj) => {$(obj).toggle(300);});
-
-    this._heatLayer.clear();
-    this.showAllMarkers();
   }
 
   private static _showRetrieveArea(target?: EventTarget) {
@@ -376,16 +378,5 @@ export class ContextMenuComponent extends MapAddict {
       X =>  toasterService.pop(successToast),
       err => toasterService.pop(errorToast),
     );
-  }
-
-  private showAllMarkers(){
-    this.showUserDefinedMarkers();
-    this.showFetchedMarkers();
-  }
-
-  private hideAllMarkers(){
-
-    this.hideUserDefinedMarkers();
-    this.hideFetchedMarkers();
   }
 }

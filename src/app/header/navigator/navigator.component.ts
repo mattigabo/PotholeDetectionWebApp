@@ -2,10 +2,10 @@ import { Component} from '@angular/core';
 import * as $ from 'jquery';
 import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../../services/rest/rest-adapter.service";
-import {MapsWrapper} from "../../maps/maps.wrapper";
+import {MapsWrapper} from "../../core/maps.wrapper";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
-import {MapAddict} from "../../map-addict";
+import {MapAddict} from "../../core/map-addict";
 import {Marker} from "../../ontologies/DataStructures";
 import {marker} from "leaflet";
 import {WindowService} from "../../services/window/window.service";
@@ -14,7 +14,8 @@ import {LngLat, RouteAPIResponse, Route, RouteServiceResponse} from "../../ontol
 import {LatLngLiteral} from "leaflet";
 import {LatLng} from "leaflet";
 import * as LeafletHeatLine from 'leaflet-hotline';
-import {Custom} from "../../custom";
+import {Custom} from "../../core/custom";
+import {HeatmapUpdater} from "../../core/heatmap-updater";
 
 
 @Component({
@@ -22,7 +23,7 @@ import {Custom} from "../../custom";
   templateUrl: './navigator.component.html',
   styleUrls: ['./navigator.component.css']
 })
-export class NavigatorComponent extends MapAddict {
+export class NavigatorComponent extends HeatmapUpdater {
 
   private heatLineOptions =  {
     min: 30,
@@ -43,7 +44,7 @@ export class NavigatorComponent extends MapAddict {
               private _toaster: ToasterService,
               private _windower: WindowService) {
 
-    super();
+    super(_distService);
 
     _distService.subscribe(entry => {
       if (entry.key === MapsWrapper.name &&
@@ -146,8 +147,6 @@ export class NavigatorComponent extends MapAddict {
   private addFetchedMarkersToLayer = (markers: Marker[]) => {
     let data : LatLng[] = markers.map(m => this.toLatLng(m.coordinates));
     this.populateLayer(data, this.fetched, Custom.serverMarker);
-    // console.log(data);
-    this._distService.submit(new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, data));
   };
 
   onClickFetchMarkersByPlace = ($event) => {

@@ -271,7 +271,7 @@ export class HeatLayer extends L.Layer {
   public clear() {
     this._isVisible = false;
     this._points = [];
-    this.redraw();
+    return this.redraw();
   }
 }
 

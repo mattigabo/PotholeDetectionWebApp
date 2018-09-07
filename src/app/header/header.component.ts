@@ -2,10 +2,10 @@ import {Component} from '@angular/core';
 import * as $ from 'jquery';
 import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../services/rest/rest-adapter.service";
-import {MapsWrapper} from "../maps/maps.wrapper";
+import {MapsWrapper} from "../core/maps.wrapper";
 import {DistributionService, Entry} from "../services/distribution/distribution.service";
 import {CoordinatesService} from "../services/coordinates/coordinates.service";
-import {MapAddict} from "../map-addict";
+import {MapAddict} from "../core/map-addict";
 
 @Component({
   selector: 'app-header',

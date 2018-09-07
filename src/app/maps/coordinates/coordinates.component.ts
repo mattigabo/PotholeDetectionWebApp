@@ -1,11 +1,11 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {LAYER_NAME, MapsWrapper} from "../maps.wrapper";
+import {LAYER_NAME, MapsWrapper} from "../../core/maps.wrapper";
 import * as Leaflet from 'leaflet';
 import * as $ from 'jquery';
 import {Toast, ToasterService} from "angular2-toaster";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
-import {MapAddict} from "../../map-addict";
+import {MapAddict} from "../../core/map-addict";
 import {instantiationError} from "@angular/core/src/di/reflective_errors";
 
 @Component({

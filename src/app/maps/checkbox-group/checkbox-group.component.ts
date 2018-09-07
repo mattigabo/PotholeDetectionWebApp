@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {MapAddict} from "../../map-addict";
+import {MapAddict} from "../../core/map-addict";
 import {DistributionService} from "../../services/distribution/distribution.service";
-import {MapsWrapper} from "../maps.wrapper";
+import {MapsWrapper} from "../../core/maps.wrapper";
 import {WindowService} from "../../services/window/window.service";
 
 

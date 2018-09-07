@@ -94,10 +94,16 @@ export class MapsWrapper {
   }
 
   public clearAll() {
+    this._layers.getLayers()
+      .filter(l => l instanceof LayerGroup)
+      .forEach(lg => {
+        (lg as LayerGroup).clearLayers()
+      });
     // this.featureGroup(LAYER_NAME.AREA_SELECTED).clearLayers();
-    this.featureGroup(LAYER_NAME.FETCHED).clearLayers();
-    this.featureGroup(LAYER_NAME.USER_DEFINED).clearLayers();
-    this.featureGroup(LAYER_NAME.ROUTE_PATH).clearLayers();
+    // this.featureGroup(LAYER_NAME.FETCHED).clearLayers();
+    // this.featureGroup(LAYER_NAME.USER_DEFINED).clearLayers();
+    // this.featureGroup(LAYER_NAME.ROUTE_PATH).clearLayers();
+    // this.featureGroup(LAYER_NAME.GEOMETRY).clearLayers();
   }
 
   private onLocationFound(event : Leaflet.LocationEvent) {
