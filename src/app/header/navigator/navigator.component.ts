@@ -1,13 +1,10 @@
 import { Component} from '@angular/core';
 import * as $ from 'jquery';
-import * as Leaflet from 'leaflet';
 import {RestAdapterService} from "../../services/rest/rest-adapter.service";
 import {MapsWrapper} from "../../core/maps.wrapper";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
-import {MapAddict} from "../../core/map-addict";
 import {Marker} from "../../ontologies/DataStructures";
-import {marker} from "leaflet";
 import {WindowService} from "../../services/window/window.service";
 import {ToasterService} from "angular2-toaster";
 import {LngLat, RouteAPIResponse, Route, RouteServiceResponse} from "../../ontologies/RouteData";
@@ -123,26 +120,25 @@ export class NavigatorComponent extends HeatmapUpdater {
     });
   };
 
-  private toggle (el) {
-    if (el.css('display') === 'none') {
-      el.css({display:'flex'}).hide().show(300);
-    } else {
-      el.hide(300);
-      el.removeClass("active");
-    }
-  }
-
-  displayPlaceFilters = (event) => {
-    $('#filter-by-route-form').hide(300);
+  togglePlaceFilters = (event) => {
+    $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
 
     this.toggle($('#filter-by-place-form'));
   };
 
-  displayRouteFilters = (event) => {
-    $('#filter-by-place-form').hide(300);
+  toggleRouteFilters = (event) => {
+    $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
 
     this.toggle($('#filter-by-route-form'))
   };
+
+  private toggle (el) {
+    if (el.css('display') === 'none') {
+      el.css({display:'flex'}).hide().show(400);
+    } else {
+      el.hide(400);
+    }
+  }
 
   private addFetchedMarkersToLayer = (markers: Marker[]) => {
     let data : LatLng[] = markers.map(m => this.toLatLng(m.coordinates));

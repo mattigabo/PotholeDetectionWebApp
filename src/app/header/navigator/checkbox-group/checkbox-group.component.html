@@ -1,0 +1,19 @@
+<div id="layers-checkbox-group" class="filters-nav--entry" xmlns="http://www.w3.org/1999/html">
+  <div id="checkbox-group-title" class="filters-nav-form--header inactive">
+    <a (click)="toggleCheckboxContainer($event)"><strong>Filter which layer to show</strong></a>
+  </div>
+  <div id="checkbox-container" class="filters-nav-form close-on-esc">
+    <div>
+      <input type="checkbox" id="route-layer-checkbox" class="layer-checkbox" [(ngModel)]="routeChecked" (change)="onRouteClicked($event)"/>Route
+    </div>
+    <div>
+      <input type="checkbox" id="fetched-markers-layer-checkbox" class="layer-checkbox" [(ngModel)]="fetchedChecked" (change)="onFetchedClicked($event)"/>Selected Markers
+    </div>
+    <div>
+      <input type="checkbox" id="user-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="userDefinedChecked"(change)="onUserDefinedClicked($event)"/>User defined
+    </div>
+    <div>
+      <input type="checkbox" id="system-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="systemDefinedChecked"(change)="onSystemDefinedClicked($event)"/>System defined
+    </div>
+  </div>
+</div>

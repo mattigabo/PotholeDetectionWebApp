@@ -15,7 +15,7 @@ export class Custom {
     left: -1.0rem;
     top: -1.0rem;
     position: relative;
-    border-radius: 3rem 3rem 0;
+    border-radius: 2rem 2rem 0;
     transform: rotate(45deg);
     border: 2px solid #333333
   `;
