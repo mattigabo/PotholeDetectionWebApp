@@ -1,9 +1,18 @@
 <div id="filters-nav" class="nav close-on-esc">
   <div id="filters-nav--header" class="close-on-esc">
-    <a class="hidden"><strong></strong></a>
-    <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
+    <div id="restore-view--buttons">
+      <a class="hidden"><strong></strong></a>
+      <a id="restore.view--button"
+         (click)="onClickUndoFiltering($event)">
+        <i class="fas fa-undo fa-1x"></i> Undo filtering
+      </a>
+    </div>
+    <div id="close-nav-button">
+      <a class="hidden"><strong></strong></a>
+      <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
       <i class="fas fa-arrow-left fa-2x"></i>
-    </a>
+      </a>
+    </div>
   </div>
   <div id="filters-nav--entries" class="close-on-esc">
     <div id="filter-by-place" class="filters-nav--entry">

@@ -10,7 +10,8 @@ export enum LAYER_NAME {
   // AREA_SELECTED = "area-selected",
   GEOMETRY = "geometry",
   HEAT_MAP = "heat-map",
-  ROUTE_PATH = "route-path"
+  ROUTE_PATH = "route-path",
+  SYSTEM_DEFINED = "system-defined"
 }
 
 export class MapsWrapper {

@@ -122,6 +122,18 @@
   color: #f1f1f1;
 }
 
+#restore-view--buttons{
+  margin: 2%;
+}
+
+#restore-view--buttons > a {
+  color: #818181;
+}
+
+#restore-view--buttons > a:hover {
+  color: #f1f1f1;
+}
+
 @media (max-width: 480px) {
   .nav {
     position: fixed;

@@ -41,7 +41,7 @@ export class MapsComponent extends MapAddict{
 
             this.populateLayer(
               potholes.map(m => this.toLatLng(m.coordinates)),
-              this.fetched,
+              this.system_defined,
               Custom.serverMarker
             );
           });
