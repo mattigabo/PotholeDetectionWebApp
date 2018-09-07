@@ -6,60 +6,52 @@
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   flex-direction: row;
   background-color: transparent;
   z-index: 2;
-  padding: 3% 2% 2% 2%;
   pointer-events: none;
-  align-content: baseline;
 }
 
-#filters {
+.header {
   position: relative;
   /*top: 4%;*/
   /*left: 3%;*/
   /*justify-content: space-between;*/
   background-color: transparent;
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
   z-index: 2;
   pointer-events: none;
   padding: 10px;
+  margin-top: 2%;
+}
+
+#filters {
+  flex-direction: row;
+  align-items: flex-end;
 }
 
 #filters > a {
-  margin-left: 10px;
-  float: left;
+  margin-left: 20px;
+  /*float: left;*/
   pointer-events: all;
   cursor: pointer;
   text-decoration: none;
 }
 
 #credits {
-  position: relative;
-  /*top: 4%;*/
-  /*right: 2%;*/
-  /*width: 100%;*/
-  /*justify-content: space-between;*/
-  background-color: transparent;
-  display: flex;
   flex-direction: row-reverse;
-  align-items: flex-end;
-  z-index: 2;
-  pointer-events: none;
-  margin-right: 1%;
-  padding: 10px;
+  align-items: flex-start;
 }
 
 #credits > a {
-  position: relative;
-  float: right;
+  /*float: right;*/
   pointer-events: all;
-  margin-right: 10px;
+  margin-right: 20px;
+  cursor: pointer;
   text-decoration: none;
 }
 
@@ -76,23 +68,16 @@
 
 #repository:hover{color: purple}
 
-#about {
-  color: #444444;
-  transition: 0.3s;
-}
-
-#about:hover {color: black}
-
 #help {
   color: #999999;
   transition: 0.3s;
 }
 
-#help:hover {color: #f1f1f1}
+#help:hover {color: #333333}
 
-#menu-button {
+#filters-button {
   color: #444444;
   transition: 0.3s;
 }
 
-#menu-button:hover {color: black}
+#filters-button:hover {color: black}

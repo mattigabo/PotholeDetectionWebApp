@@ -15,11 +15,9 @@ import {MapAddict} from "../core/map-addict";
 
 export class HeaderComponent extends MapAddict {
 
-  help = "";
-  about =
-    'Alma Mater Studiorum Bologna - Laurea Magistrale in Ingegneria e Scienze Informatiche\n'
-    '\nAlessandro Cevoli, Matteo Gabellini';
-  credits = 'pumpkinheads@gmail.com';
+  help = "https://github.com/mattigabo/PotholeDetectionWebApp/wiki/Web-App-Functionalities";
+  email = 'pumpkinheads@gmail.com';
+  mail_sender = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=" + this.email + "&tf=1";
   repository = 'https://github.com/mattigabo/PotholeDetectionWebApp';
 
   constructor(private restService : RestAdapterService,
