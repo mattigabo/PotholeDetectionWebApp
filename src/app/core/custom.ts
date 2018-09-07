@@ -3,8 +3,9 @@ import {LatLngExpression} from "leaflet";
 
 export class Custom {
 
-  public static readonly  userColor : string = '#00ccff';
-  public static readonly fetchedColor: string = '#76197b';
+  public static readonly userColor : string = '#00ccff';
+  public static readonly serverColor: string = '#76197b';
+  public static readonly fetchedColor: string = '#ffdc23';
 
   static readonly  setMarkerColor = (color: string) => `
     background-color: ${color};
@@ -27,10 +28,18 @@ export class Custom {
     html: `<span style="${Custom.setMarkerColor(Custom.userColor)}" />`
   });
 
-  public static readonly fetchedMarkerIcon : Leaflet.DivIcon = Leaflet.divIcon({
+  public static readonly serverMarkerIcon : Leaflet.DivIcon = Leaflet.divIcon({
     className: "user-marker-pin",
     iconAnchor: [0, 24],
     // iconSize: [24, 24],
+    popupAnchor: [0, -36],
+    html: `<span style="${Custom.setMarkerColor(Custom.serverColor)}" />`
+  });
+
+  public static readonly fetchedMarkerIcon : Leaflet.DivIcon = Leaflet.divIcon({
+    className: "user-marker-pin",
+    iconAnchor: [0, 24],
+    iconSize: [42, 42],
     popupAnchor: [0, -36],
     html: `<span style="${Custom.setMarkerColor(Custom.fetchedColor)}" />`
   });
@@ -40,6 +49,10 @@ export class Custom {
       Leaflet.marker(latLng, {icon: Custom.userMarkerIcon});
 
   public static readonly  serverMarker =
+    (latLng: LatLngExpression) : Leaflet.Marker  =>
+      Leaflet.marker(latLng, {icon: Custom.serverMarkerIcon});
+
+  public static readonly  fetchedMarker =
     (latLng: LatLngExpression) : Leaflet.Marker  =>
       Leaflet.marker(latLng, {icon: Custom.fetchedMarkerIcon});
 

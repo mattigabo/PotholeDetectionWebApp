@@ -40,7 +40,7 @@ export class MapsComponent extends MapAddict{
           .subscribe((potholes: Marker[]) => {
             this.populateLayer(
               potholes.map(m => this.toLatLng(m.coordinates)),
-              this.fetched,
+              this.system_defined,
               Custom.serverMarker
             );
           });

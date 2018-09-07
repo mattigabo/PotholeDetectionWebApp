@@ -146,7 +146,7 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   private addFetchedMarkersToLayer = (markers: Marker[]) => {
     let data : LatLng[] = markers.map(m => this.toLatLng(m.coordinates));
-    this.populateLayer(data, this.fetched, Custom.serverMarker);
+    this.populateLayer(data, this.fetched, Custom.fetchedMarker);
   };
 
   onClickFetchMarkersByPlace = ($event) => {
@@ -177,6 +177,11 @@ export class NavigatorComponent extends HeatmapUpdater {
         this.drawRoutePath(response.content);
       });
   };
+
+  onClickUndoFiltering = ($event) => {
+    this.route_path.clearLayers();
+    this.fetched.clearLayers();
+  }
 
   public drawRoutePath(responseContent: RouteAPIResponse){
 

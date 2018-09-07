@@ -12,7 +12,7 @@ import {WindowService} from "../../services/window/window.service";
 })
 export class CheckboxGroupComponent extends MapAddict implements OnInit {
 
-  routeChecked:boolean;
+  routeChecked: boolean;
   userDefinedChecked: boolean;
   systemDefinedChecked: boolean;
   fetchedChecked: boolean;
@@ -40,19 +40,19 @@ export class CheckboxGroupComponent extends MapAddict implements OnInit {
   ngOnInit() {
   }
 
-  onRouteClicked(event: any){
+  onRouteClicked(event: any) {
     this.routeChecked ? this.showRoute() : this.hideRoute();
   }
 
-  onFetchedClicked(event: any){
+  onFetchedClicked(event: any) {
     this.fetchedChecked ? this.showFetchedMarkers() : this.hideFetchedMarkers();
   }
 
-  onUserDefinedClicked(event: any){
+  onUserDefinedClicked(event: any) {
     this.userDefinedChecked ? this.showUserDefinedMarkers() : this.hideUserDefinedMarkers();
   }
 
-  onSystemDefinedClicked(event: any){
-    alert("easter egg: not implemented! TOLLOL");
+  onSystemDefinedClicked(event: any) {
+    this.systemDefinedChecked ? this.showSystemDefinedMarkers() : this.hideSystemDefinedMarkers();
   }
 }

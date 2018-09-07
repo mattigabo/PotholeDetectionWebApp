@@ -51,6 +51,8 @@ export class MarkersPopupComponent extends MapAddict{
 
         this.fetched.on('click', this.displayMarkerPopUp);
 
+        this.system_defined.on('click', this.displayMarkerPopUp);
+
         console.log("Marker Popup Component Ready!")
       }
     });

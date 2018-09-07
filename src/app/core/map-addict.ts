@@ -13,6 +13,7 @@ export class MapAddict implements OnInit, AfterViewInit {
   private _index: number[];
 
   private _user_defined: Leaflet.FeatureGroup;
+  private _system_defined: Leaflet.FeatureGroup;
   private _fetched: Leaflet.FeatureGroup;
   // private _area_selected: Leaflet.FeatureGroup;
   private _geometry: Leaflet.FeatureGroup;
@@ -28,6 +29,7 @@ export class MapAddict implements OnInit, AfterViewInit {
       this._index = this._wrapper.index;
 
       this._user_defined = this._wrapper.featureGroup(LAYER_NAME.USER_DEFINED);
+      this._system_defined = this._wrapper.featureGroup(LAYER_NAME.SYSTEM_DEFINED);
       this._fetched = this._wrapper.featureGroup(LAYER_NAME.FETCHED);
       // this._area_selected = this._wrapper.featureGroup(LAYER_NAME.AREA_SELECTED);
       this._geometry = this._wrapper.featureGroup(LAYER_NAME.GEOMETRY);
@@ -50,6 +52,8 @@ export class MapAddict implements OnInit, AfterViewInit {
   get index(): number[] { return this._index; }
 
   get user_defined(): Leaflet.FeatureGroup { return this._user_defined; }
+
+  get system_defined(): Leaflet.FeatureGroup { return this._system_defined; }
 
   get fetched(): Leaflet.FeatureGroup { return this._fetched; }
 
@@ -78,6 +82,10 @@ export class MapAddict implements OnInit, AfterViewInit {
     this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
   }
 
+  protected showSystemDefinedMarkers(){
+    this.wrapper.add(LAYER_NAME.SYSTEM_DEFINED, this.system_defined);
+  }
+
   protected showFetchedMarkers(){
     this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
   }
@@ -90,6 +98,10 @@ export class MapAddict implements OnInit, AfterViewInit {
     this.layers.removeLayer(this.user_defined);
   }
 
+  protected hideSystemDefinedMarkers(){
+    this.layers.removeLayer(this.system_defined);
+  }
+
   protected hideFetchedMarkers() {
     this.layers.removeLayer(this.fetched);
   }
@@ -98,13 +110,16 @@ export class MapAddict implements OnInit, AfterViewInit {
     this.layers.removeLayer(this.route_path);
   }
 
+
   protected showAllMarkers(){
     this.showUserDefinedMarkers();
     this.showFetchedMarkers();
+    this.showSystemDefinedMarkers()
   }
 
   protected hideAllMarkers(){
     this.hideUserDefinedMarkers();
     this.hideFetchedMarkers();
+    this.hideSystemDefinedMarkers();
   }
 }
