@@ -87,7 +87,12 @@ export class MapAddict implements OnInit, AfterViewInit {
   }
 
   protected showFetchedMarkers(){
+    //in order to put the fetched layer under "user" & "system" defined layer
+    this.hideSystemDefinedMarkers();
+    this.hideUserDefinedMarkers();
     this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
+    this.showSystemDefinedMarkers();
+    this.showUserDefinedMarkers();
   }
 
   protected showRoute(){
