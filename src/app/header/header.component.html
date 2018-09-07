@@ -1,20 +1,22 @@
-<div id="filters" class="header">
-  <a id= "filters-button" class="nav-display-button open-on-esc" (click)="openFiltersNav($event)">
-    <i class="fas fa-filter fa-2x"></i>
-  </a>
-</div>
-<div id="credits" class="header">
-  <a id= "repository" href="{{repository}}" target="_blank">
-      <i class="fab fa-github fa-2x" ></i>
-  </a>
-  <a id= "email" href="{{credits}}" target="_blank">
-    <i class="fab fa-google fa-2x" ></i>
-  </a>
-  <a id= "about" href="{{about}}" target="_blank">
-    <i class="fas fa-info-circle fa-2x" ></i>
-  </a>
-  <a id= "help" href="{{help}}" target="_blank">
-    <i class="fas fa-question-circle fa-2x" ></i>
-  </a>
+<div id="header-icon-bar">
+  <div id="filters" class="header">
+    <a id= "filters-button" class="nav-display-button open-on-esc" (click)="openFiltersNav($event)">
+      <i class="fas fa-filter fa-2x"></i>
+    </a>
+  </div>
+  <div id="credits" class="header">
+    <a id= "repository" href="{{repository}}" target="_blank">
+        <i class="fab fa-github fa-2x" ></i>
+    </a>
+    <a id= "email" href="{{credits}}" target="_blank">
+      <i class="fab fa-google fa-2x" ></i>
+    </a>
+    <a id= "about" href="{{about}}" target="_blank">
+      <i class="fas fa-info-circle fa-2x" ></i>
+    </a>
+    <a id= "help" href="{{help}}" target="_blank">
+      <i class="fas fa-question-circle fa-2x" ></i>
+    </a>
+  </div>
 </div>
 <app-navigator></app-navigator>

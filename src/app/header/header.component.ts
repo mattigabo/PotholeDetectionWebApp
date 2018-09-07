@@ -17,8 +17,7 @@ export class HeaderComponent extends MapAddict {
 
   help = "";
   about =
-    'Alma Mater Studiorum Bologna - Laurea Magistrale in Ingegneria e Scienze Informatiche\n' +
-    '\nProgetto di Applicazioni e Servizi Web\n' +
+    'Alma Mater Studiorum Bologna - Laurea Magistrale in Ingegneria e Scienze Informatiche\n'
     '\nAlessandro Cevoli, Matteo Gabellini';
   credits = 'pumpkinheads@gmail.com';
   repository = 'https://github.com/mattigabo/PotholeDetectionWebApp';
