@@ -1,23 +1,18 @@
 <div id="filters-nav" class="nav close-on-esc">
   <div id="filters-nav--header" class="close-on-esc">
-    <div id="restore-view--buttons">
-      <a class="hidden"><strong></strong></a>
-      <a id="restore.view--button"
-         (click)="onClickUndoFiltering($event)">
-        <i class="fas fa-undo fa-1x"></i> Undo filtering
-      </a>
-    </div>
-    <div id="close-nav-button">
-      <a class="hidden"><strong></strong></a>
-      <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
+    <a id="restore-view--button" (click)="onClickUndoFiltering($event)">
+      <i class="fas fa-undo fa-1x"></i>
+      <label>Undo filtering</label>
+    </a>
+    <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
       <i class="fas fa-arrow-left fa-2x"></i>
-      </a>
-    </div>
+      <label></label>
+    </a>
   </div>
   <div id="filters-nav--entries" class="close-on-esc">
     <div id="filter-by-place" class="filters-nav--entry">
-      <div id="filter-by-place-form--header" class="filters-nav-form--header inactive">
-        <a (click)="displayPlaceFilters($event)"><strong>Filters potholes by place</strong></a>
+      <div id="filter-by-place-form--header" class="filters-nav-form--header">
+        <a (click)="togglePlaceFilters($event)"><strong>Filters potholes by place</strong></a>
       </div>
       <div id="filter-by-place-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-place-fields" class="filters-nav--fields">
@@ -44,8 +39,8 @@
     </div>
 
     <div id="filter-by-route" class="filters-nav--entry">
-      <div id="filter-by-route-form--header" class="filters-nav-form--header inactive">
-        <a (click)="displayRouteFilters($event)"> <strong>Filters potholes by route</strong></a>
+      <div id="filter-by-route-form--header" class="filters-nav-form--header">
+        <a (click)="toggleRouteFilters($event)"> <strong>Filters potholes by route</strong></a>
       </div>
       <div id="filter-by-route-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-route--fields" class="filters-nav--fields">

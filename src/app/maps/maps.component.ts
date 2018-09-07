@@ -38,7 +38,6 @@ export class MapsComponent extends MapAddict{
 
         this.restService.getAllMarkers()
           .subscribe((potholes: Marker[]) => {
-
             this.populateLayer(
               potholes.map(m => this.toLatLng(m.coordinates)),
               this.system_defined,

@@ -61,19 +61,19 @@ export class CoordinatesComponent extends MapAddict {
   };
 
   onClickCopyCoordinates = (event : Event) => {
-    let coordinates = $('#lat-lng-input') as HTMLInputElement;
 
-    coordinates.select();
+    let el = document.createElement('textarea');
+    el.value = $('#lat-lng-span').text();
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
 
-    document.execCommand("copy");
-
-    var infoToast: Toast = {
+    this.toastService.pop({
       type: 'info',
       body: "Coordinates copied!",
       showCloseButton: true
-    };
-
-    this.toastService.pop(infoToast);
+    });
   };
 
   private hideOverlays = (event : Event) => {
@@ -96,9 +96,7 @@ export class CoordinatesComponent extends MapAddict {
     }
 
     if (coordinates) {
-      $('#lat-lng-span').html(lat + '<strong> N </strong>, ' + lng + '<strong> E </strong> ');
-
-      $('#lat-lng-input').attr("value", lat + " N, " + lng + " E");
+      $('#lat-lng-span').html(+ lng + '<strong> E </strong>, ' + lat + '<strong> N </strong>');
 
       let overlay = $('#coordinates-overlay');
 

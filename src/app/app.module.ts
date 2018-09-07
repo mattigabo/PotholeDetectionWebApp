@@ -18,7 +18,7 @@ import {DistributionService} from "./services/distribution/distribution.service"
 import { NavigatorComponent } from './header/navigator/navigator.component';
 import {CoordinatesService} from "./services/coordinates/coordinates.service";
 import {WindowService} from "./services/window/window.service";
-import { CheckboxGroupComponent } from './maps/checkbox-group/checkbox-group.component';
+import { CheckboxGroupComponent } from './header/navigator/checkbox-group/checkbox-group.component';
 
 @NgModule({
   declarations: [

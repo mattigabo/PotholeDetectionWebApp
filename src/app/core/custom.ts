@@ -25,7 +25,7 @@ export class Custom {
     left: ${offset.left};
     top: ${offset.top};
     position: relative;
-    border-radius: 3rem 3rem 0;
+    border-radius: 2rem 2rem 0;
     transform: rotate(45deg);
     border: ${border}
   `;
