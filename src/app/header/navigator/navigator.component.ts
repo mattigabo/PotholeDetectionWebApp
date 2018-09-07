@@ -143,6 +143,9 @@ export class NavigatorComponent extends HeatmapUpdater {
   private addFetchedMarkersToLayer = (markers: Marker[]) => {
     let data : LatLng[] = markers.map(m => this.toLatLng(m.coordinates));
     this.populateLayer(data, this.fetched, Custom.fetchedMarker);
+
+    this.hideFetchedMarkers();
+    this.showFetchedMarkers();
   };
 
   onClickFetchMarkersByPlace = ($event) => {
@@ -191,8 +194,8 @@ export class NavigatorComponent extends HeatmapUpdater {
     let hotLineData = this.createHotlineData(lngLats, markers);
     var routePathHotline = LeafletHeatLine.hotline(hotLineData, this.heatLineOptions);
 
-    routePathHotline.bindPopup("Potholes founded along this route:" + markers.length +
-      + " Route calculated by " + responseContent.routingServiceResponse.info.attribution);
+    routePathHotline.bindPopup("Potholes founded along this route: " + markers.length +
+       ". Route calculated by " + responseContent.routingServiceResponse.info.attribution);
     routePathHotline.addTo(this.route_path);
     // zoom the map to the polyline
     this.map.fitBounds(routePathHotline.getBounds());
@@ -215,7 +218,10 @@ export class NavigatorComponent extends HeatmapUpdater {
   private calculatePaletteColor(currPoint: LatLng, markers: Marker[]): number{
     var distances: number[] = markers.map(m => currPoint.distanceTo(new LatLng(m.coordinates.lat, m.coordinates.lng)))
       .sort((a,b) => a - b);
-    console.log(distances);
+
+    if(distances[0] == undefined){
+      return this.heatLineOptions.max;
+    }
 
     return distances[0];
   }
