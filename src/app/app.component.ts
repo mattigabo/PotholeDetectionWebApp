@@ -40,6 +40,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.windower.setWindowMaxDimensions($(window).height(), $(window).width());
     // this.windower.setWindowMaxDimensions(screen.height, screen.width);
 
+    $(document).requestFullscreen();
+
     $(document).on('keyup', (keyEvent) => {
 
         let key = keyEvent.key ? keyEvent.key.toUpperCase() : keyEvent.which;
