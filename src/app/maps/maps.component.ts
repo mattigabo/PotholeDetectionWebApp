@@ -44,6 +44,8 @@ export class MapsComponent extends MapAddict{
               Custom.serverMarker
             );
           });
+
+        console.log(this.layers);
       }
     });
 

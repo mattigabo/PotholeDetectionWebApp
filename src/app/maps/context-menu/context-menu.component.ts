@@ -108,11 +108,15 @@ export class ContextMenuComponent extends HeatmapUpdater {
 
         console.log("Context Menu Component Ready!");
       } else if (entry.key === MapsWrapper.ACTION.UPDATE_HEATMAP
-        && entry.value instanceof Array && this._heatLayer.isVisible) {
+        && this._heatLayer.isVisible) {
 
         console.log("updating heatmap");
 
-        this._heatLayer.display(entry.value as LatLng[]);
+        if (entry.value != undefined && entry.value instanceof Array) {
+          this._heatLayer.display(entry.value as LatLng[]);
+        } else if (entry.value != undefined && entry.value instanceof LatLng) {
+          this._heatLayer.add(entry.value);
+        }
       }
     });
 
@@ -196,9 +200,9 @@ export class ContextMenuComponent extends HeatmapUpdater {
 
     Custom.userMarker(this._coordinatesService.coordinates).addTo(this.user_defined);
     ContextMenuComponent._addMarker(this._coordinatesService.coordinates, this._restService, this._toasterService);
-    if (this._heatLayer.isVisible) {
-      this._heatLayer.add(this._coordinatesService.coordinates);
-    }
+    this._distService.submit(
+      new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, this._coordinatesService.coordinates)
+    );
   }
 
   onClickAddAreaSelector(event : Event) {
@@ -226,7 +230,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
         this._restService.getAllMarkersInTheArea(gc, circle.getRadius())
           .subscribe(markers => {
             data = markers.map(m => this.toLatLng(m.coordinates));
-            this.populateLayer(data, this.fetched, Custom.serverMarker);
+            this.populateLayer(data, this.fetched, Custom.fetchedMarker);
           });
       });
 
@@ -273,10 +277,20 @@ export class ContextMenuComponent extends HeatmapUpdater {
       $(obj).toggle(300);
     });
 
-    this._heatLayer
-      .display(this.getMarkersCoordinates(this.map))
-      .addTo(this.heat_group);
-    this.hideAllMarkers();
+    this.wrapper.add(
+      HeatmapUpdater.HEAT_MAP_ID,
+      this._heatLayer.display([]),
+      this.heat_group
+    );
+
+    this._distService.submit(
+      new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP,
+        this.getMarkersCoordinates(this.map))
+    );
+
+    this._distService.submit(
+      new Entry(MapsWrapper.ACTION.HEATMAP_DISPLAY, this._heatLayer)
+    );
   }
 
   displayMarkers(event) {
@@ -287,7 +301,9 @@ export class ContextMenuComponent extends HeatmapUpdater {
     this.heat_group
       .removeLayer(this._heatLayer.clear());
 
-    this.showAllMarkers();
+    this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.FETCHED));
+    this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.USER_DEFINED));
+    this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.SYSTEM_DEFINED));
   }
 
   private getMarkersCoordinates(from: Leaflet.Map | Leaflet.LayerGroup) : LatLng[] {

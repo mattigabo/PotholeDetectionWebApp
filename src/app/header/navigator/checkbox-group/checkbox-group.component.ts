@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import {MapAddict} from "../../../core/map-addict";
-import {DistributionService} from "../../../services/distribution/distribution.service";
-import {MapsWrapper} from "../../../core/maps.wrapper";
+import {Component, OnInit} from '@angular/core';
+import {DistributionService, Entry} from "../../../services/distribution/distribution.service";
+import {LAYER_NAME, MapsWrapper} from "../../../core/maps.wrapper";
 import {WindowService} from "../../../services/window/window.service";
 import * as $ from 'jquery';
+import * as Leaflet from 'leaflet';
+import {LatLng} from 'leaflet';
+import {HeatmapUpdater} from "../../../core/heatmap-updater";
 
 @Component({
   selector: 'app-checkbox-group',
   templateUrl: './checkbox-group.component.html',
   styleUrls: ['./checkbox-group.component.css']
 })
-export class CheckboxGroupComponent extends MapAddict implements OnInit {
+export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
 
   routeChecked: boolean;
   userDefinedChecked: boolean;
@@ -19,7 +21,7 @@ export class CheckboxGroupComponent extends MapAddict implements OnInit {
 
   constructor(private _distService: DistributionService,
               private _windower: WindowService) {
-    super();
+    super(_distService);
     this.routeChecked = true;
     this.userDefinedChecked = true;
     this.systemDefinedChecked = true;
@@ -33,6 +35,16 @@ export class CheckboxGroupComponent extends MapAddict implements OnInit {
         console.log(_windower.height, _windower.width);
 
         console.log("Checkbox Group Component Ready!");
+
+      } else if (entry.key === MapsWrapper.ACTION.LAYERS_DISPLAY
+        && typeof(entry.value)  === "string"){
+
+       this._switchLayerDisplay(entry.value);
+
+      } else if (entry.key === MapsWrapper.ACTION.HEATMAP_DISPLAY) {
+
+        this.hideAllMarkers()
+
       }
     });
   }
@@ -45,15 +57,54 @@ export class CheckboxGroupComponent extends MapAddict implements OnInit {
   }
 
   onFetchedClicked(event: any) {
-    this.fetchedChecked ? this.showFetchedMarkers() : this.hideFetchedMarkers();
+
+    this._checkbox_stub(() =>{
+      this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.FETCHED))
+    });
   }
 
   onUserDefinedClicked(event: any) {
-    this.userDefinedChecked ? this.showUserDefinedMarkers() : this.hideUserDefinedMarkers();
+    this._checkbox_stub(() =>{
+      this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.USER_DEFINED))
+    });
   }
 
   onSystemDefinedClicked(event: any) {
-    this.systemDefinedChecked ? this.showSystemDefinedMarkers() : this.hideSystemDefinedMarkers();
+    this._checkbox_stub(() => {
+      this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.SYSTEM_DEFINED))
+    });
+  }
+
+  private _checkbox_stub(go : Function) {
+    let heat_map = this.wrapper.heatLayer(HeatmapUpdater.HEAT_MAP_ID);
+
+    if (heat_map === undefined || !heat_map.isVisible) {
+      go();
+    } else {
+      let data : LatLng[] = [];
+
+      if (this.systemDefinedChecked) {
+        this.system_defined.getLayers()
+          .filter(l => l instanceof Leaflet.Marker)
+          .map(m => m as Leaflet.Marker)
+          .map(m => data.push(m.getLatLng()));
+      } else if (this.fetchedChecked) {
+        this.fetched.getLayers()
+          .filter(l => l instanceof Leaflet.Marker)
+          .map(m => m as Leaflet.Marker)
+          .forEach(m => data.push(m.getLatLng()));
+      } else if (this.userDefinedChecked) {
+        this.user_defined.getLayers()
+          .filter(l => l instanceof Leaflet.Marker)
+          .map(m => m as Leaflet.Marker)
+          .forEach(m => data.push(m.getLatLng()));
+      }
+
+      console.log(this.system_defined);
+      console.log(data);
+
+      this.updateHeatmap(data);
+    }
   }
 
   toggleCheckboxContainer(event?) {
@@ -67,6 +118,16 @@ export class CheckboxGroupComponent extends MapAddict implements OnInit {
       el.css({display:'flex'}).hide().show(300);
     } else {
       el.hide(300);
+    }
+  }
+
+  private _switchLayerDisplay(layer: string | LAYER_NAME) {
+    if (layer === LAYER_NAME.FETCHED) {
+      this.fetchedChecked ? this.showFetchedMarkers() : this.hideFetchedMarkers();
+    } else if (layer === LAYER_NAME.USER_DEFINED) {
+      this.userDefinedChecked ? this.showUserDefinedMarkers() : this.hideUserDefinedMarkers();
+    } else if (layer === LAYER_NAME.SYSTEM_DEFINED) {
+      this.systemDefinedChecked ? this.showSystemDefinedMarkers() : this.hideSystemDefinedMarkers();
     }
   }
 

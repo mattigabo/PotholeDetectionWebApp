@@ -32,9 +32,9 @@ export class MapAddict implements OnInit, AfterViewInit {
       this._system_defined = this._wrapper.featureGroup(LAYER_NAME.SYSTEM_DEFINED);
       this._fetched = this._wrapper.featureGroup(LAYER_NAME.FETCHED);
       // this._area_selected = this._wrapper.featureGroup(LAYER_NAME.AREA_SELECTED);
-      this._geometry = this._wrapper.featureGroup(LAYER_NAME.GEOMETRY);
-      this._route_path = this._wrapper.featureGroup(LAYER_NAME.ROUTE_PATH);
-      this._heat_group = this._wrapper.featureGroup(LAYER_NAME.HEAT_MAP);
+      this._geometry = this._wrapper.featureGroup(LAYER_NAME.GEOMETRIES);
+      this._route_path = this._wrapper.featureGroup(LAYER_NAME.ROUTE_PATHS);
+      this._heat_group = this._wrapper.featureGroup(LAYER_NAME.HEAT_MAPS);
   }
 
   ngAfterViewInit(): void {
@@ -80,23 +80,29 @@ export class MapAddict implements OnInit, AfterViewInit {
 
   protected showUserDefinedMarkers(){
     this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
+    this.user_defined.bringToFront();
+    this.fetched.bringToFront()
   }
 
   protected showSystemDefinedMarkers(){
     this.wrapper.add(LAYER_NAME.SYSTEM_DEFINED, this.system_defined);
+    this.user_defined.bringToFront();
+    this.fetched.bringToFront()
   }
 
   protected showFetchedMarkers(){
     //in order to put the fetched layer under "user" & "system" defined layer
-    this.hideSystemDefinedMarkers();
-    this.hideUserDefinedMarkers();
+    // this.hideSystemDefinedMarkers();
+    // this.hideUserDefinedMarkers();
     this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
-    this.showSystemDefinedMarkers();
-    this.showUserDefinedMarkers();
+    this.user_defined.bringToFront();
+    this.fetched.bringToFront()
+    // this.showSystemDefinedMarkers();
+    // this.showUserDefinedMarkers();
   }
 
   protected showRoute(){
-    this.wrapper.add(LAYER_NAME.ROUTE_PATH, this.route_path);
+    this.wrapper.add(LAYER_NAME.ROUTE_PATHS, this.route_path);
   }
 
   protected hideUserDefinedMarkers() {

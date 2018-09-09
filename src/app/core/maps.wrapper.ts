@@ -2,23 +2,28 @@ import * as Leaflet from 'leaflet';
 import {DistributionService, Entry} from "../services/distribution/distribution.service";
 import {Toast, ToasterService} from "angular2-toaster";
 import {LayerGroup} from "leaflet";
+import {HeatLayer} from "./heat.layer";
 
 export enum LAYER_NAME {
-  MAP_BOX = "map-box",
+  TILES = "map-box-tiles",
   FETCHED = "fetched",
   USER_DEFINED = "user-defined",
   // AREA_SELECTED = "area-selected",
-  GEOMETRY = "geometry",
-  HEAT_MAP = "heat-map",
-  ROUTE_PATH = "route-path",
+  GEOMETRIES = "geometries",
+  HEAT_MAPS = "heat-maps",
+  ROUTE_PATHS = "route-paths",
   SYSTEM_DEFINED = "system-defined"
 }
 
 export class MapsWrapper {
 
   public static ACTION = {
-    CLEAR_LAYER: "CLEAR_LAYER",
+    CLEAR_LAYERS: "CLEAR_LAYERS",
     UPDATE_HEATMAP: "UPDATE_HEATMAP",
+    LAYERS_DISPLAY: "LAYERS_DISPLAY",
+    HEATMAP_DISPLAY: "HEATMAP_DISPLAY",
+    HIDE_LAYER: "HIDE_LAYER",
+    HIDE_ALL_LAYERS: "HIDE_ALL_LAYERS"
   };
 
   private _map : Leaflet.Map;
@@ -36,7 +41,7 @@ export class MapsWrapper {
 
     this._layers = Leaflet.layerGroup();
 
-    this.add(LAYER_NAME.MAP_BOX, Leaflet.tileLayer(
+    this.add(LAYER_NAME.TILES, Leaflet.tileLayer(
       'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
       {
         attribution:
@@ -51,7 +56,7 @@ export class MapsWrapper {
     );
 
     Object.values(LAYER_NAME)
-      .filter(x => x != LAYER_NAME.MAP_BOX)
+      .filter(x => x != LAYER_NAME.TILES)
       .forEach(layer => {
         this.add(layer, Leaflet.featureGroup());
       });
@@ -74,19 +79,30 @@ export class MapsWrapper {
 
   }
 
-  public layer<T extends Leaflet.Layer>(id: string) : T {
-    return this.layers.getLayer(this.index[id]) as T;
+  public layer<T extends Leaflet.Layer>(id: string, from? : string | LayerGroup) : T {
+    let group = (from === undefined) ? this.layers :
+      (from instanceof LayerGroup) ? from : this.layerGroup(from);
+
+    return group.getLayer(this.index[id]) as T;
   }
 
   public readonly featureGroup = (id:string) : Leaflet.FeatureGroup => this.layer(id);
-
+  public readonly layerGroup = (id:string) : Leaflet.LayerGroup => this.layer(id);
   public readonly tileLayer = (id:string) : Leaflet.TileLayer => this.layer(id);
+  public readonly heatLayer = (id:string) : HeatLayer => this.layer(id, LAYER_NAME.HEAT_MAPS);
 
-  public add<T extends Leaflet.Layer>(id : string, layer: T) : MapsWrapper {
+  public add<T extends Leaflet.Layer>(id : string, layer: T, to?: string | LayerGroup) : MapsWrapper {
 
-    this._layers.addLayer(layer as T);
-    this._index[id] = this._layers.getLayerId(layer as T);
-    console.log("Added layer %s to master @ index %d", id, this._index[id]);
+    let
+      group = (to === undefined) ? this.layers :
+        (to instanceof LayerGroup) ? to : this.layerGroup(to),
+      group_id = (to === undefined) ? "master" :
+        (to instanceof LayerGroup) ? group.getLayerId(layer as T) : id;
+
+    group.addLayer(layer as T);
+    this._index[id] = group.getLayerId(layer as T);
+    console.log("Added layer %s to %s @ index %d", id, group_id, this._index[id]);
+
     return this;
   }
 
@@ -100,11 +116,6 @@ export class MapsWrapper {
       .forEach(lg => {
         (lg as LayerGroup).clearLayers()
       });
-    // this.featureGroup(LAYER_NAME.AREA_SELECTED).clearLayers();
-    // this.featureGroup(LAYER_NAME.FETCHED).clearLayers();
-    // this.featureGroup(LAYER_NAME.USER_DEFINED).clearLayers();
-    // this.featureGroup(LAYER_NAME.ROUTE_PATH).clearLayers();
-    // this.featureGroup(LAYER_NAME.GEOMETRY).clearLayers();
   }
 
   private onLocationFound(event : Leaflet.LocationEvent) {

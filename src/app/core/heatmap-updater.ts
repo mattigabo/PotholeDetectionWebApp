@@ -5,6 +5,8 @@ import {MapsWrapper} from "./maps.wrapper";
 
 export class HeatmapUpdater extends MapAddict {
 
+  protected static readonly HEAT_MAP_ID = "default-heat-map";
+
   constructor(private _dst: DistributionService) {
     super();
   }
@@ -17,7 +19,7 @@ export class HeatmapUpdater extends MapAddict {
     this.updateHeatmap(latLngs);
   }
 
-  private updateHeatmap(data: LatLngExpression[]) {
+  protected updateHeatmap(data?: LatLngExpression[]) {
     this._dst.submit(new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, data));
   }
 

@@ -6,7 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { MapsComponent } from './maps/maps.component';
-import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { ContextMenuComponent } from './maps/context-menu/context-menu.component';
 import { RestAdapterService } from "./services/rest/rest-adapter.service";
@@ -24,7 +23,6 @@ import { CheckboxGroupComponent } from './header/navigator/checkbox-group/checkb
   declarations: [
     AppComponent,
     MapsComponent,
-    FooterComponent,
     HeaderComponent,
     ContextMenuComponent,
     CoordinatesComponent,
