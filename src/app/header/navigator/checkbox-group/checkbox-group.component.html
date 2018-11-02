@@ -7,13 +7,13 @@
       <input type="checkbox" id="route-layer-checkbox" class="layer-checkbox" [(ngModel)]="routeChecked" (change)="onRouteClicked($event)"/>Route
     </div>
     <div>
-      <input type="checkbox" id="fetched-markers-layer-checkbox" class="layer-checkbox" [(ngModel)]="fetchedChecked" (change)="onFetchedClicked($event)"/>Selected Markers
+      <div></div><input type="checkbox" id="fetched-markers-layer-checkbox" class="layer-checkbox" [(ngModel)]="fetchedChecked" (change)="onFetchedClicked($event)"/>Selected Markers <i class="fas fa-map-marker fa-2x" [style.color]="fetchedColor"></i>
     </div>
     <div>
-      <input type="checkbox" id="user-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="userDefinedChecked" (change)="onUserDefinedClicked($event)"/>User added markers
+      <div></div><input type="checkbox" id="user-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="userDefinedChecked" (change)="onUserDefinedClicked($event)"/>User added markers <i class="fas fa-map-marker fa-2x" [style.color]="userColor"></i>
     </div>
     <div>
-      <input type="checkbox" id="system-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="systemDefinedChecked" (change)="onSystemDefinedClicked($event)"/>System defined
+      <div></div><input type="checkbox" id="system-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="systemDefinedChecked" (change)="onSystemDefinedClicked($event)"/>Default markers <i class="fas fa-map-marker fa-2x" [style.color]="serverColor"></i>
     </div>
   </div>
 </div>

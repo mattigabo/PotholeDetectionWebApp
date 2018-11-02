@@ -6,6 +6,7 @@ import * as $ from 'jquery';
 import * as Leaflet from 'leaflet';
 import {LatLng} from 'leaflet';
 import {HeatmapUpdater} from "../../../core/heatmap-updater";
+import {Custom} from "../../../core/custom";
 
 @Component({
   selector: 'app-checkbox-group',
@@ -13,6 +14,10 @@ import {HeatmapUpdater} from "../../../core/heatmap-updater";
   styleUrls: ['./checkbox-group.component.css']
 })
 export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
+
+  userColor = Custom.userColor;
+  serverColor = Custom.serverColor;
+  fetchedColor = Custom.fetchedColor;
 
   routeChecked: boolean;
   userDefinedChecked: boolean;
