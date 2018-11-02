@@ -12,51 +12,51 @@
     </a>
   </div>
   <div id="marker-popup--info" class="marker-popup-entry">
-    <label *ngIf="country != _null"
+    <div *ngIf="country != _null"
            id="marker-popup-label--country"
            class="primary" for="marker-popup--info">
       <strong>Country</strong>: {{country}}
-    </label>
-    <label *ngIf="region != _null"
+    </div>
+    <div *ngIf="region != _null"
            id="marker-popup-label--region"
            class="primary" for="marker-popup--info">
       <strong>Region</strong>: {{region}}
-    </label>
-    <label *ngIf="county != _null"
+    </div>
+    <div *ngIf="county != _null"
            id="marker-popup-label--county"
            class="primary" for="marker-popup--info">
       <strong>County</strong>: {{county}}
-    </label>
-    <label *ngIf="city != _null"
+    </div>
+    <div *ngIf="city != _null"
            id="marker-popup-label--city"
            class="primary">
       <strong>City</strong>: {{city}}
-    </label>
-    <label *ngIf="district != _null"
+    </div>
+    <div *ngIf="district != _null"
            id="marker-popup-label--district"
            class="secondary" for="marker-popup--info">
       <strong>District</strong>: {{district}}
-    </label>
-    <label *ngIf="suburb != _null"
+    </div>
+    <div *ngIf="suburb != _null"
            id="marker-popup-label--suburb"
            class="secondary" for="marker-popup--info">
       <strong>Suburb</strong>: {{suburb}}
-    </label>
-    <label *ngIf="town != _null"
+    </div>
+    <div *ngIf="town != _null"
            id="marker-popup-label--town"
            class="primary" for="marker-popup--info">
       <strong>Town</strong>: {{town}}
-    </label>
-    <label *ngIf="place != _null"
+    </div>
+    <div *ngIf="place != _null"
            id="marker-popup-label--place"
            class="secondary" for="marker-popup--info">
       <strong>Place</strong>: {{place}}
-    </label>
-    <label *ngIf="road != _null"
+    </div>
+    <div *ngIf="road != _null"
            id="marker-popup-label--road"
            class="primary" for="marker-popup--info">
       <strong>Road</strong>: {{road}}
-    </label>
+    </div>
   </div>
   <div id="marker-popup--comment" class="marker-popup-entry">
       <textarea id="marker-popup-comment--text"
@@ -66,6 +66,7 @@
                 readonly
                 (input)="commentText = $event.target.value"
                 (focus)="onFocusHideMarkerPopup($event)"></textarea>
+      <label hidden class="description" for="marker-popup-comment--text"> If you want you can insert your comment relative to the pothole</label>
   </div>
   <div id="marker-popup--footer" class="marker-popup-entry">
     <a class="hidden">
@@ -85,5 +86,5 @@
             maxlength="500" rows="10" cols="30"
             (input)="commentText = $event.target.value"
             (blur)="onBlurDisplayMarkerPopup($event)"></textarea>
-
+  <label hidden class="description" for="text-stub">Send Comment for Marker</label>
 </div>
