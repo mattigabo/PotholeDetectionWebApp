@@ -1,6 +1,7 @@
 <div id="coordinates-overlay" class="overlay close-on-esc">
   <a id="coordinates-overlay-close-button" class="close-button" (click)="onCloseFadeCoordinatesOverlay($event)">
     <i class="fas fa-times-circle fa-xs"></i>
+    <label hidden class="description" for="coordinates-overlay-close-button">Close coordinates overlay display</label>
   </a>
   <span id="lat-lng-span" (click)="onClickCopyCoordinates($event)"></span>
 </div>

@@ -7,13 +7,14 @@ interface Offset{
 }
 export class Custom {
 
-  public static readonly userColor : string = '#00ccff';
-  public static readonly serverColor: string = '#339933';
+  public static readonly userColor : string = '#86cbff';
+  public static readonly serverColor: string = '#87cd78';
+  public static readonly fetchedColor: string = '#ff8f83';
 
   public static readonly fetchedBorderColor: string = '#ff4e00';
   public static readonly defaultBorderColor: string = '#222222';
 
-  private static readonly fetchedMarkerBorderValue: string = '4px solid ' + Custom.fetchedBorderColor;
+  private static readonly fetchedMarkerBorderValue: string = '3px solid ' + Custom.defaultBorderColor;
   private static readonly userMarkerBorderValue: string = '2px solid ' + Custom.defaultBorderColor;
   private static readonly serverMarkerBorderValue: string = '2px solid ' + Custom.defaultBorderColor;
   private static readonly fetchedMarkerOffset: Offset = { left: '-1.15em', top: '-1.15em' };
@@ -56,7 +57,7 @@ export class Custom {
     iconAnchor: Custom.iconAnchor,
     // iconSize: [42, 42],
     popupAnchor: Custom.popupAnchor,
-    html: `<span style="${Custom.setMarkerColor('transparent', Custom.fetchedMarkerBorderValue, Custom.fetchedMarkerOffset)}" />`
+    html: `<span style="${Custom.setMarkerColor(Custom.fetchedColor, Custom.fetchedMarkerBorderValue, Custom.fetchedMarkerOffset)}" />`
   });
 
   public static readonly userMarker =
