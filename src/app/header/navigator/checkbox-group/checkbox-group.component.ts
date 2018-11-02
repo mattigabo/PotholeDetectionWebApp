@@ -50,6 +50,8 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
 
         this.hideAllMarkers()
 
+      } else if (entry.key == MapsWrapper.ACTION.UNCHECK_SYSTEM_LAYER){
+        this.systemDefinedChecked = false;
       }
     });
   }
