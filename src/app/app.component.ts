@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
 import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
 import {WindowService} from "./services/window/window.service";
+// import a11yChecker from 'a11y-checker';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import {WindowService} from "./services/window/window.service";
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   public potholeSystemToastConfig : ToasterConfig = new ToasterConfig({
     positionClass: 'toast-bottom-left',
@@ -84,5 +85,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.onOrientationChange();
+    // a11yChecker();
+  }
+
+  ngAfterViewChecked(): void {
   }
 }

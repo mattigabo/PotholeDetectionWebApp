@@ -56,7 +56,7 @@
             "ssl": false,
             "sslKey": "../ssl/server.key",
             "sslCert": "../ssl/server.crt",
-            "host": "192.168.1.11",
+            "host": "192.168.1.12",
             "port": 8443
           },
           "configurations": {

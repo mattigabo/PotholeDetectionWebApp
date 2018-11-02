@@ -22,6 +22,7 @@
     "@angular/router": "^6.1.0",
     "@types/leaflet": "^1.2.9",
     "@types/leaflet-draw": "^0.4.13",
+    "a11y-checker": "^2.2.1",
     "angular2-toaster": "^6.1.0",
     "core-js": "^2.5.4",
     "heatmap.js": "^2.0.5",

@@ -2,11 +2,11 @@
   <div id="filters-nav--header" class="close-on-esc">
     <a id="restore-view--button" (click)="onClickUndoFiltering($event)">
       <i class="fas fa-undo fa-1x"></i>
-      <label>Undo filtering</label>
+      <label for="restore-view--button">Undo filtering</label>
     </a>
     <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
       <i class="fas fa-arrow-left fa-2x"></i>
-      <label></label>
+      <label hidden class="description" for="filters-nav-close-button">Close filtering side menu</label>
     </a>
   </div>
   <div id="filters-nav--entries" class="close-on-esc">
@@ -28,11 +28,14 @@
                  (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
         </div>
         <div id="filter-by-place-send-button" class="filters-nav-form--buttons">
-          <a class="hidden"><strong></strong></a>
+          <a class="hidden">
+            <label hidden class="description" for="filter-by-place-send-button">Padding</label>
+          </a>
           <a id="filter-by-place-send--button"
              class="filters-nav-form--send-button"
              (click)="onClickFetchMarkersByPlace($event)">
             <i class="fas fa-arrow-circle-right fa-2x"></i>
+            <label hidden class="description" for="filter-by-place-send-button">Fetch filtered markers</label>
           </a>
         </div>
       </div>
@@ -52,11 +55,14 @@
                  (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
         </div>
         <div id="filter-by-route--buttons" class="filters-nav-form--buttons">
-          <a class="hidden"><strong></strong></a>
+          <a class="hidden">
+            <label hidden class="description" for="filter-by-route--buttons">Padding</label>
+          </a>
           <a id="filter-by-route-send--button"
              class="filters-nav-form--send-button"
              (click)="onClickFetchMarkersByRoute($event)">
             <i class="fas fa-arrow-circle-right fa-2x"></i>
+            <label hidden class="description" for="filter-by-route-send--button">Fetch route markers</label>
           </a>
         </div>
       </div>
