@@ -24,7 +24,6 @@ export let defaultOptions : HeatOptions = {
 
 export class HeatLayer extends L.Layer {
 
-  private _batch: L.LatLng[];
   private _isVisible: boolean = false;
   private _frame: number;
   private _heat: SimpleHeat;
@@ -252,16 +251,6 @@ export class HeatLayer extends L.Layer {
       // @ts-ignore
       this._canvas.style[L.DomUtil.TRANSFORM] = L.DomUtil.getTranslateString(offset) + ' scale(' + scale + ')';
     }
-  }
-
-  public show() {
-    this._points = this._batch;
-    this._batch = [];
-  }
-
-  public hide() {
-    this._batch = this._points;
-    this._points = [];
   }
 
   public get isVisible() {

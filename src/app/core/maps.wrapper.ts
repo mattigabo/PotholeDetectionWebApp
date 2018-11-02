@@ -17,6 +17,11 @@ export enum LAYER_NAME {
 
 export class MapsWrapper {
 
+  private _user_is_hidden = false;
+  private _system_defined_is_hidden = false;
+  private _fetched_is_hidden = false;
+  private _route_is_hidden = false;
+
   public static ACTION = {
     CLEAR_LAYERS: "CLEAR_LAYERS",
     UPDATE_HEATMAP: "UPDATE_HEATMAP",
@@ -34,6 +39,32 @@ export class MapsWrapper {
   public get map(): Leaflet.Map { return this._map}
   public get layers() : Leaflet.LayerGroup {return this._layers}
   public get index() : number[] { return this._index}
+
+
+  get user_is_hidden(): boolean {
+    return this._user_is_hidden;
+  }
+  get system_defined_is_hidden(): boolean {
+    return this._system_defined_is_hidden;
+  }
+  get fetched_is_hidden(): boolean {
+    return this._fetched_is_hidden;
+  }
+  get route_is_hidden(): boolean {
+    return this._route_is_hidden;
+  }
+  set fetched_is_hidden(value: boolean) {
+    this._fetched_is_hidden = value;
+  }
+  set system_defined_is_hidden(value: boolean) {
+    this._system_defined_is_hidden = value;
+  }
+  set user_is_hidden(value: boolean) {
+    this._user_is_hidden = value;
+  }
+  set route_is_hidden(value: boolean){
+    this._route_is_hidden = value;
+  }
 
   constructor(private _map_id : string,
               private _options : Leaflet.MapOptions,

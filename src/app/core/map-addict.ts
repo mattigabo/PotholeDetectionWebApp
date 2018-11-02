@@ -6,6 +6,7 @@ import {GeoCoordinates} from "../ontologies/DataStructures";
 
 export class MapAddict implements OnInit, AfterViewInit {
 
+
   private _wrapper: MapsWrapper;
 
   private _map: Leaflet.Map;
@@ -19,11 +20,6 @@ export class MapAddict implements OnInit, AfterViewInit {
   private _geometry: Leaflet.FeatureGroup;
   private _route_path: Leaflet.FeatureGroup;
   private _heat_group: Leaflet.FeatureGroup;
-
-  private _user_is_hidden = false;
-  private _system_defined_is_hidden = false;
-  private _fetched_is_hidden = false;
-  private _route_is_hidden = false;
 
   protected init (mapWrapper: MapsWrapper) {
 
@@ -72,20 +68,36 @@ export class MapAddict implements OnInit, AfterViewInit {
 
 
   get user_is_hidden(): boolean {
-    return this._user_is_hidden;
+    return this.wrapper.user_is_hidden;
   }
 
   get system_defined_is_hidden(): boolean {
-    return this._system_defined_is_hidden;
+    return this.wrapper.system_defined_is_hidden;
   }
 
   get fetched_is_hidden(): boolean {
-    return this._fetched_is_hidden;
+    return this.wrapper.fetched_is_hidden;
   }
 
   get route_is_hidden(): boolean {
-    return this._route_is_hidden;
+    return this.wrapper.route_is_hidden;
   }
+
+  set fetched_is_hidden(value: boolean) {
+    this.wrapper.fetched_is_hidden = value;
+  }
+  set system_defined_is_hidden(value: boolean) {
+    this.wrapper.system_defined_is_hidden = value;
+  }
+
+  set user_is_hidden(value: boolean) {
+    this.wrapper.user_is_hidden = value;
+  }
+
+  set route_is_hidden(value: boolean){
+    this.wrapper.route_is_hidden = value;
+  }
+
 
   protected populateLayer(latLngs: LatLngExpression[],
                           group: LayerGroup,
@@ -100,23 +112,24 @@ export class MapAddict implements OnInit, AfterViewInit {
     return latLng([c.lat, c.lng]);
   }
 
-  private _showUserDefined() {
-    this._user_is_hidden = false;
-    this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
-  }
 
   private _showRoute() {
-    this._route_is_hidden = false;
+    this.route_is_hidden = false;
     this.wrapper.add(LAYER_NAME.ROUTE_PATHS, this.route_path);
   }
 
-  private _showFetched() {
-    this._fetched_is_hidden = false;
+  protected showUserDefinedLayer() {
+    this.user_is_hidden = false;
+    this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
+  }
+
+  protected showFetchedLayer() {
+    this.fetched_is_hidden = false;
     this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
   }
 
-  private _showSystemDefined() {
-    this._system_defined_is_hidden = false;
+  protected showSystemDefinedLayer() {
+    this.system_defined_is_hidden = false;
     this.wrapper.add(LAYER_NAME.SYSTEM_DEFINED, this.system_defined);
   }
 
@@ -130,14 +143,14 @@ export class MapAddict implements OnInit, AfterViewInit {
 
     if (!this.system_defined_is_hidden) {
       this.hideSystemDefinedMarkers();
-      this._showSystemDefined();
+      this.showSystemDefinedLayer();
     }
 
-    this._showUserDefined();
+    this.showUserDefinedLayer();
 
     if (!this.fetched_is_hidden) {
       this.hideFetchedMarkers();
-      this._showFetched();
+      this.showFetchedLayer();
     }
   }
 
@@ -150,14 +163,14 @@ export class MapAddict implements OnInit, AfterViewInit {
 
     if (!this.user_is_hidden) {
       this.hideUserDefinedMarkers();
-      this._showUserDefined();
+      this.showUserDefinedLayer();
     }
 
-    this._showSystemDefined();
+    this.showSystemDefinedLayer();
 
     if (!this.fetched_is_hidden) {
       this.hideFetchedMarkers();
-      this._showFetched();
+      this.showFetchedLayer();
     }
   }
 
@@ -170,15 +183,15 @@ export class MapAddict implements OnInit, AfterViewInit {
 
     if (!this.system_defined_is_hidden) {
       this.hideSystemDefinedMarkers();
-      this._showSystemDefined();
+      this.showSystemDefinedLayer();
     }
 
     if (!this.user_is_hidden) {
       this.hideUserDefinedMarkers();
-      this._showUserDefined();
+      this.showUserDefinedLayer();
     }
 
-    this._showFetched();
+    this.showFetchedLayer();
 
   }
 
@@ -188,46 +201,46 @@ export class MapAddict implements OnInit, AfterViewInit {
 
     if (!this.system_defined_is_hidden) {
       this.hideSystemDefinedMarkers();
-      this._showSystemDefined();
+      this.showSystemDefinedLayer();
     }
 
     if (!this.user_is_hidden) {
       this.hideUserDefinedMarkers();
-      this._showUserDefined();
+      this.showUserDefinedLayer();
     }
 
     if (!this.fetched_is_hidden) {
       this.hideFetchedMarkers();
-      this._showFetched();
+      this.showFetchedLayer();
     }
   }
 
   protected hideUserDefinedMarkers() {
-    this._user_is_hidden = true;
+    this.user_is_hidden = true;
     this.layers.removeLayer(this.user_defined);
   }
 
   protected hideSystemDefinedMarkers(){
-    this._system_defined_is_hidden = true;
+    this.system_defined_is_hidden = true;
     this.layers.removeLayer(this.system_defined);
   }
 
   protected hideFetchedMarkers() {
-    this._fetched_is_hidden = true;
+    this.fetched_is_hidden = true;
     this.layers.removeLayer(this.fetched);
   }
 
   protected hideRoute() {
-    this._route_is_hidden = true;
+    this.route_is_hidden = true;
     this.layers.removeLayer(this.route_path);
   }
 
 
   protected showAllMarkers(){
     this._showRoute();
-    this._showSystemDefined();
-    this._showUserDefined();
-    this._showFetched();
+    this.showSystemDefinedLayer();
+    this.showUserDefinedLayer();
+    this.showFetchedLayer();
   }
 
   protected hideAllMarkers(){
@@ -235,4 +248,11 @@ export class MapAddict implements OnInit, AfterViewInit {
     this.hideFetchedMarkers();
     this.hideSystemDefinedMarkers();
   }
+
+  protected showAllLayer(){
+    this.showFetchedLayer();
+    this.showSystemDefinedLayer();
+    this.showUserDefinedLayer();
+  }
+
 }

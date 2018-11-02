@@ -46,10 +46,6 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
 
        this._switchLayerDisplay(entry.value);
 
-      } else if (entry.key === MapsWrapper.ACTION.HEATMAP_DISPLAY) {
-
-        this.hideAllMarkers()
-
       } else if (entry.key == MapsWrapper.ACTION.UNCHECK_SYSTEM_LAYER){
         this.systemDefinedChecked = false;
       }
@@ -64,54 +60,16 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
   }
 
   onFetchedClicked(event: any) {
-
-    this._checkbox_stub(() =>{
       this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.FETCHED))
-    });
+
   }
 
   onUserDefinedClicked(event: any) {
-    this._checkbox_stub(() =>{
       this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.USER_DEFINED))
-    });
   }
 
   onSystemDefinedClicked(event: any) {
-    this._checkbox_stub(() => {
-      this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.SYSTEM_DEFINED))
-    });
-  }
-
-  private _checkbox_stub(go : Function) {
-    let heat_map = this.wrapper.heatLayer(HeatmapUpdater.HEAT_MAP_ID);
-
-    if (heat_map === undefined || !heat_map.isVisible) {
-      go();
-    } else {
-      let data : LatLng[] = [];
-
-      if (this.systemDefinedChecked) {
-        this.system_defined.getLayers()
-          .filter(l => l instanceof Leaflet.Marker)
-          .map(m => m as Leaflet.Marker)
-          .map(m => data.push(m.getLatLng()));
-      } else if (this.fetchedChecked) {
-        this.fetched.getLayers()
-          .filter(l => l instanceof Leaflet.Marker)
-          .map(m => m as Leaflet.Marker)
-          .forEach(m => data.push(m.getLatLng()));
-      } else if (this.userDefinedChecked) {
-        this.user_defined.getLayers()
-          .filter(l => l instanceof Leaflet.Marker)
-          .map(m => m as Leaflet.Marker)
-          .forEach(m => data.push(m.getLatLng()));
-      }
-
-      console.log(this.system_defined);
-      console.log(data);
-
-      this.updateHeatmap(data);
-    }
+    this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.SYSTEM_DEFINED))
   }
 
   toggleCheckboxContainer(event?) {

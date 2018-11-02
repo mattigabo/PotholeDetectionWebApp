@@ -19,8 +19,60 @@ export class HeatmapUpdater extends MapAddict {
     this.updateHeatmap(latLngs);
   }
 
-  protected updateHeatmap(data?: LatLngExpression[]) {
+  protected updateHeatmap(data?: any) {
     this._dst.submit(new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, data));
   }
 
+
+  private isHeatMapVisible(): boolean {
+    let heat_map = this.wrapper.heatLayer(HeatmapUpdater.HEAT_MAP_ID);
+
+    return  heat_map != undefined && heat_map.isVisible;
+  }
+
+  protected showUserDefinedLayer(): void {
+    if(this.isHeatMapVisible()) {
+      this.user_is_hidden = false;
+      console.log("SHIT user")
+      this.updateHeatmap(null)
+    } else {
+      super.showUserDefinedLayer();
+    }
+  }
+
+  protected showFetchedLayer(): void {
+    if(this.isHeatMapVisible()) {
+      this.fetched_is_hidden = false;
+      this.updateHeatmap(null)
+      console.log("SHIT fetch")
+    } else {
+      super.showFetchedLayer();
+    }
+  }
+
+  protected showSystemDefinedLayer(): void {
+    if(this.isHeatMapVisible()) {
+      this.system_defined_is_hidden = false;
+      this.updateHeatmap(null)
+      console.log("SHIT system")
+    } else {
+      super.showSystemDefinedLayer();
+    }
+  }
+
+
+  protected hideUserDefinedMarkers(): void {
+    super.hideUserDefinedMarkers();
+    this.updateHeatmap(null)
+  }
+
+  protected hideSystemDefinedMarkers(): void {
+    super.hideSystemDefinedMarkers();
+    this.updateHeatmap(null)
+  }
+
+  protected hideFetchedMarkers(): void {
+    super.hideFetchedMarkers();
+    this.updateHeatmap(null)
+  }
 }

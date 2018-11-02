@@ -10,7 +10,7 @@ import {DistributionService, Entry} from "../../services/distribution/distributi
 import {GeoCoordinates} from "../../ontologies/DataStructures";
 import {heatLayer, HeatOptions, HeatLayer} from "../../core/heat.layer";
 import {Custom} from "../../core/custom";
-import {latLng, LatLng} from "leaflet";
+import {latLng, LatLng, Layer} from "leaflet";
 import {HeatmapUpdater} from "../../core/heatmap-updater";
 
 @Component({
@@ -107,16 +107,15 @@ export class ContextMenuComponent extends HeatmapUpdater {
         });
 
         console.log("Context Menu Component Ready!");
+
       } else if (entry.key === MapsWrapper.ACTION.UPDATE_HEATMAP
         && this._heatLayer.isVisible) {
 
         console.log("updating heatmap");
 
-        if (entry.value != undefined && entry.value instanceof Array) {
-          this._heatLayer.display(entry.value as LatLng[]);
-        } else if (entry.value != undefined && entry.value instanceof LatLng) {
-          this._heatLayer.add(entry.value);
-        }
+        let activeMarkers = this.getActiveMarkersCoordinates()
+        console.log(activeMarkers)
+        this._heatLayer.display(activeMarkers)
       }
     });
 
@@ -272,10 +271,12 @@ export class ContextMenuComponent extends HeatmapUpdater {
   displayHeatMap(event) {
 
     ContextMenuComponent.hideContextMenu(event);
-
     $('.toggle').each((idx, obj) => {
       $(obj).toggle(300);
+
     });
+
+    this.hideAllMarkers()
 
     this.wrapper.add(
       HeatmapUpdater.HEAT_MAP_ID,
@@ -283,13 +284,10 @@ export class ContextMenuComponent extends HeatmapUpdater {
       this.heat_group
     );
 
-    this._distService.submit(
-      new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP,
-        this.getMarkersCoordinates(this.map))
-    );
+    this.showAllLayer()
 
     this._distService.submit(
-      new Entry(MapsWrapper.ACTION.HEATMAP_DISPLAY, this._heatLayer)
+      new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, this._heatLayer)
     );
   }
 
@@ -306,16 +304,26 @@ export class ContextMenuComponent extends HeatmapUpdater {
     this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.SYSTEM_DEFINED));
   }
 
-  private getMarkersCoordinates(from: Leaflet.Map | Leaflet.LayerGroup) : LatLng[] {
+  private getActiveMarkersCoordinates() : LatLng[] {
     let coordinates : Leaflet.LatLng[] = [];
 
-    this.map.eachLayer(layer => {
+    let updateFun: (layer:Layer) => void = layer => {
       if (layer instanceof Leaflet.Marker) {
         // console.log("pushing %s in heat_group", layer.getLatLng().toString());
         let c = layer.getLatLng();
         coordinates.push(latLng(c.lat, c.lng, 1.0))
       }
-    });
+    }
+
+    if(!this.system_defined_is_hidden){
+      this.system_defined.eachLayer(updateFun);
+    }
+    if(!this.user_is_hidden){
+      this.user_defined.eachLayer(updateFun);
+    }
+    if(!this.fetched_is_hidden){
+      this.fetched.eachLayer(updateFun);
+    }
 
     return coordinates;
   }
