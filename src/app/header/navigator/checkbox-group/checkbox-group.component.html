@@ -4,16 +4,22 @@
   </div>
   <div id="checkbox-container" class="filters-nav-form close-on-esc">
     <div>
-      <input type="checkbox" id="route-layer-checkbox" class="layer-checkbox" [(ngModel)]="routeChecked" (change)="onRouteClicked($event)"/>Route
+      <input type="checkbox" id="route-layer-checkbox" class="layer-checkbox" [(ngModel)]="routeChecked" (change)="onRouteClicked($event)"/> <label for="route-layer-checkbox">Route</label>
     </div>
     <div>
-      <div></div><input type="checkbox" id="fetched-markers-layer-checkbox" class="layer-checkbox" [(ngModel)]="fetchedChecked" (change)="onFetchedClicked($event)"/>Selected Markers <i class="fas fa-map-marker fa-2x" [style.color]="fetchedColor"></i>
+      <input type="checkbox" id="fetched-markers-layer-checkbox" class="layer-checkbox" [(ngModel)]="fetchedChecked" (change)="onFetchedClicked($event)"/>
+      <label for="fetched-markers-layer-checkbox">Selected Markers </label>
+      <i class="fas fa-map-marker fa-2x" [style.color]="fetchedColor"></i>
     </div>
     <div>
-      <div></div><input type="checkbox" id="user-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="userDefinedChecked" (change)="onUserDefinedClicked($event)"/>User added markers <i class="fas fa-map-marker fa-2x" [style.color]="userColor"></i>
+      <input type="checkbox" id="user-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="userDefinedChecked" (change)="onUserDefinedClicked($event)"/>
+      <label for="user-defined-layer-checkbox">User added markers</label>
+      <i class="fas fa-map-marker fa-2x" [style.color]="userColor"></i>
     </div>
     <div>
-      <div></div><input type="checkbox" id="system-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="systemDefinedChecked" (change)="onSystemDefinedClicked($event)"/>Default markers <i class="fas fa-map-marker fa-2x" [style.color]="serverColor"></i>
+      <input type="checkbox" id="system-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="systemDefinedChecked" (change)="onSystemDefinedClicked($event)"/>
+      <label for="system-defined-layer-checkbox">Default markers</label>
+      <i class="fas fa-map-marker fa-2x" [style.color]="serverColor"></i>
     </div>
   </div>
 </div>
