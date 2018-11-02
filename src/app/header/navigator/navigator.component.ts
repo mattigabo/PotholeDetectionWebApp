@@ -127,11 +127,20 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   togglePlaceFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
+    if(window.matchMedia('(max-width:480px)').matches) {
+      if (this.is_focused) {
+        this.is_focused = false;
+
+      }
+    }
     this.toggle($('#filter-by-place-form'));
   };
 
   toggleRouteFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
+    if(window.matchMedia('(max-width:480px)').matches) {
+
+    }
     this.toggle($('#filter-by-route-form'))
   };
 

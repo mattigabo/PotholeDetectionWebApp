@@ -142,7 +142,7 @@
   }
 
   .secondary {
-    display: unset;
+    display: none;
   }
 
   #marker-popup--footer {
