@@ -36,6 +36,8 @@ export class NavigatorComponent extends HeatmapUpdater {
     smoothFactor: 0
   };
 
+  private is_focused = false;
+
   constructor(private _restService : RestAdapterService,
               private _distService: DistributionService,
               private _toaster: ToasterService,
@@ -77,7 +79,7 @@ export class NavigatorComponent extends HeatmapUpdater {
     console.log("Focus:", event);
     if(window.matchMedia('(max-width:480px)').matches) {
       let entry = $(event.target).parent().parent().parent().attr("id");
-
+      this.is_focused = true;
       $(document).on('keyup', this._onEnterBlur($(event.target)));
 
       $(window).on('resize', this._onResizeBlur($(event.target)));
@@ -85,8 +87,10 @@ export class NavigatorComponent extends HeatmapUpdater {
       $('#filters-nav--header').hide();
       if (entry === "filter-by-place") {
         $('#filter-by-route').hide();
-      } else {
+        $('#layers-checkbox-group').hide();
+      } else if (entry === "filter-by-route") {
         $('#filter-by-place').hide();
+        $('#layers-checkbox-group').hide();
       }
     }
   };
@@ -95,10 +99,11 @@ export class NavigatorComponent extends HeatmapUpdater {
     console.log("Blur:", event);
 
     if(window.matchMedia("(max-width:480px)").matches) {
-
+      this.is_focused = false;
       $('#filters-nav--header').show();
       $('#filter-by-route').show();
       $('#filter-by-place').show();
+      $('#layers-checkbox-group').show();
       $(document).off('keyup', this._onEnterBlur);
       $(window).off('resize', this._onResizeBlur);
     }
@@ -122,13 +127,11 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   togglePlaceFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
-
     this.toggle($('#filter-by-place-form'));
   };
 
   toggleRouteFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
-
     this.toggle($('#filter-by-route-form'))
   };
 

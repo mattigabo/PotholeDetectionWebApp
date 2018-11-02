@@ -20,6 +20,11 @@ export class MapAddict implements OnInit, AfterViewInit {
   private _route_path: Leaflet.FeatureGroup;
   private _heat_group: Leaflet.FeatureGroup;
 
+  private _user_is_hidden = false;
+  private _system_defined_is_hidden = false;
+  private _fetched_is_hidden = false;
+  private _route_is_hidden = false;
+
   protected init (mapWrapper: MapsWrapper) {
 
       this._wrapper = mapWrapper;
@@ -65,6 +70,23 @@ export class MapAddict implements OnInit, AfterViewInit {
 
   get heat_group(): Leaflet.FeatureGroup { return this._heat_group; }
 
+
+  get user_is_hidden(): boolean {
+    return this._user_is_hidden;
+  }
+
+  get system_defined_is_hidden(): boolean {
+    return this._system_defined_is_hidden;
+  }
+
+  get fetched_is_hidden(): boolean {
+    return this._fetched_is_hidden;
+  }
+
+  get route_is_hidden(): boolean {
+    return this._route_is_hidden;
+  }
+
   protected populateLayer(latLngs: LatLngExpression[],
                           group: LayerGroup,
                           markerGenerator: (LatLngExpression) => Marker) {
@@ -78,54 +100,134 @@ export class MapAddict implements OnInit, AfterViewInit {
     return latLng([c.lat, c.lng]);
   }
 
-  protected showUserDefinedMarkers(){
+  private _showUserDefined() {
+    this._user_is_hidden = false;
     this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
-    this.user_defined.bringToFront();
-    this.fetched.bringToFront()
   }
 
-  protected showSystemDefinedMarkers(){
-    this.wrapper.add(LAYER_NAME.SYSTEM_DEFINED, this.system_defined);
-    this.user_defined.bringToFront();
-    this.fetched.bringToFront()
-  }
-
-  protected showFetchedMarkers(){
-    //in order to put the fetched layer under "user" & "system" defined layer
-    // this.hideSystemDefinedMarkers();
-    // this.hideUserDefinedMarkers();
-    this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
-    this.user_defined.bringToFront();
-    this.fetched.bringToFront()
-    // this.showSystemDefinedMarkers();
-    // this.showUserDefinedMarkers();
-  }
-
-  protected showRoute(){
+  private _showRoute() {
+    this._route_is_hidden = false;
     this.wrapper.add(LAYER_NAME.ROUTE_PATHS, this.route_path);
   }
 
+  private _showFetched() {
+    this._fetched_is_hidden = false;
+    this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
+  }
+
+  private _showSystemDefined() {
+    this._system_defined_is_hidden = false;
+    this.wrapper.add(LAYER_NAME.SYSTEM_DEFINED, this.system_defined);
+  }
+
+  protected showUserDefinedMarkers(){
+
+
+    if (!this.route_is_hidden) {
+      this.hideRoute();
+      this._showRoute();
+    }
+
+    if (!this.system_defined_is_hidden) {
+      this.hideSystemDefinedMarkers();
+      this._showSystemDefined();
+    }
+
+    this._showUserDefined();
+
+    if (!this.fetched_is_hidden) {
+      this.hideFetchedMarkers();
+      this._showFetched();
+    }
+  }
+
+  protected showSystemDefinedMarkers(){
+
+    if (!this.route_is_hidden) {
+      this.hideRoute();
+      this._showRoute();
+    }
+
+    if (!this.user_is_hidden) {
+      this.hideUserDefinedMarkers();
+      this._showUserDefined();
+    }
+
+    this._showSystemDefined();
+
+    if (!this.fetched_is_hidden) {
+      this.hideFetchedMarkers();
+      this._showFetched();
+    }
+  }
+
+  protected showFetchedMarkers(){
+
+    if (!this.route_is_hidden) {
+      this.hideRoute();
+      this._showRoute();
+    }
+
+    if (!this.system_defined_is_hidden) {
+      this.hideSystemDefinedMarkers();
+      this._showSystemDefined();
+    }
+
+    if (!this.user_is_hidden) {
+      this.hideUserDefinedMarkers();
+      this._showUserDefined();
+    }
+
+    this._showFetched();
+
+  }
+
+  protected showRoute(){
+
+    this._showRoute();
+
+    if (!this.system_defined_is_hidden) {
+      this.hideSystemDefinedMarkers();
+      this._showSystemDefined();
+    }
+
+    if (!this.user_is_hidden) {
+      this.hideUserDefinedMarkers();
+      this._showUserDefined();
+    }
+
+    if (!this.fetched_is_hidden) {
+      this.hideFetchedMarkers();
+      this._showFetched();
+    }
+  }
+
   protected hideUserDefinedMarkers() {
+    this._user_is_hidden = true;
     this.layers.removeLayer(this.user_defined);
   }
 
   protected hideSystemDefinedMarkers(){
+    this._system_defined_is_hidden = true;
     this.layers.removeLayer(this.system_defined);
   }
 
   protected hideFetchedMarkers() {
+    this._fetched_is_hidden = true;
     this.layers.removeLayer(this.fetched);
   }
 
   protected hideRoute() {
+    this._route_is_hidden = true;
     this.layers.removeLayer(this.route_path);
   }
 
 
   protected showAllMarkers(){
-    this.showUserDefinedMarkers();
-    this.showFetchedMarkers();
-    this.showSystemDefinedMarkers()
+    this._showRoute();
+    this._showSystemDefined();
+    this._showUserDefined();
+    this._showFetched();
   }
 
   protected hideAllMarkers(){

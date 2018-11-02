@@ -127,6 +127,7 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
     } else if (layer === LAYER_NAME.USER_DEFINED) {
       this.userDefinedChecked ? this.showUserDefinedMarkers() : this.hideUserDefinedMarkers();
     } else if (layer === LAYER_NAME.SYSTEM_DEFINED) {
+      console.log(this.systemDefinedChecked);
       this.systemDefinedChecked ? this.showSystemDefinedMarkers() : this.hideSystemDefinedMarkers();
     }
   }
