@@ -57,7 +57,7 @@
             "sslKey": "../ssl/server.key",
             "sslCert": "../ssl/server.crt",
             "host": "192.168.1.15",
-            "port": 8443
+            "port": 8080
           },
           "configurations": {
             "production": {
