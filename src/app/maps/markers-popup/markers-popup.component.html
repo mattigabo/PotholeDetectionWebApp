@@ -12,39 +12,49 @@
     </a>
   </div>
   <div id="marker-popup--info" class="marker-popup-entry">
-    <div id="marker-popup-label--country" class="primary" for="marker-popup--info">
+    <div *ngIf="country != _null"
+           id="marker-popup-label--country"
+           class="primary" for="marker-popup--info">
       <strong>Country</strong>: {{country}}
     </div>
-    <div id="marker-popup-label--region" class="primary" for="marker-popup--info">
+    <div *ngIf="region != _null"
+           id="marker-popup-label--region"
+           class="primary" for="marker-popup--info">
       <strong>Region</strong>: {{region}}
     </div>
-    <div id="marker-popup-label--county" class="primary" for="marker-popup--info">
+    <div *ngIf="county != _null"
+           id="marker-popup-label--county"
+           class="primary" for="marker-popup--info">
       <strong>County</strong>: {{county}}
     </div>
-    <div id="marker-popup-label--city"
-           *ngIf="(town == undefined || town == 'null') && (city !=undefined || city == 'null')"
+    <div *ngIf="city != _null"
+           id="marker-popup-label--city"
            class="primary">
       <strong>City</strong>: {{city}}
     </div>
-    <div id="marker-popup-label--district"
-           *ngIf="district != undefined && district != 'null'"
+    <div *ngIf="district != _null"
+           id="marker-popup-label--district"
            class="secondary" for="marker-popup--info">
       <strong>District</strong>: {{district}}
     </div>
-    <div *ngIf="suburb != undefined && suburb != 'null'"
-           id="marker-popup-label--suburb" class="secondary" for="marker-popup--info">
+    <div *ngIf="suburb != _null"
+           id="marker-popup-label--suburb"
+           class="secondary" for="marker-popup--info">
       <strong>Suburb</strong>: {{suburb}}
     </div>
-    <div *ngIf="town != undefined && town != 'null'"
-           id="marker-popup-label--town" class="primary" for="marker-popup--info">
+    <div *ngIf="town != _null"
+           id="marker-popup-label--town"
+           class="primary" for="marker-popup--info">
       <strong>Town</strong>: {{town}}
     </div>
-    <div *ngIf="place != undefined && place != 'null'"
-           id="marker-popup-label--place" class="secondary" for="marker-popup--info">
+    <div *ngIf="place != _null"
+           id="marker-popup-label--place"
+           class="secondary" for="marker-popup--info">
       <strong>Place</strong>: {{place}}
     </div>
-    <div *ngIf="road != undefined && road != 'null'"
-           id="marker-popup-label--road" class="primary" for="marker-popup--info">
+    <div *ngIf="road != _null"
+           id="marker-popup-label--road"
+           class="primary" for="marker-popup--info">
       <strong>Road</strong>: {{road}}
     </div>
   </div>

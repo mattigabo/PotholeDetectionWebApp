@@ -33,6 +33,8 @@ export class MarkersPopupComponent extends MapAddict{
   suburb: string;
   district: string;
 
+  _null = "'null'";
+
   constructor(private _restService : RestAdapterService,
               private _distributionService : DistributionService,
               private _sanitizer: DomSanitizer,
