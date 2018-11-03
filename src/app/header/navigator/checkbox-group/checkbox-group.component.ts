@@ -89,12 +89,24 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
 
   private _switchLayersDisplay(layer: string | LAYER_NAME) {
     if (layer === LAYER_NAME.FETCHED) {
-      this.fetchedChecked ? this.showFetchedLayerOrdered() : this.hideFetchedLayer();
+      this.fetchedChecked ?
+        this.isHeatMapVisible() ?
+          this.showFetchedLayer() :
+          this.showFetchedLayerOrdered() :
+        this.hideFetchedLayer();
     } else if (layer === LAYER_NAME.USER_DEFINED) {
-      this.userDefinedChecked ? this.showUserDefinedLayerOrdered() : this.hideUserDefinedLayer();
+      this.userDefinedChecked ?
+        this.isHeatMapVisible() ?
+          this.showUserDefinedLayer() :
+          this.showUserDefinedLayerOrdered() :
+        this.hideUserDefinedLayer();
     } else if (layer === LAYER_NAME.SYSTEM_DEFINED) {
       // console.log(this.systemDefinedChecked);
-      this.systemDefinedChecked ? this.showDefaultLayerOrdered() : this.hideDefaultLayer();
+      this.systemDefinedChecked ?
+        this.isHeatMapVisible() ?
+          this.showDefaultLayer() :
+          this.showDefaultLayerOrdered() :
+        this.hideDefaultLayer();
     }
   }
 

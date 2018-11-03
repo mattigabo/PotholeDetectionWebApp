@@ -36,7 +36,7 @@ export class HeatmapUpdater extends MapAddict {
     this._dst.submit(new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, data));
   }
 
-  private isHeatMapVisible(): boolean {
+  protected isHeatMapVisible(): boolean {
     let heat_map = this.wrapper.heatLayer(HeatmapUpdater.HEAT_MAP_ID);
 
     return  heat_map != undefined && heat_map.isVisible;

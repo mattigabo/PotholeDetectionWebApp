@@ -279,6 +279,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
     super.initHeatMap(this._heatLayer);
 
     super.updateHeatMap(this._heatLayer);
+
   }
 
   displayMarkers(event) {

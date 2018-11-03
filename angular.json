@@ -56,8 +56,8 @@
             "ssl": false,
             "sslKey": "../ssl/server.key",
             "sslCert": "../ssl/server.crt",
-            "host": "192.168.1.38",
-            "port": 8080
+            "host": "192.168.1.12",
+            "port": 80
           },
           "configurations": {
             "production": {
