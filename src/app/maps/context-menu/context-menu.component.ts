@@ -114,7 +114,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
         console.log("updating heatmap");
 
         let activeMarkers = this.getActiveMarkersCoordinates()
-        console.log(activeMarkers)
+        // console.log(activeMarkers)
         this._heatLayer.display(activeMarkers)
       }
     });
@@ -276,19 +276,9 @@ export class ContextMenuComponent extends HeatmapUpdater {
 
     });
 
-    this.hideAllMarkers()
+    super.initHeatMap(this._heatLayer);
 
-    this.wrapper.add(
-      HeatmapUpdater.HEAT_MAP_ID,
-      this._heatLayer.display([]),
-      this.heat_group
-    );
-
-    this.showAllLayer()
-
-    this._distService.submit(
-      new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, this._heatLayer)
-    );
+    super.updateHeatMap(this._heatLayer);
   }
 
   displayMarkers(event) {
@@ -307,22 +297,22 @@ export class ContextMenuComponent extends HeatmapUpdater {
   private getActiveMarkersCoordinates() : LatLng[] {
     let coordinates : Leaflet.LatLng[] = [];
 
-    let updateFun: (layer:Layer) => void = layer => {
+    let extractPoints: (layer:Layer) => void = layer => {
       if (layer instanceof Leaflet.Marker) {
         // console.log("pushing %s in heat_group", layer.getLatLng().toString());
         let c = layer.getLatLng();
         coordinates.push(latLng(c.lat, c.lng, 1.0))
       }
-    }
+    };
 
-    if(!this.system_defined_is_hidden){
-      this.system_defined.eachLayer(updateFun);
+    if(!this.isDefaultHidden){
+      this.system_defined.eachLayer(extractPoints);
     }
-    if(!this.user_is_hidden){
-      this.user_defined.eachLayer(updateFun);
+    if(!this.isUserHidden){
+      this.user_defined.eachLayer(extractPoints);
     }
-    if(!this.fetched_is_hidden){
-      this.fetched.eachLayer(updateFun);
+    if(!this.isFetchedHidden){
+      this.fetched.eachLayer(extractPoints);
     }
 
     return coordinates;

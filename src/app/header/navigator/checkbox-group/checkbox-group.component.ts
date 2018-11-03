@@ -7,6 +7,7 @@ import * as Leaflet from 'leaflet';
 import {LatLng} from 'leaflet';
 import {HeatmapUpdater} from "../../../core/heatmap-updater";
 import {Custom} from "../../../core/custom";
+import {MapAddict} from "../../../core/map-addict";
 
 @Component({
   selector: 'app-checkbox-group',
@@ -44,7 +45,7 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
       } else if (entry.key === MapsWrapper.ACTION.LAYERS_DISPLAY
         && typeof(entry.value)  === "string"){
 
-       this._switchLayerDisplay(entry.value);
+        this._switchLayersDisplay(entry.value);
 
       } else if (entry.key == MapsWrapper.ACTION.UNCHECK_SYSTEM_LAYER){
         this.systemDefinedChecked = false;
@@ -56,7 +57,7 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
   }
 
   onRouteClicked(event: any) {
-    this.routeChecked ? this.showRoute() : this.hideRoute();
+    this.routeChecked ? this.showRouteLayerOrdered() : this.hideRouteLayer();
   }
 
   onFetchedClicked(event: any) {
@@ -86,14 +87,14 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
     }
   }
 
-  private _switchLayerDisplay(layer: string | LAYER_NAME) {
+  private _switchLayersDisplay(layer: string | LAYER_NAME) {
     if (layer === LAYER_NAME.FETCHED) {
-      this.fetchedChecked ? this.showFetchedMarkers() : this.hideFetchedMarkers();
+      this.fetchedChecked ? this.showFetchedLayerOrdered() : this.hideFetchedLayer();
     } else if (layer === LAYER_NAME.USER_DEFINED) {
-      this.userDefinedChecked ? this.showUserDefinedMarkers() : this.hideUserDefinedMarkers();
+      this.userDefinedChecked ? this.showUserDefinedLayerOrdered() : this.hideUserDefinedLayer();
     } else if (layer === LAYER_NAME.SYSTEM_DEFINED) {
-      console.log(this.systemDefinedChecked);
-      this.systemDefinedChecked ? this.showSystemDefinedMarkers() : this.hideSystemDefinedMarkers();
+      // console.log(this.systemDefinedChecked);
+      this.systemDefinedChecked ? this.showDefaultLayerOrdered() : this.hideDefaultLayer();
     }
   }
 

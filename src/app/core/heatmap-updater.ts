@@ -2,6 +2,7 @@ import {MapAddict} from "./map-addict";
 import {LatLng, LatLngExpression, LayerGroup, Marker} from "leaflet";
 import {DistributionService, Entry} from "../services/distribution/distribution.service";
 import {MapsWrapper} from "./maps.wrapper";
+import {HeatLayer} from "./heat.layer";
 
 export class HeatmapUpdater extends MapAddict {
 
@@ -16,13 +17,24 @@ export class HeatmapUpdater extends MapAddict {
                 markerGenerator: (LatLngExpression) => Marker) {
 
     super.populateLayer(latLngs, group, markerGenerator);
-    this.updateHeatmap(latLngs);
+    this.updateHeatMap(latLngs);
   }
 
-  protected updateHeatmap(data?: any) {
+  protected initHeatMap(heatMap : HeatLayer) {
+    this.hideAllLayers();
+
+    this.wrapper.add(
+      HeatmapUpdater.HEAT_MAP_ID,
+      heatMap.display([]),
+      this.heat_group
+    );
+
+    this.showAllLayers();
+  }
+
+  protected updateHeatMap(data?: any) {
     this._dst.submit(new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, data));
   }
-
 
   private isHeatMapVisible(): boolean {
     let heat_map = this.wrapper.heatLayer(HeatmapUpdater.HEAT_MAP_ID);
@@ -32,9 +44,8 @@ export class HeatmapUpdater extends MapAddict {
 
   protected showUserDefinedLayer(): void {
     if(this.isHeatMapVisible()) {
-      this.user_is_hidden = false;
-      console.log("SHIT user")
-      this.updateHeatmap(null)
+      this.isUserHidden = false;
+      this.updateHeatMap(null)
     } else {
       super.showUserDefinedLayer();
     }
@@ -42,37 +53,34 @@ export class HeatmapUpdater extends MapAddict {
 
   protected showFetchedLayer(): void {
     if(this.isHeatMapVisible()) {
-      this.fetched_is_hidden = false;
-      this.updateHeatmap(null)
-      console.log("SHIT fetch")
+      this.isFetchedHidden = false;
+      this.updateHeatMap(null)
     } else {
       super.showFetchedLayer();
     }
   }
 
-  protected showSystemDefinedLayer(): void {
+  protected showDefaultLayer(): void {
     if(this.isHeatMapVisible()) {
-      this.system_defined_is_hidden = false;
-      this.updateHeatmap(null)
-      console.log("SHIT system")
+      this.isDefaultHidden = false;
+      this.updateHeatMap(null);
     } else {
-      super.showSystemDefinedLayer();
+      super.showDefaultLayer();
     }
   }
 
-
-  protected hideUserDefinedMarkers(): void {
-    super.hideUserDefinedMarkers();
-    this.updateHeatmap(null)
+  protected hideUserDefinedLayer(): void {
+    super.hideUserDefinedLayer();
+    this.updateHeatMap(null)
   }
 
-  protected hideSystemDefinedMarkers(): void {
-    super.hideSystemDefinedMarkers();
-    this.updateHeatmap(null)
+  protected hideDefaultLayer(): void {
+    super.hideDefaultLayer();
+    this.updateHeatMap(null)
   }
 
-  protected hideFetchedMarkers(): void {
-    super.hideFetchedMarkers();
-    this.updateHeatmap(null)
+  protected hideFetchedLayer(): void {
+    super.hideFetchedLayer();
+    this.updateHeatMap(null)
   }
 }

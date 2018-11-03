@@ -67,35 +67,35 @@ export class MapAddict implements OnInit, AfterViewInit {
   get heat_group(): Leaflet.FeatureGroup { return this._heat_group; }
 
 
-  get user_is_hidden(): boolean {
-    return this.wrapper.user_is_hidden;
+  get isUserHidden(): boolean {
+    return this.wrapper.isUserHidden;
   }
 
-  get system_defined_is_hidden(): boolean {
-    return this.wrapper.system_defined_is_hidden;
+  get isDefaultHidden(): boolean {
+    return this.wrapper.isDefaultHidden;
   }
 
-  get fetched_is_hidden(): boolean {
-    return this.wrapper.fetched_is_hidden;
+  get isFetchedHidden(): boolean {
+    return this.wrapper.isFetchedHidden;
   }
 
-  get route_is_hidden(): boolean {
-    return this.wrapper.route_is_hidden;
+  get isRouteHidden(): boolean {
+    return this.wrapper.isRouteHidden;
   }
 
-  set fetched_is_hidden(value: boolean) {
-    this.wrapper.fetched_is_hidden = value;
+  set isFetchedHidden(value: boolean) {
+    this.wrapper.isFetchedHidden = value;
   }
-  set system_defined_is_hidden(value: boolean) {
-    this.wrapper.system_defined_is_hidden = value;
-  }
-
-  set user_is_hidden(value: boolean) {
-    this.wrapper.user_is_hidden = value;
+  set isDefaultHidden(value: boolean) {
+    this.wrapper.isDefaultHidden = value;
   }
 
-  set route_is_hidden(value: boolean){
-    this.wrapper.route_is_hidden = value;
+  set isUserHidden(value: boolean) {
+    this.wrapper.isUserHidden = value;
+  }
+
+  set isRouteHidden(value: boolean){
+    this.wrapper.isRouteHidden = value;
   }
 
 
@@ -113,81 +113,81 @@ export class MapAddict implements OnInit, AfterViewInit {
   }
 
 
-  private _showRoute() {
-    this.route_is_hidden = false;
+  protected showRouteLayer() {
+    this.isRouteHidden = false;
     this.wrapper.add(LAYER_NAME.ROUTE_PATHS, this.route_path);
   }
 
   protected showUserDefinedLayer() {
-    this.user_is_hidden = false;
+    this.isUserHidden = false;
     this.wrapper.add(LAYER_NAME.USER_DEFINED, this.user_defined);
   }
 
   protected showFetchedLayer() {
-    this.fetched_is_hidden = false;
+    this.isFetchedHidden = false;
     this.wrapper.add(LAYER_NAME.FETCHED, this.fetched);
   }
 
-  protected showSystemDefinedLayer() {
-    this.system_defined_is_hidden = false;
+  protected showDefaultLayer() {
+    this.isDefaultHidden = false;
     this.wrapper.add(LAYER_NAME.SYSTEM_DEFINED, this.system_defined);
   }
 
-  protected showUserDefinedMarkers(){
+  protected showUserDefinedLayerOrdered(){
 
 
-    if (!this.route_is_hidden) {
-      this.hideRoute();
-      this._showRoute();
+    if (!this.isRouteHidden) {
+      this.hideRouteLayer();
+      this.showRouteLayer();
     }
 
-    if (!this.system_defined_is_hidden) {
-      this.hideSystemDefinedMarkers();
-      this.showSystemDefinedLayer();
+    if (!this.isDefaultHidden) {
+      this.hideDefaultLayer();
+      this.showDefaultLayer();
     }
 
     this.showUserDefinedLayer();
 
-    if (!this.fetched_is_hidden) {
-      this.hideFetchedMarkers();
+    if (!this.isFetchedHidden) {
+      this.hideFetchedLayer();
       this.showFetchedLayer();
     }
   }
 
-  protected showSystemDefinedMarkers(){
+  protected showDefaultLayerOrdered(){
 
-    if (!this.route_is_hidden) {
-      this.hideRoute();
-      this._showRoute();
+    if (!this.isRouteHidden) {
+      this.hideRouteLayer();
+      this.showRouteLayer();
     }
 
-    if (!this.user_is_hidden) {
-      this.hideUserDefinedMarkers();
+    if (!this.isUserHidden) {
+      this.hideUserDefinedLayer();
       this.showUserDefinedLayer();
     }
 
-    this.showSystemDefinedLayer();
+    this.showDefaultLayer();
 
-    if (!this.fetched_is_hidden) {
-      this.hideFetchedMarkers();
+    if (!this.isFetchedHidden) {
+      this.hideFetchedLayer();
       this.showFetchedLayer();
     }
   }
 
-  protected showFetchedMarkers(){
+  protected showFetchedLayerOrdered(){
 
-    if (!this.route_is_hidden) {
-      this.hideRoute();
-      this._showRoute();
+    if (!this.isRouteHidden) {
+      this.hideRouteLayer();
+      this.showRouteLayer();
     }
 
-    if (!this.system_defined_is_hidden) {
-      this.hideSystemDefinedMarkers();
-      this.showSystemDefinedLayer();
+    if (!this.isDefaultHidden) {
+      this.hideDefaultLayer();
+      this.showDefaultLayer();
     }
 
-    if (!this.user_is_hidden) {
-      this.hideUserDefinedMarkers();
+    if (!this.isUserHidden) {
+      this.hideUserDefinedLayer();
       this.showUserDefinedLayer();
     }
 
@@ -195,63 +195,64 @@ export class MapAddict implements OnInit, AfterViewInit {
 
   }
 
-  protected showRoute(){
+  protected showRouteLayerOrdered(){
 
-    this._showRoute();
+    this.showRouteLayer();
 
-    if (!this.system_defined_is_hidden) {
-      this.hideSystemDefinedMarkers();
-      this.showSystemDefinedLayer();
+    if (!this.isDefaultHidden) {
+      this.hideDefaultLayer();
+      this.showDefaultLayer();
     }
 
-    if (!this.user_is_hidden) {
-      this.hideUserDefinedMarkers();
+    if (!this.isUserHidden) {
+      this.hideUserDefinedLayer();
       this.showUserDefinedLayer();
     }
 
-    if (!this.fetched_is_hidden) {
-      this.hideFetchedMarkers();
+    if (!this.isFetchedHidden) {
+      this.hideFetchedLayer();
       this.showFetchedLayer();
     }
   }
 
-  protected hideUserDefinedMarkers() {
-    this.user_is_hidden = true;
+  protected hideUserDefinedLayer() {
+    this.isUserHidden = true;
     this.layers.removeLayer(this.user_defined);
   }
 
-  protected hideSystemDefinedMarkers(){
-    this.system_defined_is_hidden = true;
+  protected hideDefaultLayer(){
+    this.isDefaultHidden = true;
     this.layers.removeLayer(this.system_defined);
   }
 
-  protected hideFetchedMarkers() {
-    this.fetched_is_hidden = true;
+  protected hideFetchedLayer() {
+    this.isFetchedHidden = true;
     this.layers.removeLayer(this.fetched);
   }
 
-  protected hideRoute() {
-    this.route_is_hidden = true;
+  protected hideRouteLayer() {
+    this.isRouteHidden = true;
     this.layers.removeLayer(this.route_path);
   }
 
-
-  protected showAllMarkers(){
-    this._showRoute();
-    this.showSystemDefinedLayer();
-    this.showUserDefinedLayer();
-    this.showFetchedLayer();
+  protected showAllLayersOrdered(){
+    this.showRouteLayerOrdered();
+    this.showDefaultLayerOrdered();
+    this.showUserDefinedLayerOrdered();
+    this.showFetchedLayerOrdered();
   }
 
-  protected hideAllMarkers(){
-    this.hideUserDefinedMarkers();
-    this.hideFetchedMarkers();
-    this.hideSystemDefinedMarkers();
+  protected hideAllLayers(){
+    this.hideRouteLayer();
+    this.hideUserDefinedLayer();
+    this.hideFetchedLayer();
+    this.hideDefaultLayer();
   }
 
-  protected showAllLayer(){
+  protected showAllLayers(){
+    this.showRouteLayer();
     this.showFetchedLayer();
-    this.showSystemDefinedLayer();
+    this.showDefaultLayer();
     this.showUserDefinedLayer();
   }
 

@@ -17,10 +17,10 @@ export enum LAYER_NAME {
 
 export class MapsWrapper {
 
-  private _user_is_hidden = false;
-  private _system_defined_is_hidden = false;
-  private _fetched_is_hidden = false;
-  private _route_is_hidden = false;
+  private _isUserHidden = false;
+  private _isDefaultHidden = false;
+  private _isFetchedHidden = false;
+  private _isRouteHidden = false;
 
   public static ACTION = {
     CLEAR_LAYERS: "CLEAR_LAYERS",
@@ -41,29 +41,29 @@ export class MapsWrapper {
   public get index() : number[] { return this._index}
 
 
-  get user_is_hidden(): boolean {
-    return this._user_is_hidden;
+  get isUserHidden(): boolean {
+    return this._isUserHidden;
   }
-  get system_defined_is_hidden(): boolean {
-    return this._system_defined_is_hidden;
+  get isDefaultHidden(): boolean {
+    return this._isDefaultHidden;
   }
-  get fetched_is_hidden(): boolean {
-    return this._fetched_is_hidden;
+  get isFetchedHidden(): boolean {
+    return this._isFetchedHidden;
   }
-  get route_is_hidden(): boolean {
-    return this._route_is_hidden;
+  get isRouteHidden(): boolean {
+    return this._isRouteHidden;
   }
-  set fetched_is_hidden(value: boolean) {
-    this._fetched_is_hidden = value;
+  set isFetchedHidden(value: boolean) {
+    this._isFetchedHidden = value;
   }
-  set system_defined_is_hidden(value: boolean) {
-    this._system_defined_is_hidden = value;
+  set isDefaultHidden(value: boolean) {
+    this._isDefaultHidden = value;
   }
-  set user_is_hidden(value: boolean) {
-    this._user_is_hidden = value;
+  set isUserHidden(value: boolean) {
+    this._isUserHidden = value;
   }
-  set route_is_hidden(value: boolean){
-    this._route_is_hidden = value;
+  set isRouteHidden(value: boolean){
+    this._isRouteHidden = value;
   }
 
   constructor(private _map_id : string,
