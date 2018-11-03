@@ -83,4 +83,28 @@ export class HeatmapUpdater extends MapAddict {
     super.hideFetchedLayer();
     this.updateHeatMap(null)
   }
+
+  protected hideAllLayers(): void {
+    super.hideRouteLayer();
+    super.hideUserDefinedLayer();
+    super.hideFetchedLayer();
+    super.hideDefaultLayer();
+    if (this.isHeatMapVisible()) {
+      this.updateHeatMap(null);
+    }
+  }
+
+  protected showAllLayers(): void {
+    super.showRouteLayer();
+    if (this.isHeatMapVisible()) {
+      this.isDefaultHidden = false;
+      this.isFetchedHidden = false;
+      this.isUserHidden = false;
+      this.updateHeatMap(null);
+    } else {
+      super.showFetchedLayer();
+      super.showDefaultLayer();
+      super.showUserDefinedLayer();
+    }
+  }
 }
