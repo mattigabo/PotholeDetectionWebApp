@@ -17,22 +17,22 @@
       <div id="filter-by-place-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-place-fields" class="filters-nav--fields">
           <input id="filter-field--country" type="text" placeholder="Country (optional)" value=""
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="displayRegion($event)">
           <label hidden class="description" for="filter-field--country"> Specify the Country, optional field</label>
 
-          <input id="filter-field--region" type="text" placeholder="Region (optional)" value=""
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input hidden id="filter-field--region" type="text" placeholder="Region (optional)" value=""
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="displayCounty($event)">
           <label hidden class="description" for="filter-field--region"> Specify the Region, optional field</label>
 
-          <input id="filter-field--county" type="text" placeholder="County (optional)" value=""
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input hidden id="filter-field--county" type="text" placeholder="County (optional)" value=""
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="displayTown($event)">
           <label hidden class="description" for="filter-field--county"> Specify the county, optional field</label>
 
-          <input id="filter-field--town" type="text" placeholder="Town (optional)" value=""
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          <input hidden id="filter-field--town" type="text" placeholder="Town (optional)" value=""
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="displayRoad($event)">
           <label hidden class="description" for="filter-field--town"> Specify the town, optional field</label>
 
-          <input id="filter-field--road" type="text" placeholder="Road (optional)" value=""
+          <input hidden id="filter-field--road" type="text" placeholder="Road (optional)" value=""
                  (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--road"> Specify the road, optional field</label>
         </div>

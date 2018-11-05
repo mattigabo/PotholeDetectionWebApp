@@ -61,6 +61,49 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   ngAfterViewInit() {}
 
+  private _toggleInput(source, brother) {
+    let hidden_attr = brother.attr('hidden');
+
+    if (hidden_attr !==  undefined &&
+      source.val() !== undefined && source.val() !== "") {
+      // console.log("Display");
+      brother.attr('hidden', false);
+    } else if (typeof hidden_attr !== typeof undefined || hidden_attr !== false) {
+      if (source.val() == undefined || source.val() == "") {
+        // console.log("Hide");
+        brother.attr('hidden', true);
+      }
+    }
+  }
+
+  displayRegion(event) {
+    let brother = $("#filter-field--region");
+    let source = $("#filter-field--country");
+
+    this._toggleInput(source, brother);
+  }
+
+  displayCounty(event) {
+    let brother = $("#filter-field--county");
+    let source = $("#filter-field--region");
+
+    this._toggleInput(source, brother);
+  }
+
+  displayTown(event) {
+    let brother = $("#filter-field--town");
+    let source = $("#filter-field--county");
+
+    this._toggleInput(source, brother);
+  }
+
+  displayRoad(event) {
+    let brother = $("#filter-field--road");
+    let source = $("#filter-field--town");
+
+    this._toggleInput(source, brother);
+  }
+
   private _onEnterBlur = (input) => (keyEvent : KeyboardEvent) => {
     let key = keyEvent.key ? keyEvent.key.toUpperCase() : keyEvent.which;
 
@@ -76,7 +119,7 @@ export class NavigatorComponent extends HeatmapUpdater {
   };
 
   onInputFocus = (event) => {
-    console.log("Focus:", event);
+    // console.log("Focus:", event);
     if(window.matchMedia('(max-width:480px)').matches) {
       let entry = $(event.target).parent().parent().parent().attr("id");
       this.is_focused = true;
@@ -96,7 +139,7 @@ export class NavigatorComponent extends HeatmapUpdater {
   };
 
   onInputBlur = (event) => {
-    console.log("Blur:", event);
+    // console.log("Blur:", event);
 
     if(window.matchMedia("(max-width:480px)").matches) {
       this.is_focused = false;
