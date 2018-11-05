@@ -72,7 +72,7 @@ export class NavigatorComponent extends HeatmapUpdater {
       if (source.val() == undefined || source.val() == "") {
         // console.log("Hide");
         brother.attr('hidden', true);
-        brother.val("")
+        // brother.val("")
       }
     }
   }
