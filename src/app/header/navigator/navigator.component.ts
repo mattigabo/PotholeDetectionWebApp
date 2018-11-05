@@ -72,6 +72,7 @@ export class NavigatorComponent extends HeatmapUpdater {
       if (source.val() == undefined || source.val() == "") {
         // console.log("Hide");
         brother.attr('hidden', true);
+        brother.val("")
       }
     }
   }
@@ -81,6 +82,7 @@ export class NavigatorComponent extends HeatmapUpdater {
     let source = $("#filter-field--country");
 
     this._toggleInput(source, brother);
+    this.displayCounty(event);
   }
 
   displayCounty(event) {
@@ -88,6 +90,7 @@ export class NavigatorComponent extends HeatmapUpdater {
     let source = $("#filter-field--region");
 
     this._toggleInput(source, brother);
+    this.displayTown(event)
   }
 
   displayTown(event) {
@@ -95,6 +98,7 @@ export class NavigatorComponent extends HeatmapUpdater {
     let source = $("#filter-field--county");
 
     this._toggleInput(source, brother);
+    this.displayRoad(event)
   }
 
   displayRoad(event) {
