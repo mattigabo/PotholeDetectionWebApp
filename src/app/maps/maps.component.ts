@@ -52,9 +52,7 @@ export class MapsComponent extends MapAddict{
   }
 
   ngOnInit() {
-
     new MapsWrapper("osm-map", this.options, this.distService, this.toasterService);
-
   }
 
   ngAfterViewInit(): void {
