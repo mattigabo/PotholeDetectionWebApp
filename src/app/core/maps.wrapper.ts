@@ -1,7 +1,7 @@
 import * as Leaflet from 'leaflet';
 import {DistributionService, Entry} from "../services/distribution/distribution.service";
 import {Toast, ToasterService} from "angular2-toaster";
-import {LayerGroup} from "leaflet";
+import {LayerGroup, LocationEvent} from "leaflet";
 import {HeatLayer} from "./heat.layer";
 
 export enum LAYER_NAME {
@@ -12,7 +12,8 @@ export enum LAYER_NAME {
   GEOMETRIES = "geometries",
   HEAT_MAPS = "heat-maps",
   ROUTE_PATHS = "route-paths",
-  SYSTEM_DEFINED = "system-defined"
+  SYSTEM_DEFINED = "system-defined",
+  USER_POSITION = "user-position"
 }
 
 export class MapsWrapper {
@@ -71,6 +72,10 @@ export class MapsWrapper {
               private _emitter: DistributionService,
               private _toasterService: ToasterService) {
 
+
+    console.log("TOAST SERVICE");
+    console.log(this._toasterService);
+
     this._layers = Leaflet.layerGroup();
 
     this.add(LAYER_NAME.TILES, Leaflet.tileLayer(
@@ -97,11 +102,8 @@ export class MapsWrapper {
 
     this._map = Leaflet.map(_map_id, _options);
 
-    this._map.on('locationerror', this.onLocationError);
+    this.loadUserLocation();
 
-    this._map.on('locationfound', this.onLocationFound);
-
-    //this._map.locate({setView: true, enableHighAccuracy: true});
 
     this._map.whenReady(() => {
       _emitter.submit(new Entry<string, any>(MapsWrapper.name, this))
@@ -109,6 +111,14 @@ export class MapsWrapper {
 
     console.log("Map Wrapper Instance Ready!");
 
+  }
+
+  private loadUserLocation(){
+    this._map.on('locationerror',(event:LocationEvent) => MapsWrapper.onLocationError(event, this._toasterService));
+
+    this._map.on('locationfound',(event:LocationEvent) => MapsWrapper.onLocationFound(event, this._toasterService));
+
+    this._map.locate({setView: true, enableHighAccuracy: true});
   }
 
   public layer<T extends Leaflet.Layer>(id: string, from? : string | LayerGroup) : T {
@@ -150,9 +160,9 @@ export class MapsWrapper {
       });
   }
 
-  private onLocationFound(event : Leaflet.LocationEvent) {
-
-    this._toasterService.pop({
+  private static onLocationFound(event : Leaflet.LocationEvent, toasterService: ToasterService) {
+    console.log(toasterService);
+    toasterService.pop({
       type: 'info',
       title: 'User Location',
       body: "User found @["+
@@ -163,8 +173,8 @@ export class MapsWrapper {
     });
   }
 
-  private onLocationError(event: Leaflet.LocationEvent) {
-    this._toasterService.pop({
+  private static onLocationError(event: Leaflet.LocationEvent, toasterService: ToasterService) {
+    toasterService.pop({
       type: 'error',
       title: 'User Location',
       body: "Couldn't establish user position!",
