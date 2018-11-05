@@ -104,7 +104,6 @@ export class MapsWrapper {
 
     this.loadUserLocation();
 
-
     this._map.whenReady(() => {
       _emitter.submit(new Entry<string, any>(MapsWrapper.name, this))
     });

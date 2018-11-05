@@ -64,12 +64,12 @@ export class NavigatorComponent extends HeatmapUpdater {
   private _toggleInput(source, brother) {
     let hidden_attr = brother.attr('hidden');
 
-    if (hidden_attr !==  undefined &&
+    if ((typeof hidden_attr !== typeof undefined || hidden_attr === true) &&
       source.val() !== undefined && source.val() !== "") {
       // console.log("Display");
       brother.attr('hidden', false);
-    } else if (typeof hidden_attr !== typeof undefined || hidden_attr !== false) {
-      if (source.val() == undefined || source.val() == "") {
+    } else if (typeof hidden_attr === typeof undefined || hidden_attr === false) {
+      if (source.val() == undefined || source.val() == "" || source.attr('hidden') !== undefined) {
         // console.log("Hide");
         brother.attr('hidden', true);
         // brother.val("")
