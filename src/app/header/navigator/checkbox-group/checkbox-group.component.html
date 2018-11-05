@@ -21,5 +21,10 @@
       <label for="system-defined-layer-checkbox">Default markers</label>
       <i class="fas fa-map-marker fa-2x" [style.color]="serverColor"></i>
     </div>
+    <div>
+      <input type="checkbox" id="user-position-layer-checkbox" class="layer-checkbox" [(ngModel)]="positionChecked" (change)="onUserPositionClicked($event)"/>
+      <label for="user-position-layer-checkbox">User Position</label>
+      <i class="fas fa-map-marker fa-2x" [style.color]="positionColor"></i>
+    </div>
   </div>
 </div>

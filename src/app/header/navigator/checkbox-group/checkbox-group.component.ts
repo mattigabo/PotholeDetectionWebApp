@@ -3,11 +3,8 @@ import {DistributionService, Entry} from "../../../services/distribution/distrib
 import {LAYER_NAME, MapsWrapper} from "../../../core/maps.wrapper";
 import {WindowService} from "../../../services/window/window.service";
 import * as $ from 'jquery';
-import * as Leaflet from 'leaflet';
-import {LatLng} from 'leaflet';
 import {HeatmapUpdater} from "../../../core/heatmap-updater";
 import {Custom} from "../../../core/custom";
-import {MapAddict} from "../../../core/map-addict";
 
 @Component({
   selector: 'app-checkbox-group',
@@ -19,11 +16,13 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
   userColor = Custom.userColor;
   serverColor = Custom.serverColor;
   fetchedColor = Custom.fetchedColor;
+  positionColor = Custom.positionColor;
 
   routeChecked: boolean;
   userDefinedChecked: boolean;
   systemDefinedChecked: boolean;
   fetchedChecked: boolean;
+  positionChecked: boolean;
 
   constructor(private _distService: DistributionService,
               private _windower: WindowService) {
@@ -32,6 +31,7 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
     this.userDefinedChecked = true;
     this.systemDefinedChecked = true;
     this.fetchedChecked = true;
+    this.positionChecked = true;
 
     _distService.subscribe(entry => {
       if (entry.key === MapsWrapper.name &&
@@ -73,6 +73,10 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
     this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.SYSTEM_DEFINED))
   }
 
+  onUserPositionClicked(event: any) {
+    this._distService.submit(new Entry(MapsWrapper.ACTION.LAYERS_DISPLAY, LAYER_NAME.USER_POSITION))
+  }
+
   toggleCheckboxContainer(event?) {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
 
@@ -107,6 +111,9 @@ export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
           this.showDefaultLayer() :
           this.showDefaultLayerOrdered() :
         this.hideDefaultLayer();
+    } else if (layer === LAYER_NAME.USER_POSITION) {
+      this.positionChecked ?
+        this.showUserPositionLayerOrdered() : this.hideUserPositionLayer();
     }
   }
 

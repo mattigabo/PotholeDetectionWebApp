@@ -20,6 +20,7 @@ export class MapAddict implements OnInit, AfterViewInit {
   private _geometry: Leaflet.FeatureGroup;
   private _route_path: Leaflet.FeatureGroup;
   private _heat_group: Leaflet.FeatureGroup;
+  private _user_position: Leaflet.FeatureGroup;
 
   protected init (mapWrapper: MapsWrapper) {
 
@@ -36,6 +37,7 @@ export class MapAddict implements OnInit, AfterViewInit {
       this._geometry = this._wrapper.featureGroup(LAYER_NAME.GEOMETRIES);
       this._route_path = this._wrapper.featureGroup(LAYER_NAME.ROUTE_PATHS);
       this._heat_group = this._wrapper.featureGroup(LAYER_NAME.HEAT_MAPS);
+      this._user_position = this._wrapper.featureGroup(LAYER_NAME.USER_POSITION);
   }
 
   ngAfterViewInit(): void {
@@ -66,6 +68,7 @@ export class MapAddict implements OnInit, AfterViewInit {
 
   get heat_group(): Leaflet.FeatureGroup { return this._heat_group; }
 
+  get user_position(): Leaflet.FeatureGroup { return this._user_position; }
 
   get isUserHidden(): boolean {
     return this.wrapper.isUserHidden;
@@ -81,6 +84,14 @@ export class MapAddict implements OnInit, AfterViewInit {
 
   get isRouteHidden(): boolean {
     return this.wrapper.isRouteHidden;
+  }
+
+  get isPositionHidden(): boolean {
+    return this.wrapper.isPositionHidden;
+  }
+
+  set isPositionHidden(value: boolean) {
+    this.wrapper.isPositionHidden = value;
   }
 
   set isFetchedHidden(value: boolean) {
@@ -133,8 +144,12 @@ export class MapAddict implements OnInit, AfterViewInit {
     this.wrapper.add(LAYER_NAME.SYSTEM_DEFINED, this.system_defined);
   }
 
-  protected showUserDefinedLayerOrdered(){
+  protected showUserPositionLayer() {
+    this.isPositionHidden = false;
+    this.wrapper.add(LAYER_NAME.USER_POSITION, this.user_position)
+  }
 
+  protected showUserDefinedLayerOrdered(){
 
     if (!this.isRouteHidden) {
       this.hideRouteLayer();
@@ -151,6 +166,11 @@ export class MapAddict implements OnInit, AfterViewInit {
     if (!this.isFetchedHidden) {
       this.hideFetchedLayer();
       this.showFetchedLayer();
+    }
+
+    if (!this.isPositionHidden) {
+      this.hideUserPositionLayer();
+      this.showUserPositionLayer();
     }
   }
 
@@ -171,6 +191,11 @@ export class MapAddict implements OnInit, AfterViewInit {
     if (!this.isFetchedHidden) {
       this.hideFetchedLayer();
       this.showFetchedLayer();
+    }
+
+    if (!this.isPositionHidden) {
+      this.hideUserPositionLayer();
+      this.showUserPositionLayer();
     }
   }
 
@@ -193,6 +218,10 @@ export class MapAddict implements OnInit, AfterViewInit {
 
     this.showFetchedLayer();
 
+    if (!this.isPositionHidden) {
+      this.hideUserPositionLayer();
+      this.showUserPositionLayer();
+    }
   }
 
   protected showRouteLayerOrdered(){
@@ -213,6 +242,35 @@ export class MapAddict implements OnInit, AfterViewInit {
       this.hideFetchedLayer();
       this.showFetchedLayer();
     }
+
+    if (!this.isPositionHidden) {
+      this.hideUserPositionLayer();
+      this.showUserPositionLayer();
+    }
+  }
+  protected showUserPositionLayerOrdered(){
+
+    if (!this.isRouteHidden) {
+      this.hideRouteLayer();
+      this.showRouteLayer();
+    }
+
+    if (!this.isDefaultHidden) {
+      this.hideDefaultLayer();
+      this.showDefaultLayer();
+    }
+
+    if (!this.isUserHidden) {
+      this.hideUserDefinedLayer();
+      this.showUserDefinedLayer();
+    }
+
+    if (!this.isFetchedHidden) {
+      this.hideFetchedLayer();
+      this.showFetchedLayer();
+    }
+
+    this.showUserPositionLayer();
   }
 
   protected hideUserDefinedLayer() {
@@ -235,11 +293,17 @@ export class MapAddict implements OnInit, AfterViewInit {
     this.layers.removeLayer(this.route_path);
   }
 
+  protected hideUserPositionLayer() {
+    this.isPositionHidden = true;
+    this.layers.removeLayer(this.user_position);
+  }
+
   protected showAllLayersOrdered(){
-    this.showRouteLayerOrdered();
-    this.showDefaultLayerOrdered();
-    this.showUserDefinedLayerOrdered();
-    this.showFetchedLayerOrdered();
+    this.showRouteLayer();
+    this.showDefaultLayer();
+    this.showUserDefinedLayer();
+    this.showFetchedLayer();
+    this.showUserPositionLayer()
   }
 
   protected hideAllLayers(){
@@ -247,6 +311,7 @@ export class MapAddict implements OnInit, AfterViewInit {
     this.hideUserDefinedLayer();
     this.hideFetchedLayer();
     this.hideDefaultLayer();
+    this.hideUserPositionLayer()
   }
 
   protected showAllLayers(){
@@ -254,6 +319,7 @@ export class MapAddict implements OnInit, AfterViewInit {
     this.showFetchedLayer();
     this.showDefaultLayer();
     this.showUserDefinedLayer();
+    this.showUserPositionLayer()
   }
 
 }

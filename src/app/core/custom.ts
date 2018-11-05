@@ -10,6 +10,7 @@ export class Custom {
   public static readonly userColor : string = '#86cbff';
   public static readonly serverColor: string = '#87cd78';
   public static readonly fetchedColor: string = '#ff8f83';
+  public static readonly positionColor: string = '#ee00ee';
 
   public static readonly fetchedBorderColor: string = '#ff4e00';
   public static readonly defaultBorderColor: string = '#222222';
@@ -17,6 +18,8 @@ export class Custom {
   private static readonly fetchedMarkerBorderValue: string = '3px solid ' + Custom.defaultBorderColor;
   private static readonly userMarkerBorderValue: string = '2px solid ' + Custom.defaultBorderColor;
   private static readonly serverMarkerBorderValue: string = '2px solid ' + Custom.defaultBorderColor;
+  private static readonly positionMarkerBorderValue: string = '2px solid ' + Custom.defaultBorderColor;
+
   private static readonly fetchedMarkerOffset: Offset = { left: '-1.15em', top: '-1.15em' };
   private static readonly defaultMarkerOffset: Offset = { left: '-1.0em', top: '-1.0em' };
   private static readonly iconAnchor : PointExpression = [0, 12];
@@ -60,6 +63,14 @@ export class Custom {
     html: `<span style="${Custom.setMarkerColor(Custom.fetchedColor, Custom.fetchedMarkerBorderValue, Custom.fetchedMarkerOffset)}" />`
   });
 
+  public static readonly positionMarkerIcon : Leaflet.DivIcon = Leaflet.divIcon({
+    className: "user-marker-pin",
+    iconAnchor: Custom.iconAnchor,
+    // iconSize: [42, 42],
+    popupAnchor: Custom.popupAnchor,
+    html: `<span style="${Custom.setMarkerColor(Custom.positionColor, Custom.positionMarkerBorderValue, Custom.defaultMarkerOffset)}" />`
+  });
+
   public static readonly userMarker =
     (latLng: LatLngExpression) : Leaflet.Marker  =>
       Leaflet.marker(latLng, {icon: Custom.userMarkerIcon});
@@ -71,6 +82,10 @@ export class Custom {
   public static readonly  fetchedMarker =
     (latLng: LatLngExpression) : Leaflet.Marker  =>
       Leaflet.marker(latLng, {icon: Custom.fetchedMarkerIcon});
+
+  public static readonly  positonMarker =
+    (latLng: LatLngExpression) : Leaflet.Marker  =>
+      Leaflet.marker(latLng, {icon: Custom.positionMarkerIcon});
 
   constructor(){}
 }

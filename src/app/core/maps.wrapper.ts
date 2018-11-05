@@ -3,6 +3,7 @@ import {DistributionService, Entry} from "../services/distribution/distribution.
 import {Toast, ToasterService} from "angular2-toaster";
 import {LayerGroup, LocationEvent} from "leaflet";
 import {HeatLayer} from "./heat.layer";
+import {Custom} from "./custom";
 
 export enum LAYER_NAME {
   TILES = "map-box-tiles",
@@ -22,6 +23,7 @@ export class MapsWrapper {
   private _isDefaultHidden = false;
   private _isFetchedHidden = false;
   private _isRouteHidden = false;
+  private _isPositionHidden = false;
 
   public static ACTION = {
     CLEAR_LAYERS: "CLEAR_LAYERS",
@@ -54,6 +56,16 @@ export class MapsWrapper {
   get isRouteHidden(): boolean {
     return this._isRouteHidden;
   }
+
+
+  get isPositionHidden(): boolean {
+    return this._isPositionHidden;
+  }
+
+  set isPositionHidden(value: boolean) {
+    this._isPositionHidden = value;
+  }
+
   set isFetchedHidden(value: boolean) {
     this._isFetchedHidden = value;
   }
@@ -115,7 +127,10 @@ export class MapsWrapper {
   private loadUserLocation(){
     this._map.on('locationerror',(event:LocationEvent) => MapsWrapper.onLocationError(event, this._toasterService));
 
-    this._map.on('locationfound',(event:LocationEvent) => MapsWrapper.onLocationFound(event, this._toasterService));
+    this._map.on('locationfound',(event:LocationEvent) => {
+      this.featureGroup(LAYER_NAME.USER_POSITION).addLayer(Custom.positonMarker(event.latlng));
+      MapsWrapper.onLocationFound(event, this._toasterService)
+    });
 
     this._map.locate({setView: true, enableHighAccuracy: true});
   }
