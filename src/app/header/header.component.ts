@@ -31,6 +31,10 @@ export class HeaderComponent extends MapAddict {
 
         super.init(entry.value);
 
+        $("#filter-field--country").on("", () => {
+
+        });
+
         console.log("Header Component Ready!");
       }
     });
