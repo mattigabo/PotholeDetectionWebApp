@@ -4,6 +4,7 @@ import {Toast, ToasterService} from "angular2-toaster";
 import {LayerGroup, LocationEvent} from "leaflet";
 import {HeatLayer} from "./heat.layer";
 import {Custom} from "./custom";
+import {RestAdapterService} from "../services/rest/rest-adapter.service";
 
 export enum LAYER_NAME {
   TILES = "map-box-tiles",
@@ -57,7 +58,6 @@ export class MapsWrapper {
     return this._isRouteHidden;
   }
 
-
   get isPositionHidden(): boolean {
     return this._isPositionHidden;
   }
@@ -82,6 +82,7 @@ export class MapsWrapper {
   constructor(private _map_id : string,
               private _options : Leaflet.MapOptions,
               private _emitter: DistributionService,
+              private _restService: RestAdapterService,
               private _toasterService: ToasterService) {
 
 
@@ -129,6 +130,28 @@ export class MapsWrapper {
 
     this._map.on('locationfound',(event:LocationEvent) => {
       this.featureGroup(LAYER_NAME.USER_POSITION).addLayer(Custom.positonMarker(event.latlng));
+
+      this._restService
+        .getLocationInfo(event.latlng.lat, event.latlng.lng)
+        .subscribe(osm_node => {
+          let country = osm_node.country,
+              region = osm_node.region,
+              county = osm_node.county
+              // city = osm_node.city === null ? osm_node.town : osm_node.city
+          ;
+
+           console.log(osm_node);
+
+          this._restService
+            .getAllMarkers(country, region, county)
+            .subscribe(markers => {
+              markers
+                .map(m => m.coordinates)
+                .map(c => Custom.fetchedMarker([c.lat, c.lng]))
+                .forEach(m => this.featureGroup(LAYER_NAME.FETCHED).addLayer(m))
+            });
+        });
+
       MapsWrapper.onLocationFound(event, this._toasterService)
     });
 
