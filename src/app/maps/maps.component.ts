@@ -46,6 +46,7 @@ export class MapsComponent extends MapAddict{
           });
 
         console.log(this.layers);
+        this.refreshIfNotOnChrome()
       }
     });
 
@@ -56,6 +57,12 @@ export class MapsComponent extends MapAddict{
   }
 
   ngAfterViewInit(): void {
+  }
 
+  private refreshIfNotOnChrome(){
+    if(!(/Chrome/.test(navigator.appVersion))) {
+      console.log("MI INVALIDO");
+      this.map.invalidateSize()
+    }
   }
 }
