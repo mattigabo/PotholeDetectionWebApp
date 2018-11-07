@@ -13,11 +13,6 @@ import {Custom} from "../../../core/custom";
 })
 export class CheckboxGroupComponent extends HeatmapUpdater implements OnInit {
 
-  userColor = Custom.userColor;
-  serverColor = Custom.serverColor;
-  fetchedColor = Custom.fetchedColor;
-  positionColor = Custom.positionColor;
-
   routeChecked: boolean;
   userDefinedChecked: boolean;
   systemDefinedChecked: boolean;

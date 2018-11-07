@@ -49,37 +49,72 @@
   align-items: flex-start;
 }
 
+.external-link-container{
+  background-color: rgba(255,255,255,0.7);
+  border: 1px solid #000000;
+  border-radius: 0rem 0rem 1rem 1rem;
+  margin-top: -100%;
+
+  position: absolute;
+  pointer-events: none;
+  padding-left: 107%;
+  z-index: 1;
+  padding-bottom: 16em;
+}
+
 #credits > a {
   /*float: right;*/
   pointer-events: all;
-  margin-right: 20px;
+  margin-right: 1em;
   cursor: pointer;
+  z-index: 2;
   text-decoration: none;
+  margin-top: 1%;
 }
 
 #email {
-  color: indianred;
+  color: rgba(255, 0, 0, 0.76);
   transition: 0.3s;
 }
+
 #email:hover {color: red}
 
 #repository{
-  color: mediumpurple;
+  color: #574991;
   transition: 0.3s;
 }
 
 #repository:hover{color: purple}
 
 #help {
-  color: #999999;
+  color: #424242;
   transition: 0.3s;
 }
 
-#help:hover {color: #333333}
+#help:hover {color: #000000
+}
 
 #filters-button {
-  color: #444444;
+  color: #343434;
   transition: 0.3s;
 }
 
 #filters-button:hover {color: black}
+
+
+.interal-filter-button{
+  color: #FFFFFF;
+  position: absolute;
+  left: 52%;
+  top: 32%;
+}
+
+@media  (max-width: 480px) {
+  .external-link-container{
+    margin-bottom: 4%;
+  }
+
+  #email {color: red}
+
+  #repository{color: purple}
+}

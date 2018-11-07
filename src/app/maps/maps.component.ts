@@ -61,7 +61,7 @@ export class MapsComponent extends MapAddict{
 
   private refreshIfNotOnChrome(){
     if(!(/Chrome/.test(navigator.appVersion))) {
-      console.log("MI INVALIDO");
+      this.map.invalidateSize()
       this.map.invalidateSize()
     }
   }

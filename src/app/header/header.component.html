@@ -1,21 +1,20 @@
 <div id="header-icon-bar">
   <div id="filters" class="header">
     <a id= "filters-button" class="nav-display-button open-on-esc" (click)="openFiltersNav($event)">
-      <i class="fas fa-filter fa-2x"></i>
+      <i class="fas fa-filter fa-3x external-filter-button"></i>
+      <i class="fas fa-filter fa-1x interal-filter-button"></i>
       <label hidden class="description" for="filters-button">Open filtering side menu</label>
     </a>
   </div>
   <div id="credits" class="header">
-    <a id= "repository" href="{{repository}}" target="_blank" aria-describedby="repository">
-      <i class="fab fa-github fa-2x" ></i>
+    <!--<div class="external-link-container"></div>-->
+    <a id= "repository" class="fab fa-github fa-2x" href="{{repository}}" target="_blank" aria-describedby="repository">
       <label hidden class="description" for="repository">Got to credits page</label>
     </a>
-    <a id= "email" href="{{mail_sender}}" target="_blank" aria-describedby="email">
-      <i class="fab fa-google fa-2x" ></i>
+    <a id="email" class="fab fa-google fa-2x" href="{{mail_sender}}" target="_blank" aria-describedby="email">
       <label hidden class="description" for="email">Open GMail to send us an email</label>
     </a>
-    <a id= "help" href="{{help}}" target="_blank" aria-describedby="help">
-      <i class="fas fa-question-circle fa-2x" ></i>
+    <a id="help" class="fas fa-question-circle fa-2x" href="{{help}}" target="_blank" aria-describedby="help">
       <label hidden class="description" for="help">Go to wiki-help page</label>
     </a>
   </div>
