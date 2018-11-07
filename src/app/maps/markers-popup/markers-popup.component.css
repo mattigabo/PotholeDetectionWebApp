@@ -104,6 +104,7 @@
   display: none;
 }
 
+
 @media (max-width: 480px){
   :host{
     position: unset;
@@ -139,6 +140,15 @@
 
   .marker-popup-entry {
     display: none;
+    margin-right: 6%;
+  }
+
+  #marker-popup--header{
+    margin-right: 6%;
+  }
+
+  #marker-popup--info{
+    margin-right: 6%;
   }
 
   .secondary {

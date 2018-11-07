@@ -12,23 +12,23 @@
 
 
 .user-added-marker{
-  background-color: #86cbff;
+  background-color: #48c6d4;
   border: 2px solid #222222;
 }
 
 .server-marker{
-  background-color: #87cd78;
+  background-color: #3bcf2e;
   border: 2px solid #222222;
 }
 
 .fetched-marker{
-  background-color: #ff8f83;
+  background-color: rgb(212, 87, 72);
   border: 3px solid #222222;
 }
 
 .position-marker{
   border-radius: 1rem;
-  background-color: #ee00ee;
-  border: 2px solid #222222;
+  background-color: #f2ff00;
+  border: 3px solid #0d00ff;
   top:0em;
 }
