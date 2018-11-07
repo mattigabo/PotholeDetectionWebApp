@@ -3,28 +3,28 @@
     <a (click)="toggleCheckboxContainer($event)"><strong>Filter which layer to show</strong></a>
   </div>
   <div id="checkbox-container" class="filters-nav-form close-on-esc">
-    <div>
+    <div class="check-box-row">
       <input type="checkbox" id="route-layer-checkbox" class="layer-checkbox" [(ngModel)]="routeChecked" (change)="onRouteClicked($event)"/> <label for="route-layer-checkbox">Route</label>
     </div>
-    <div>
+    <div class="check-box-row">
       <input type="checkbox" id="fetched-markers-layer-checkbox" class="layer-checkbox" [(ngModel)]="fetchedChecked" (change)="onFetchedClicked($event)"/>
       <label for="fetched-markers-layer-checkbox">Selected Markers </label>
-      <i class="fas fa-map-marker fa-2x layer-icon" [style.color]="fetchedColor"></i>
+      <span class="layer-icon marker fetched-marker"></span>
     </div>
-    <div>
+    <div class="check-box-row">
       <input type="checkbox" id="user-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="userDefinedChecked" (change)="onUserDefinedClicked($event)"/>
       <label for="user-defined-layer-checkbox">User added markers</label>
-      <i class="fas fa-map-marker fa-2x layer-icon" [style.color]="userColor"></i>
+      <span class="layer-icon marker user-added-marker" [style.color]="userColor"></span>
     </div>
-    <div>
+    <div class="check-box-row">
       <input type="checkbox" id="system-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="systemDefinedChecked" (change)="onSystemDefinedClicked($event)"/>
       <label for="system-defined-layer-checkbox">Default markers</label>
-      <i class="fas fa-map-marker fa-2x layer-icon" [style.color]="serverColor"></i>
+      <span class="layer-icon marker server-marker" ></span>
     </div>
-    <div>
+    <div class="check-box-row">
       <input type="checkbox" id="user-position-layer-checkbox" class="layer-checkbox" [(ngModel)]="positionChecked" (change)="onUserPositionClicked($event)"/>
       <label for="user-position-layer-checkbox">User Position</label>
-      <i class="fas fa-map-marker fa-2x layer-icon" [style.color]="positionColor"></i>
+      <span class="layer-icon marker position-marker"></span>
     </div>
   </div>
 </div>

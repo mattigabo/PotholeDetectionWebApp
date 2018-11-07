@@ -1,5 +1,9 @@
 @import "../navigator.component.css";
 
+.check-box-row{
+  padding: 1%;
+}
+
 .layer-checkbox{
   margin: 4%;
   border: none;
@@ -9,4 +13,5 @@
 .layer-icon {
   position: relative;
   float: right;
+  top: 4%;
 }
