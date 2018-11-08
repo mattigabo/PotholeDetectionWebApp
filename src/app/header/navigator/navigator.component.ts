@@ -6,7 +6,7 @@ import {DistributionService, Entry} from "../../services/distribution/distributi
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {Marker} from "../../ontologies/DataStructures";
 import {WindowService} from "../../services/window/window.service";
-import {ToasterService} from "angular2-toaster";
+import {Toast, ToasterService} from "angular2-toaster";
 import {LngLat, RouteAPIResponse, Route, RouteServiceResponse} from "../../ontologies/RouteData";
 import {LatLngLiteral} from "leaflet";
 import {LatLng} from "leaflet";
@@ -40,7 +40,7 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   constructor(private _restService : RestAdapterService,
               private _distService: DistributionService,
-              private _toaster: ToasterService,
+              private _toasterService: ToasterService,
               private _windower: WindowService) {
 
     super(_distService);
@@ -214,7 +214,16 @@ export class NavigatorComponent extends HeatmapUpdater {
     this.closeFiltersNav();
 
     this._restService.getAllMarkers(country, region, county, town, road)
-      .subscribe(markers => this.addFetchedMarkersToLayer(markers));
+      .subscribe(markers => {
+        let infoToast: Toast = {
+          type: 'info',
+          title: 'Server Response',
+          body: "The server has founded n°" + markers.length + " potholes",
+          showCloseButton: true
+        };
+        this._toasterService.pop(infoToast);
+        this.addFetchedMarkersToLayer(markers);
+      });
   };
 
 

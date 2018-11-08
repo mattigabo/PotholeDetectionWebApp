@@ -365,14 +365,6 @@ export class ContextMenuComponent extends HeatmapUpdater {
   }
 
   private static _addMarker(coordinates, restService: RestAdapterService, toasterService: ToasterService){
-    let infoToast: Toast = {
-      type: 'info',
-      title: 'Prova',
-      body: "Marker successfully added",
-      showCloseButton: true
-    };
-
-    // toasterService.pop(infoToast);
 
     let successToast: Toast = {
       type: 'success',
