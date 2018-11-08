@@ -11,7 +11,7 @@ import {LngLat, RouteAPIResponse, Route, RouteServiceResponse} from "../../ontol
 import {LatLngLiteral} from "leaflet";
 import {LatLng} from "leaflet";
 import * as LeafletHeatLine from 'leaflet-hotline';
-import {Custom} from "../../core/custom";
+import {Custom, MediaTypes} from "../../core/custom";
 import {HeatmapUpdater} from "../../core/heatmap-updater";
 
 
@@ -21,8 +21,6 @@ import {HeatmapUpdater} from "../../core/heatmap-updater";
   styleUrls: ['./navigator.component.css']
 })
 export class NavigatorComponent extends HeatmapUpdater {
-
-  static mediaQuery = "(max-width:480px)"
 
   private heatLineOptions =  {
     min: 30,
@@ -126,7 +124,7 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   onInputFocus = (event) => {
     // console.log("Focus:", event);
-    if(window.matchMedia(NavigatorComponent.mediaQuery).matches) {
+    if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
       let entry = $(event.target).parent().parent().parent().attr("id");
       this.is_focused = true;
       $(document).on('keyup', this._onEnterBlur($(event.target)));
@@ -147,7 +145,7 @@ export class NavigatorComponent extends HeatmapUpdater {
   onInputBlur = (event) => {
     // console.log("Blur:", event);
 
-    if(window.matchMedia(NavigatorComponent.mediaQuery).matches) {
+    if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
       this.is_focused = false;
       $('#filters-nav--header').show();
       $('#filter-by-route').show();
@@ -176,7 +174,7 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   togglePlaceFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
-    if(window.matchMedia(NavigatorComponent.mediaQuery).matches) {
+    if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
       if (this.is_focused) {
         this.is_focused = false;
 
@@ -187,7 +185,7 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   toggleRouteFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
-    if(window.matchMedia(NavigatorComponent.mediaQuery).matches) {
+    if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
 
     }
     this.toggle($('#filter-by-route-form'))

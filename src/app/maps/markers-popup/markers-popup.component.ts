@@ -9,6 +9,7 @@ import {GeoCoordinates, Marker, MarkerComment} from "../../ontologies/DataStruct
 import {DomSanitizer} from "@angular/platform-browser";
 import {Toast, ToasterService} from "angular2-toaster";
 import {WindowService} from "../../services/window/window.service";
+import {MediaTypes} from "../../core/custom";
 
 @Component({
   selector: 'app-markers-popup',
@@ -96,7 +97,7 @@ export class MarkersPopupComponent extends MapAddict{
 
       let marker_popup = $('#marker-popup');
 
-      if (window.matchMedia("(max-width: 768px)").matches) {
+      if (window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
         marker_popup.css({display: 'flex'}).hide().animate({
           height:"toggle",
         }, 500, () => {
@@ -129,7 +130,7 @@ export class MarkersPopupComponent extends MapAddict{
   hideMarkerPopup = (click: Event) => {
     let marker_popup = $('#marker-popup');
 
-    if (!window.matchMedia("(max-width: 768px)").matches) {
+    if (!window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
       marker_popup.fadeOut(300);
     } else {
       $('.marker-popup-entry').each((idx, obj) => {
@@ -147,7 +148,7 @@ export class MarkersPopupComponent extends MapAddict{
   };
 
   onFocusHideMarkerPopup = (event) => {
-    if(window.matchMedia("(max-width:768px)").matches){
+    if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches){
       $("#marker-popup").fadeOut(200);
       $(event.target).blur();
       let stub = $("#text-stub");
@@ -157,7 +158,7 @@ export class MarkersPopupComponent extends MapAddict{
   };
 
   onBlurDisplayMarkerPopup = ($event) => {
-    if(window.matchMedia("(max-width:768px)").matches){
+    if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches){
       $("#comment-stub").fadeOut(300, () => {
         $("#marker-popup").fadeIn(300);
         $("#marker-popup-comment--text").val($("#text-stub").val());
