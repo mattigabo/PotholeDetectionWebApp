@@ -99,3 +99,22 @@ export class Custom {
   constructor(){}
 }
 
+export class MediaType{
+  constructor(private maxWidthPx: number, private maxHeightPx: number){
+  }
+
+  getMaxWidthMediaQuery(): string{
+    return "(max-width:"+ this.maxWidthPx +"px)";
+  }
+
+  getMaxHeightMediaQuery(): string{
+    return "(max-height:"+ this.maxHeightPx +"px)";
+
+  }
+}
+
+export class MediaTypes {
+  static smartphone: MediaType = new MediaType(480, 736);
+  static tablet: MediaType = new MediaType(768, 1024);
+  static bigTablet: MediaType = new MediaType(1024, 1366)
+}

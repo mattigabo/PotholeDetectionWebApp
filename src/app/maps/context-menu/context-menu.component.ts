@@ -9,7 +9,7 @@ import {CoordinatesService} from "../../services/coordinates/coordinates.service
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {GeoCoordinates} from "../../ontologies/DataStructures";
 import {heatLayer, HeatOptions, HeatLayer} from "../../core/heat.layer";
-import {Custom} from "../../core/custom";
+import {Custom, MediaTypes} from "../../core/custom";
 import {latLng, LatLng, Layer} from "leaflet";
 import {HeatmapUpdater} from "../../core/heatmap-updater";
 
@@ -140,7 +140,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
 
     let contextMenu = $('#map-context-menu');
 
-    if (!window.matchMedia("(max-width: 768px)").matches) {
+    if (!window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
 
       let
         top = (event.containerPoint.y + 10),
@@ -183,7 +183,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
     let context_menu = $(".context-menu");
 
     if (context_menu.css("display") !== "none") {
-      if (!window.matchMedia("(max-width: 768px)").matches) {
+      if (!window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
         context_menu.each((idx, obj) => $(obj).hide());
       } else {
         context_menu.each((idx, obj) => $(obj).animate({height:'toggle'}, 500));
