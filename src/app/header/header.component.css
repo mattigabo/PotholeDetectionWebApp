@@ -27,7 +27,7 @@
   display: flex;
   z-index: 2;
   pointer-events: none;
-  padding: 10px;
+  padding: 8px;
   margin-top: 2%;
 }
 
@@ -70,10 +70,14 @@
   z-index: 2;
   text-decoration: none;
   margin-top: 1%;
+
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 2rem;
+  padding:2%;
 }
 
 #email {
-  color: rgba(255, 0, 0, 0.76);
+  color: rgb(255, 62, 62);
   transition: 0.3s;
 }
 
@@ -106,10 +110,17 @@
   color: #FFFFFF;
   position: absolute;
   left: 52%;
-  top: 32%;
+  top: 30%;
 }
 
-@media  (max-width: 480px) {
+#external-email-circle{
+  position: absolute;
+  right:50%;
+  color: white;
+  font-size: 0.9em;
+}
+
+@media  (max-width: 768px) {
   .external-link-container{
     margin-bottom: 4%;
   }

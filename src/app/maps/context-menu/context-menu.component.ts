@@ -140,7 +140,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
 
     let contextMenu = $('#map-context-menu');
 
-    if (!window.matchMedia("(max-width: 480px)").matches) {
+    if (!window.matchMedia("(max-width: 768px)").matches) {
 
       let
         top = (event.containerPoint.y + 10),
@@ -183,7 +183,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
     let context_menu = $(".context-menu");
 
     if (context_menu.css("display") !== "none") {
-      if (!window.matchMedia("(max-width: 480px)").matches) {
+      if (!window.matchMedia("(max-width: 768px)").matches) {
         context_menu.each((idx, obj) => $(obj).hide());
       } else {
         context_menu.each((idx, obj) => $(obj).animate({height:'toggle'}, 500));

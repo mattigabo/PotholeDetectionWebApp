@@ -96,7 +96,7 @@ export class MarkersPopupComponent extends MapAddict{
 
       let marker_popup = $('#marker-popup');
 
-      if (window.matchMedia("(max-width: 480px)").matches) {
+      if (window.matchMedia("(max-width: 768px)").matches) {
         marker_popup.css({display: 'flex'}).hide().animate({
           height:"toggle",
         }, 500, () => {
@@ -129,7 +129,7 @@ export class MarkersPopupComponent extends MapAddict{
   hideMarkerPopup = (click: Event) => {
     let marker_popup = $('#marker-popup');
 
-    if (!window.matchMedia("(max-width: 480px)").matches) {
+    if (!window.matchMedia("(max-width: 768px)").matches) {
       marker_popup.fadeOut(300);
     } else {
       $('.marker-popup-entry').each((idx, obj) => {
@@ -147,7 +147,7 @@ export class MarkersPopupComponent extends MapAddict{
   };
 
   onFocusHideMarkerPopup = (event) => {
-    if(window.matchMedia("(max-width:480px)").matches){
+    if(window.matchMedia("(max-width:768px)").matches){
       $("#marker-popup").fadeOut(200);
       $(event.target).blur();
       let stub = $("#text-stub");
@@ -157,7 +157,7 @@ export class MarkersPopupComponent extends MapAddict{
   };
 
   onBlurDisplayMarkerPopup = ($event) => {
-    if(window.matchMedia("(max-width:480px)").matches){
+    if(window.matchMedia("(max-width:768px)").matches){
       $("#comment-stub").fadeOut(300, () => {
         $("#marker-popup").fadeIn(300);
         $("#marker-popup-comment--text").val($("#text-stub").val());
