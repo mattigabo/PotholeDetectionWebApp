@@ -38,6 +38,15 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   private is_focused = false;
 
+  country: string = "";
+  region: string = "";
+  county: string = "";
+  town: string = "";
+  road: string = "";
+  origin: string = "";
+  destination: string = "";
+  radius: number = 100;
+
   constructor(private _restService : RestAdapterService,
               private _distService: DistributionService,
               private _toaster: ToasterService,
@@ -124,7 +133,7 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   onInputFocus = (event) => {
     // console.log("Focus:", event);
-    if(window.matchMedia('(max-width:480px)').matches) {
+    if(window.matchMedia('(max-width:768px)').matches) {
       let entry = $(event.target).parent().parent().parent().attr("id");
       this.is_focused = true;
       $(document).on('keyup', this._onEnterBlur($(event.target)));
@@ -145,7 +154,7 @@ export class NavigatorComponent extends HeatmapUpdater {
   onInputBlur = (event) => {
     // console.log("Blur:", event);
 
-    if(window.matchMedia("(max-width:480px)").matches) {
+    if(window.matchMedia("(max-width:768px)").matches) {
       this.is_focused = false;
       $('#filters-nav--header').show();
       $('#filter-by-route').show();
@@ -174,7 +183,7 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   togglePlaceFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
-    if(window.matchMedia('(max-width:480px)').matches) {
+    if(window.matchMedia('(max-width:768px)').matches) {
       if (this.is_focused) {
         this.is_focused = false;
 
@@ -185,8 +194,10 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   toggleRouteFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
-    if(window.matchMedia('(max-width:480px)').matches) {
-
+    if(window.matchMedia('(max-width:768px)').matches) {
+      if (this.is_focused) {
+        this.is_focused = false;
+      }
     }
     this.toggle($('#filter-by-route-form'))
   };
@@ -205,27 +216,18 @@ export class NavigatorComponent extends HeatmapUpdater {
   };
 
   onClickFetchMarkersByPlace = ($event) => {
-    let country = $('#filter-field--country').val(),
-      region = $('#filter-field--region').val(),
-      county = $('#filter-field--county').val(),
-      town = $('#filter-field--town').val(),
-      road = $('#filter-field--road').val();
 
     this.closeFiltersNav();
 
-    this._restService.getAllMarkers(country, region, county, town, road)
+    this._restService.getAllMarkers(this.country, this.region, this.county, this.town, this.road)
       .subscribe(markers => this.addFetchedMarkersToLayer(markers));
   };
 
-
   onClickFetchMarkersByRoute = ($event) => {
-    let origin = $('#filter-field--origin').val(),
-      destination = $('#filter-field--destination').val(),
-      radius = $('#filter-field--search-radius').val();
 
     this.closeFiltersNav();
 
-    this._restService.getMarkerOnRouteByPlace(origin, destination, radius)
+    this._restService.getMarkerOnRouteByPlace(this.origin, this.destination, this.radius)
       .subscribe(response => {
         //this.fetchMarkers(response.content);
         console.log(response);
