@@ -16,23 +16,28 @@
       </div>
       <div id="filter-by-place-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-place-fields" class="filters-nav--fields">
-          <input id="filter-field--country" type="text" placeholder="Country (optional)" value=""
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="displayRegion($event)">
+          <input id="filter-field--country" type="text" placeholder="Country (optional)"
+                 [value]="country" (input)="country=$event.target.value; displayRegion($event)"
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--country"> Specify the Country, optional field</label>
 
-          <input hidden id="filter-field--region" type="text" placeholder="Region (optional)" value=""
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="displayCounty($event)">
+          <input hidden id="filter-field--region" type="text" placeholder="Region (optional)"
+                 [value]="region" (input)="region=$event.target.value; displayCounty($event)"
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--region"> Specify the Region, optional field</label>
 
-          <input hidden id="filter-field--county" type="text" placeholder="County (optional)" value=""
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="displayTown($event)">
+          <input hidden id="filter-field--county" type="text" placeholder="County (optional)"
+                 [value]="county" (input)="county=$event.target.value; displayTown($event)"
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--county"> Specify the county, optional field</label>
 
-          <input hidden id="filter-field--town" type="text" placeholder="Town (optional)" value=""
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" (input)="displayRoad($event)">
+          <input hidden id="filter-field--town" type="text" placeholder="Town (optional)"
+                 [value]="town" (input)="town=$event.target.value; displayRoad($event)"
+                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--town"> Specify the town, optional field</label>
 
-          <input hidden id="filter-field--road" type="text" placeholder="Road (optional)" value=""
+          <input hidden id="filter-field--road" type="text" placeholder="Road (optional)"
+                 [value]="road" (input)="road=$event.target.value; "
                  (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--road"> Specify the road, optional field</label>
         </div>
@@ -56,15 +61,22 @@
       </div>
       <div id="filter-by-route-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-route--fields" class="filters-nav--fields">
-          <input id="filter-field--origin" type="text" placeholder="Origin"
+          <input id="filter-field--origin" type="text"
+                 name="Origin" placeholder="Origin"
+                 (input)= "origin = $event.target.value;" [value]="origin"
                  (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--origin"> Specify the origin</label>
 
-          <input id="filter-field--destination" type="text" placeholder="Destination"
+          <input id="filter-field--destination" type="text"
+                 name="Destination" placeholder="Destination"
+                 (input)="destination= $event.target.value;" [value]="destination"
                  (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--destination"> Specify the destination</label>
 
-          <input id="filter-field--search-radius" type="text" placeholder="Search Radius (default: 100m)"
+          <input id="filter-field--search-radius" type="number"
+                 name="Search Radius (meters)"
+                 placeholder="Search Radius (default: 100 meters)"
+                 (input)= "radius = $event.target.value;" [value]="radius"
                  (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
           <label hidden class="description" for="filter-field--search-radius"> Specify the search radius, default value 100 meters</label>
         </div>

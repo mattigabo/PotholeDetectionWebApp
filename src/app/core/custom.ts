@@ -27,7 +27,6 @@ export class Custom {
   // private static readonly fetchedMarkerOffset: Offset = { left: '-1.15em', top: '-1.15em' };
   // private static readonly defaultMarkerOffset: Offset = { left: '-1.0em', top: '-1.0em' };
 
-
   private static readonly positionMarkerAnchor: PointExpression = [12, 12];
   private static readonly iconAnchor : PointExpression = [7, 29];
   private static readonly popupAnchor : PointExpression = [0, -18];
@@ -74,7 +73,7 @@ export class Custom {
 
   public static readonly positionMarkerIcon : Leaflet.DivIcon = Leaflet.divIcon({
     className: "position-marker-pin",
-    iconAnchor: Custom.positionMarkerAnchor,
+    iconAnchor: Custom.iconAnchor,
     // iconSize: [42, 42],
     popupAnchor: Custom.popupAnchor,
     //html: `<span style="${Custom.setMarkerStyle(Custom.positionColor, Custom.positionMarkerBorderValue, Custom.userPositionBorderRadius, Custom.defaultMarkerOffset)}" />`

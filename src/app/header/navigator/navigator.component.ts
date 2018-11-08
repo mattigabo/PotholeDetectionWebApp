@@ -38,6 +38,15 @@ export class NavigatorComponent extends HeatmapUpdater {
 
   private is_focused = false;
 
+  country: string = "";
+  region: string = "";
+  county: string = "";
+  town: string = "";
+  road: string = "";
+  origin: string = "";
+  destination: string = "";
+  radius: number = 100;
+
   constructor(private _restService : RestAdapterService,
               private _distService: DistributionService,
               private _toasterService: ToasterService,
@@ -177,7 +186,6 @@ export class NavigatorComponent extends HeatmapUpdater {
     if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
       if (this.is_focused) {
         this.is_focused = false;
-
       }
     }
     this.toggle($('#filter-by-place-form'));
@@ -186,7 +194,9 @@ export class NavigatorComponent extends HeatmapUpdater {
   toggleRouteFilters = (event) => {
     $('.filters-nav-form').each((idx, obj) => $(obj).hide(300));
     if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
-
+      if (this.is_focused) {
+        this.is_focused = false;
+      }
     }
     this.toggle($('#filter-by-route-form'))
   };
@@ -205,15 +215,10 @@ export class NavigatorComponent extends HeatmapUpdater {
   };
 
   onClickFetchMarkersByPlace = ($event) => {
-    let country = $('#filter-field--country').val(),
-      region = $('#filter-field--region').val(),
-      county = $('#filter-field--county').val(),
-      town = $('#filter-field--town').val(),
-      road = $('#filter-field--road').val();
 
     this.closeFiltersNav();
 
-    this._restService.getAllMarkers(country, region, county, town, road)
+    this._restService.getAllMarkers(this.country, this.region, this.county, this.town, this.road)
       .subscribe(markers => {
         let infoToast: Toast = {
           type: 'info',
@@ -226,15 +231,11 @@ export class NavigatorComponent extends HeatmapUpdater {
       });
   };
 
-
   onClickFetchMarkersByRoute = ($event) => {
-    let origin = $('#filter-field--origin').val(),
-      destination = $('#filter-field--destination').val(),
-      radius = $('#filter-field--search-radius').val();
 
     this.closeFiltersNav();
 
-    this._restService.getMarkerOnRouteByPlace(origin, destination, radius)
+    this._restService.getMarkerOnRouteByPlace(this.origin, this.destination, this.radius)
       .subscribe(response => {
         //this.fetchMarkers(response.content);
         console.log(response);
