@@ -117,7 +117,7 @@ a:hover {
   .nav {
     position: fixed;
     width: 100%;
-    min-height: 100%;
+    min-height: 200%;
   }
 
   a {
@@ -127,6 +127,6 @@ a:hover {
 
 @media (max-height: 480px) {
   .filters-nav--fields > * {
-    width: 70%;
+    /*width: 70%;*/
   }
 }

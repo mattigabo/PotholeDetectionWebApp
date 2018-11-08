@@ -1,11 +1,5 @@
 <div id="marker-popup" class="close-on-esc overlay">
   <div id="marker-popup--header" class="marker-popup-entry">
-    <a id="marker-popup-close-button"
-       class="close-button"
-       (click)="hideMarkerPopup($event)">
-      <i class="fas fa-times-circle fa-1x"></i>
-      <label hidden class="description" for="marker-popup-close-button">Close Marker Popup</label>
-    </a>
     <a><strong>Marker</strong></a>
     <a id="marker-popup--coordinates">
       [{{latitude}} <strong>N</strong>, {{longitude}} <strong>E</strong>]
@@ -69,11 +63,16 @@
       <label hidden class="description" for="marker-popup-comment--text"> If you want you can insert your comment relative to the pothole</label>
   </div>
   <div id="marker-popup--footer" class="marker-popup-entry">
-    <a class="hidden">
-      <label hidden class="description" for="marker-popup--footer">Padding</label>
+    <a id="marker-popup-close-button"
+       class="close-button"
+       (click)="hideMarkerPopup($event)">
+      <i *ngIf="isMobile()" class="fas fa-times-circle fa-3x"></i>
+      <i *ngIf="!isMobile()" class="fas fa-times-circle fa-2x"></i>
+      <label hidden class="description" for="marker-popup-close-button">Close Marker Popup</label>
     </a>
     <a id="marker-popup-send-button" class="marker-send-button" (click)="addComment($event)">
-      <i class="fas fa-arrow-circle-right fa-2x"></i>
+      <i *ngIf="isMobile()" class="fas fa-arrow-circle-right fa-3x"></i>
+      <i *ngIf="!isMobile()" class="fas fa-arrow-circle-right fa-2x"></i>
       <label hidden class="description" for="marker-popup-send-button">Send Comment for Marker</label>
     </a>
   </div>

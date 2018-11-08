@@ -34,6 +34,8 @@ export class MarkersPopupComponent extends MapAddict{
   suburb: string;
   district: string;
 
+  isMobile: () => boolean = () => window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches;
+
   _null = "'null'";
 
   constructor(private _restService : RestAdapterService,
@@ -98,13 +100,14 @@ export class MarkersPopupComponent extends MapAddict{
       let marker_popup = $('#marker-popup');
 
       if (window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
-        marker_popup.css({display: 'flex'}).hide().animate({
-          height:"toggle",
-        }, 500, () => {
-          $('.marker-popup-entry').each((idx, obj) => {
-            $(obj).css({display: 'flex'}).hide().fadeIn(300);
-          })
-        });
+        marker_popup.css({display: 'flex'}).hide().fadeIn(300)
+        //.animate({
+        //   height:"toggle",
+        // }, 300, () => {
+        //   $('.marker-popup-entry').each((idx, obj) => {
+        //     $(obj).css({display: 'flex'}).hide().fadeIn(100);
+        //   })
+        // });
       } else {
         marker_popup.css({display: 'flex'}).hide().fadeIn(300);
       }
@@ -133,10 +136,11 @@ export class MarkersPopupComponent extends MapAddict{
     if (!window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
       marker_popup.fadeOut(300);
     } else {
-      $('.marker-popup-entry').each((idx, obj) => {
-        $(obj).hide();
-      });
-      marker_popup.animate({height:"toggle"}, 500);
+      // $('.marker-popup-entry').each((idx, obj) => {
+      //   $(obj).hide();
+      // });
+      marker_popup.fadeOut(300);
+        // .animate({height:"toggle"}, 500);
     }
   };
 
