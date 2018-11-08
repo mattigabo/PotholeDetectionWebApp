@@ -13,12 +13,12 @@
 
 .user-added-marker{
   background-color: #48c6d4;
-  border: 2px solid #222222;
+  border: 3px solid #222222;
 }
 
 .server-marker{
   background-color: #3bcf2e;
-  border: 2px solid #222222;
+  border: 3px solid #222222;
 }
 
 .fetched-marker{

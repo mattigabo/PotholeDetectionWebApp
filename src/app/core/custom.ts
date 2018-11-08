@@ -27,7 +27,8 @@ export class Custom {
   // private static readonly fetchedMarkerOffset: Offset = { left: '-1.15em', top: '-1.15em' };
   // private static readonly defaultMarkerOffset: Offset = { left: '-1.0em', top: '-1.0em' };
 
-  private static readonly iconAnchor : PointExpression = [0, 12];
+  private static readonly positionMarkerAnchor: PointExpression = [12, 12];
+  private static readonly iconAnchor : PointExpression = [7, 29];
   private static readonly popupAnchor : PointExpression = [0, -18];
 
   // static readonly  setMarkerStyle = (color: string, border: string, radius: string, offset: Offset) => `
