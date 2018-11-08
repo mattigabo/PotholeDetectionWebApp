@@ -223,7 +223,7 @@ export class NavigatorComponent extends HeatmapUpdater {
         let infoToast: Toast = {
           type: 'info',
           title: 'Server Response',
-          body: "The server has founded n°" + markers.length + " potholes",
+          body: "The server has found n°" + markers.length + " potholes",
           showCloseButton: true
         };
         this._toasterService.pop(infoToast);
@@ -236,17 +236,37 @@ export class NavigatorComponent extends HeatmapUpdater {
     this.closeFiltersNav();
 
     this._restService.getMarkerOnRouteByPlace(this.origin, this.destination, this.radius)
-      .subscribe(response => {
-        //this.fetchMarkers(response.content);
-        console.log(response);
-        this.drawRoutePath(response.content);
-      });
+      .subscribe(response => this.processMarkerByRouteServerResponse(response.content));
   };
 
   onClickUndoFiltering = ($event) => {
     this.route_path.clearLayers();
     this.fetched.clearLayers();
   };
+
+
+  private processMarkerByRouteServerResponse(response: RouteAPIResponse){
+    //this.fetchMarkers(response.content);
+    let infoToast: Toast;
+    if(response.routingServiceResponse == null) {
+      infoToast = {
+        type: 'info',
+        title: 'Server Response',
+        body: "The server hasn't found any route",
+        showCloseButton: true
+      };
+    } else {
+      infoToast = {
+        type: 'info',
+        title: 'Server Response',
+        body: "The server has found n°" + response.markers.length + " potholes in the radius of " + this.radius + " meters from the searched route",
+        showCloseButton: true
+      };
+    }
+    this._toasterService.pop(infoToast);
+    this.drawRoutePath(response);
+  }
+
 
   public drawRoutePath(responseContent: RouteAPIResponse){
 

@@ -14,7 +14,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   public potholeSystemToastConfig : ToasterConfig = new ToasterConfig({
     positionClass: 'toast-bottom-left',
-    timeout:3000,
+    timeout:4000,
     animation: 'fade',
     showCloseButton: true
   });
