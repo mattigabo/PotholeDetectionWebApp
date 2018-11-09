@@ -213,12 +213,6 @@ export class NavigatorComponent extends HeatmapUpdater {
 
     this.isFetching = true;
 
-    this._toasterService.pop({
-      type: 'info',
-      body: "OK",
-      showCloseButton: true
-    });
-
     this.closeFiltersNav();
 
     this._restService.getAllMarkers(this.country, this.region, this.county, this.town, this.road)
