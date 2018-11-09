@@ -14,7 +14,7 @@
     <div class="check-box-row">
       <input type="checkbox" id="user-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="userDefinedChecked" (change)="onUserDefinedClicked($event)"/>
       <label for="user-defined-layer-checkbox">User added markers</label>
-      <span class="layer-icon marker user-added-marker" [style.color]="userColor"></span>
+      <span class="layer-icon marker user-added-marker"></span>
     </div>
     <div class="check-box-row">
       <input type="checkbox" id="system-defined-layer-checkbox" class="layer-checkbox" [(ngModel)]="systemDefinedChecked" (change)="onSystemDefinedClicked($event)"/>
