@@ -2,11 +2,11 @@
   <div id="filters-nav--header" class="close-on-esc">
     <a id="restore-view--button" (click)="onClickUndoFiltering($event)">
       <i class="fas fa-undo fa-1x"></i>
-      <label for="restore-view--button">Undo filtering</label>
+      <span *ngIf="!isMobile()">Undo</span>
     </a>
     <a id="filters-nav-close-button" class="nav-close-button" (click)="closeFiltersNav($event)">
+      <span hidden>Close Sidebar</span>
       <i class="fas fa-arrow-left fa-2x"></i>
-      <label hidden class="description" for="filters-nav-close-button">Close filtering side menu</label>
     </a>
   </div>
   <div id="filters-nav--entries" class="close-on-esc">
@@ -16,40 +16,58 @@
       </div>
       <div id="filter-by-place-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-place-fields" class="filters-nav--fields">
-          <input id="filter-field--country" type="text" placeholder="Country (optional)"
-                 [value]="country" (input)="country=$event.target.value; displayRegion($event)"
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-          <label hidden class="description" for="filter-field--country"> Specify the Country, optional field</label>
 
-          <input hidden id="filter-field--region" type="text" placeholder="Region (optional)"
-                 [value]="region" (input)="region=$event.target.value; displayCounty($event)"
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-          <label hidden class="description" for="filter-field--region"> Specify the Region, optional field</label>
+          <label class="description" for="filter-field--country">
+            <span hidden>Specify the Country, optional field</span>
+            <input id="filter-field--country" class="filters-nav--field {{place_field}}"
+                   type="text" name="Country" placeholder="Country (optional)"
+                   [value]="country" (input)="country=$event.target.value; displayRegion($event)"
+                   (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          </label>
 
-          <input hidden id="filter-field--county" type="text" placeholder="County (optional)"
-                 [value]="county" (input)="county=$event.target.value; displayTown($event)"
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-          <label hidden class="description" for="filter-field--county"> Specify the county, optional field</label>
 
-          <input hidden id="filter-field--town" type="text" placeholder="Town (optional)"
-                 [value]="town" (input)="town=$event.target.value; displayRoad($event)"
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-          <label hidden class="description" for="filter-field--town"> Specify the town, optional field</label>
+          <label class="description" for="filter-field--region">
+            <span hidden>Specify the Region, optional field</span>
+            <input hidden id="filter-field--region" class="filters-nav--field {{place_field}}"
+                   type="text" name="Region" placeholder="Region (optional)"
+                   [value]="region" (input)="region=$event.target.value; displayCounty($event)"
+                   (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          </label>
 
-          <input hidden id="filter-field--road" type="text" placeholder="Road (optional)"
-                 [value]="road" (input)="road=$event.target.value; "
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-          <label hidden class="description" for="filter-field--road"> Specify the road, optional field</label>
+          <label class="description" for="filter-field--county">
+            <span hidden>Specify the county, optional field</span>
+            <input hidden id="filter-field--county" class="filters-nav--field {{place_field}}"
+                   type="text" name="County" placeholder="County (optional)"
+                   [value]="county" (input)="county=$event.target.value; displayTown($event)"
+                   (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          </label>
+
+          <label class="description" for="filter-field--town">
+            <span hidden>Specify the town, optional field</span>
+            <input hidden id="filter-field--town" class="filters-nav--field {{place_field}}"
+                   type="text" name="Town" placeholder="Town (optional)"
+                   [value]="town" (input)="town=$event.target.value; displayRoad($event)"
+                   (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          </label>
+
+          <label class="description" for="filter-field--road">
+            <span hidden>Specify the road, optional field</span>
+            <input hidden id="filter-field--road" class="filters-nav--field {{place_field}}"
+                   type="text" name="Road" placeholder="Road (optional)"
+                   [value]="road" (input)="road=$event.target.value; "
+                   (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          </label>
+
         </div>
         <div id="filter-by-place--buttons" class="filters-nav-form--buttons">
           <a class="hidden">
-            <label hidden class="description" for="filter-by-place--buttons">Padding</label>
+            <span hidden>Padding</span>
           </a>
           <a id="filter-by-place-send--button"
              class="filters-nav-form--send-button"
              (click)="onClickFetchMarkersByPlace($event)">
+            <span hidden class="description">Filter potholes markers by place</span>
             <i class="fas fa-arrow-circle-right fa-2x"></i>
-            <label hidden class="description" for="filter-by-place--buttons">Fetch filtered markers</label>
           </a>
         </div>
       </div>
@@ -61,34 +79,40 @@
       </div>
       <div id="filter-by-route-form" class="filters-nav-form close-on-esc">
         <div id="filter-by-route--fields" class="filters-nav--fields">
-          <input id="filter-field--origin" type="text"
-                 name="Origin" placeholder="Origin"
-                 (input)= "origin = $event.target.value;" [value]="origin"
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-          <label hidden class="description" for="filter-field--origin"> Specify the origin</label>
+          <label class="description" for="filter-field--origin">
+            <span hidden>Specify the origin</span>
+            <input id="filter-field--origin" class="filters-nav--field {{route_field}}"
+                   type="text" name="Origin" placeholder="Origin"
+                   (input)= "origin = $event.target.value;" [value]="origin"
+                   (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          </label>
 
-          <input id="filter-field--destination" type="text"
-                 name="Destination" placeholder="Destination"
-                 (input)="destination= $event.target.value;" [value]="destination"
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-          <label hidden class="description" for="filter-field--destination"> Specify the destination</label>
+          <label class="description" for="filter-field--destination">
+            <span hidden>Specify the destination</span>
+            <input id="filter-field--destination" class="filters-nav--field {{route_field}}"
+                   type="text" name="Destination" placeholder="Destination"
+                   (input)="destination= $event.target.value;" [value]="destination"
+                   (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          </label>
 
-          <input id="filter-field--search-radius" type="number"
-                 name="Search Radius (meters)"
-                 placeholder="Search Radius (default: 100 meters)"
-                 (input)= "radius = $event.target.value;" [value]="radius"
-                 (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
-          <label hidden class="description" for="filter-field--search-radius"> Specify the search radius, default value 100 meters</label>
+          <label class="description" for="filter-field--search-radius">
+            <span hidden>Specify the search radius, default value 100 meters</span>
+            <input id="filter-field--search-radius" class="filters-nav--field {{route_field}}"
+                   type="number" name="Search Radius (meters)"
+                   placeholder="Search Radius (default: 100 meters)"
+                   (input)= "radius = $event.target.value;" [value]="radius"
+                   (focus)="onInputFocus($event)" (blur)="onInputBlur($event)">
+          </label>
         </div>
         <div id="filter-by-route--buttons" class="filters-nav-form--buttons">
           <a class="hidden">
-            <label hidden class="description" for="filter-by-route--buttons">Padding</label>
+            <span hidden>Padding</span>
           </a>
           <a id="filter-by-route-send--button"
              class="filters-nav-form--send-button"
              (click)="onClickFetchMarkersByRoute($event)">
-            <i class="fas fa-arrow-circle-right fa-2x"></i>
-            <label hidden class="description" for="filter-by-route-send--button">Fetch route markers</label>
+            <span hidden class="description">Filter potholes markers by Route</span>
+            <i class="fas fa-arrow-circle-right fa-2x" de></i>
           </a>
         </div>
       </div>

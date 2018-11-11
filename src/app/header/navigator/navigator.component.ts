@@ -45,6 +45,9 @@ export class NavigatorComponent extends HeatmapUpdater {
   destination: string = "";
   radius: number = 100;
 
+  place_field = "place-field";
+  route_field = "route-field";
+
   isFetching = false;
   readonly isMobile = () => window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches;
 
@@ -133,28 +136,31 @@ export class NavigatorComponent extends HeatmapUpdater {
   };
 
   onInputFocus = (event) => {
-    // console.log("Focus:", event);
-    if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
-      let entry = $(event.target).parent().parent().parent().attr("id");
-      $(document).on('keyup', this._onEnterBlur($(event.target)));
 
+    if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches) {
+
+      $(document).on('keyup', this._onEnterBlur($(event.target)));
       $(window).on('resize', this._onResizeBlur($(event.target)));
 
-      $('#filters-nav--header').hide();
-      if (entry === "filter-by-place") {
-        $('#filter-by-route').hide();
-        $('#filter-by-place--buttons').hide();
-        $('#layers-checkbox-group').hide();
-      } else if (entry === "filter-by-route") {
-        $('#filter-by-place').hide();
-        $('#filter-by-route--buttons').hide();
-        $('#layers-checkbox-group').hide();
-      }
+      $(event.target).attr("class").split(" ")
+        .filter(entry => entry === this.place_field || entry === this.route_field)
+        .forEach(entry => {
+          $('#filters-nav--header').hide();
+          if (entry === this.place_field) {
+            $('#filter-by-route').hide();
+            $('#filter-by-place--buttons').hide();
+            $('#layers-checkbox-group').hide();
+          } else if (entry === this.route_field) {
+            $('#filter-by-place').hide();
+            $('#filter-by-route--buttons').hide();
+            $('#layers-checkbox-group').hide();
+          }
+        });
+
     }
   };
 
   onInputBlur = (event) => {
-    // console.log("Blur:", event);
 
     if(window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches && !this.isFetching) {
       $('#filters-nav--header').show();

@@ -84,7 +84,7 @@ a:hover {
   padding: 2%;
 }
 
-.filters-nav--fields > * {
+.filters-nav--field {
   /*color: #444444;*/
   width: 90%;
   margin-bottom: 1%;
@@ -101,7 +101,7 @@ a:hover {
   font-size: medium;
 }
 
-.filters-nav--fields > *:focus {
+.filters-nav--field:focus {
   background: none;
   outline: none;
   border-bottom: 3px solid #f1f1f1;
@@ -126,7 +126,7 @@ a:hover {
 }
 
 @media (max-height: 480px) {
-  .filters-nav--fields > * {
+  .filters-nav--field {
     /*width: 70%;*/
   }
 }

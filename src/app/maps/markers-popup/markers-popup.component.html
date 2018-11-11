@@ -57,10 +57,9 @@
                 class="marker-popup-text"
                 placeholder="Insert here your comment! (max.: 500 chars)"
                 maxlength="500" rows="10" cols="30"
-                readonly
                 (input)="commentText = $event.target.value"
                 (focus)="onFocusHideMarkerPopup($event)"></textarea>
-      <label hidden class="description" for="marker-popup-comment--text"> If you want you can insert your comment relative to the pothole</label>
+        <span hidden>Insert here your comment about the selected pothole</span>
   </div>
   <div id="marker-popup--footer" class="marker-popup-entry">
     <a id="marker-popup-close-button"
@@ -68,22 +67,21 @@
        (click)="hideMarkerPopup($event)">
       <i *ngIf="isMobile()" class="fas fa-times-circle fa-3x"></i>
       <i *ngIf="!isMobile()" class="fas fa-times-circle fa-2x"></i>
-      <label hidden class="description" for="marker-popup-close-button">Close Marker Popup</label>
+      <span hidden class="description">Close Marker Popup</span>
     </a>
     <a id="marker-popup-send-button" class="marker-send-button" (click)="addComment($event)">
       <i *ngIf="isMobile()" class="fas fa-arrow-circle-right fa-3x"></i>
       <i *ngIf="!isMobile()" class="fas fa-arrow-circle-right fa-2x"></i>
-      <label hidden class="description" for="marker-popup-send-button">Send Comment for Marker</label>
+      <span hidden class="description">Send Comment for Marker</span>
     </a>
   </div>
 </div>
 
 <div id="comment-stub" class="stub close-on-esc" hidden>
-  <textarea id="text-stub"
-            class="marker-popup-text"
-            placeholder="Insert here your comment! (max.: 500 chars)"
-            maxlength="500" rows="10" cols="30"
-            (input)="commentText = $event.target.value"
-            (blur)="onBlurDisplayMarkerPopup($event)"></textarea>
-  <label hidden class="description" for="text-stub">Send Comment for Marker</label>
+    <textarea id="text-stub"
+              class="marker-popup-text"
+              placeholder="Insert here your comment! (max.: 500 chars)"
+              maxlength="500" rows="10" cols="30"
+              (input)="commentText = $event.target.value"
+              (blur)="onBlurDisplayMarkerPopup($event)"></textarea>
 </div>

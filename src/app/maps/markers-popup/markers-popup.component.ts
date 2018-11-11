@@ -142,6 +142,10 @@ export class MarkersPopupComponent extends MapAddict{
       marker_popup.fadeOut(300);
         // .animate({height:"toggle"}, 500);
     }
+
+    $(".marker-popup-text").each((idx, textarea) => {
+      $(textarea).val('');
+    });
   };
 
   private _onResizeBlur = (input) => (event) => {
