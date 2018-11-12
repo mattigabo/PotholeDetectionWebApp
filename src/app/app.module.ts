@@ -19,7 +19,7 @@ import {CoordinatesService} from "./services/coordinates/coordinates.service";
 import {WindowService} from "./services/window/window.service";
 import { CheckboxGroupComponent } from './header/navigator/checkbox-group/checkbox-group.component';
 
-@NgModule({
+@NgModule({ // This is the metadata object
   declarations: [
     AppComponent,
     MapsComponent,

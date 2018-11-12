@@ -10,7 +10,8 @@
   color: #f1f1f1;
   background-color: #444444;
   opacity: 0.9;
-  overflow-x: hidden;
+  /*overflow-x: hidden;*/
+  /*overflow-y: scroll;*/
   /*transition: 0.5s;*/
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
   flex-direction: column;
@@ -114,10 +115,20 @@ a:hover {
 }
 
 @media (max-width: 480px) {
+
   .nav {
     position: fixed;
     width: 100%;
     min-height: 200%;
+    /*overflow-y: scroll;*/
+  }
+
+  #filters-nav--header {
+    padding-bottom: 5px;
+  }
+
+  #filters-nav--entries {
+    padding-top: 5px;
   }
 
   a {
