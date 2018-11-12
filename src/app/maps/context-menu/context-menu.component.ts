@@ -197,10 +197,12 @@ export class ContextMenuComponent extends HeatmapUpdater {
 
     ContextMenuComponent.hideContextMenu(event);
 
-    Custom.userMarker(this._coordinatesService.coordinates).addTo(this.user_defined);
-    ContextMenuComponent._addMarker(this._coordinatesService.coordinates, this._restService, this._toasterService);
-    this._distService.submit(
-      new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, this._coordinatesService.coordinates)
+    let geoCoordinates: GeoCoordinates = new GeoCoordinates(this._coordinatesService.coordinates.lat,
+      this._coordinatesService.coordinates.lng);
+
+    this._restService.addMarker(geoCoordinates,
+      X =>  this.onUserMarkerAdded(this._coordinatesService.coordinates),
+      err => this.onUserMarkerNotAdded(),
     );
   }
 
@@ -364,7 +366,12 @@ export class ContextMenuComponent extends HeatmapUpdater {
     $('#area-select-item').hide();
   }
 
-  private static _addMarker(coordinates, restService: RestAdapterService, toasterService: ToasterService){
+  private onUserMarkerAdded(coordinates){
+
+    Custom.userMarker(coordinates).addTo(this.user_defined);
+    this._distService.submit(
+      new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, coordinates)
+    );
 
     let successToast: Toast = {
       type: 'success',
@@ -373,17 +380,18 @@ export class ContextMenuComponent extends HeatmapUpdater {
       showCloseButton: true
     };
 
+    this._toasterService.pop(successToast);
+  }
+
+  private onUserMarkerNotAdded(){
+
     let errorToast: Toast = {
       type: 'error',
       title: 'Marker Not Added',
-      body: "Error occured during the marker adding",
+      body: "Error occured during the marker adding! Please retry...",
       showCloseButton: true
     };
 
-    let geoCoordinates: GeoCoordinates = new GeoCoordinates(coordinates.lat, coordinates.lng);
-    restService.addMarker(geoCoordinates,
-      X =>  toasterService.pop(successToast),
-      err => toasterService.pop(errorToast),
-    );
+    this._toasterService.pop(errorToast);
   }
 }
