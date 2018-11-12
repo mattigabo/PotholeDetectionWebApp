@@ -1,0 +1,18 @@
+{
+  "name": "The Pothole Compendium",
+  "short_name": "PHC",
+  "lang": "en",
+  "description": "A Compendium of road potholes gathered through a crowd-source model of both vehicle data and mobile data",
+  "theme_color": "#88888",
+  "background_color": "#222222",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/index.html",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32 64x64 128x128 256x256"
+    }
+  ]
+}
