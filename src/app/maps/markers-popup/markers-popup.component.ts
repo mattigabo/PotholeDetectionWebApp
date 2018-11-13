@@ -34,6 +34,8 @@ export class MarkersPopupComponent extends MapAddict{
   suburb: string;
   district: string;
 
+  confirmationLevel:number;
+
   isMobile: () => boolean = () => window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches;
 
   _null = "'null'";
@@ -63,6 +65,8 @@ export class MarkersPopupComponent extends MapAddict{
         console.log("Marker Popup Component Ready!")
       }
     });
+
+    this.confirmationLevel = 2;
   }
 
   ngOnInit() {
@@ -175,19 +179,41 @@ export class MarkersPopupComponent extends MapAddict{
     }
   };
 
+  confirmPotholePresence = ($event) => {
+    let successToast: Toast = {
+      type: 'success',
+      title: 'Pothole Confirmed',
+      body: "Thanks, you have confirmed the Pothole presence!",
+      showCloseButton: true
+    };
+
+    let errorToast: Toast = {
+      type: 'error',
+      title: 'Pothole not confirmed',
+      body: "An error has occured during the confirmation! Please retry",
+      showCloseButton: true
+    };
+
+    this._toasterService.pop(successToast);
+    // this._restService.addComment(comment,
+    //   X =>  this._toasterService.pop(successToast),
+    //   err => this._toasterService.pop(errorToast),
+    // );
+  }
+
   private sendComment(comment: MarkerComment){
 
     let successToast: Toast = {
       type: 'success',
       title: 'Comment Added',
-      body: "Comment successfully added to the Marker with ID: " + comment.markerId,
+      body: "Comment successfully added to the pothole relative to Marker with ID: " + comment.markerId,
       showCloseButton: true
     };
 
     let errorToast: Toast = {
       type: 'error',
       title: 'Comment Not Added',
-      body: "Error occured during the comment adding to the Marker with ID:" + comment.markerId,
+      body: "Error occured during the comment adding to the pothole relative to Marker with ID:" + comment.markerId,
       showCloseButton: true
     };
 

@@ -52,6 +52,16 @@
       <strong>Road</strong>: {{road}}
     </div>
   </div>
+  <div id="marker-popup--confirmations" class="marker-popup-entry">
+    <div id="confirmations-level"><strong>Number of confirm</strong>: {{confirmationLevel}}</div>
+    <a id="marker-popup-add-confirmation-button"
+       class="add-confirmation-button marker-popup-button"
+       (click)="confirmPotholePresence($event)">
+      <i *ngIf="isMobile()" class="fas fa-plus-square fa-3x"></i>
+      <i *ngIf="!isMobile()" class="fas fa-plus-square fa-2x"></i>
+      <span hidden class="description">Add a confirmation of the presence of this pothole</span>
+    </a>
+  </div>
   <div id="marker-popup--comment" class="marker-popup-entry">
       <textarea id="marker-popup-comment--text"
                 class="marker-popup-text"
@@ -63,13 +73,13 @@
   </div>
   <div id="marker-popup--footer" class="marker-popup-entry">
     <a id="marker-popup-close-button"
-       class="close-button"
+       class="close-button marker-popup-button"
        (click)="hideMarkerPopup($event)">
       <i *ngIf="isMobile()" class="fas fa-times-circle fa-3x"></i>
       <i *ngIf="!isMobile()" class="fas fa-times-circle fa-2x"></i>
       <span hidden class="description">Close Marker Popup</span>
     </a>
-    <a id="marker-popup-send-button" class="marker-send-button" (click)="addComment($event)">
+    <a id="marker-popup-send-button" class="marker-send-button marker-popup-button" (click)="addComment($event)">
       <i *ngIf="isMobile()" class="fas fa-arrow-circle-right fa-3x"></i>
       <i *ngIf="!isMobile()" class="fas fa-arrow-circle-right fa-2x"></i>
       <span hidden class="description">Send Comment for Marker</span>
