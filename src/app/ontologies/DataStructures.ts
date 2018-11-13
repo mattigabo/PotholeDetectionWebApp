@@ -61,3 +61,11 @@ export class MarkerComment {
   }
 }
 
+export class MarkerUpVote{
+  markerId: number;
+
+  constructor(markerId:number) {
+    this.markerId = markerId;
+  }
+}
+

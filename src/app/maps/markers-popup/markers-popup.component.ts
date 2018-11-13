@@ -5,7 +5,7 @@ import {LAYER_NAME, MapsWrapper} from "../../core/maps.wrapper";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {MapAddict} from "../../core/map-addict";
-import {GeoCoordinates, Marker, MarkerComment} from "../../ontologies/DataStructures";
+import {GeoCoordinates, Marker, MarkerComment, MarkerUpVote} from "../../ontologies/DataStructures";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Toast, ToasterService} from "angular2-toaster";
 import {WindowService} from "../../services/window/window.service";
@@ -33,6 +33,8 @@ export class MarkersPopupComponent extends MapAddict{
   road: string;
   suburb: string;
   district: string;
+
+  confirmationLevel:number;
 
   isMobile: () => boolean = () => window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches;
 
@@ -75,7 +77,7 @@ export class MarkersPopupComponent extends MapAddict{
 
   addComment = (click: Event) => {
     this._sanitizer.sanitize(SecurityContext.HTML, this.commentText);
-    var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText)
+    var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText);
 
     this.sendComment(mcomment);
   };
@@ -126,6 +128,8 @@ export class MarkersPopupComponent extends MapAddict{
         this.city = marker.addressNode.city;
         this.suburb = marker.addressNode.suburb;
         this.district = marker.addressNode.district;
+
+        this.confirmationLevel = marker.nDetections;
       });
     }
   };
@@ -175,19 +179,45 @@ export class MarkersPopupComponent extends MapAddict{
     }
   };
 
+  confirmPotholePresence = ($event) => {
+    let successToast: Toast = {
+      type: 'success',
+      title: 'Pothole Confirmed',
+      body: "Thanks, you have confirmed the Pothole presence!",
+      showCloseButton: true
+    };
+
+    let errorToast: Toast = {
+      type: 'error',
+      title: 'Pothole not confirmed',
+      body: "An error has occured during the confirmation! Please retry",
+      showCloseButton: true
+    };
+
+    var upvote: MarkerUpVote = new MarkerUpVote(this.markerId);
+
+    this._restService.addUpVote(upvote,
+      X =>  {
+        this._toasterService.pop(successToast)
+        this.confirmationLevel++;
+      },
+      err => this._toasterService.pop(errorToast),
+    );
+  }
+
   private sendComment(comment: MarkerComment){
 
     let successToast: Toast = {
       type: 'success',
       title: 'Comment Added',
-      body: "Comment successfully added to the Marker with ID: " + comment.markerId,
+      body: "Comment successfully added to the pothole relative to Marker with ID: " + comment.markerId,
       showCloseButton: true
     };
 
     let errorToast: Toast = {
       type: 'error',
       title: 'Comment Not Added',
-      body: "Error occured during the comment adding to the Marker with ID:" + comment.markerId,
+      body: "Error occured during the comment adding to the pothole relative to Marker with ID:" + comment.markerId,
       showCloseButton: true
     };
 

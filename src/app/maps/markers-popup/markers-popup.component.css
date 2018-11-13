@@ -41,15 +41,6 @@
   margin: 0 5px 5px;
 }
 
-#marker-popup-close-button {
-  color: #818181;
-  cursor: pointer;
-}
-
-#marker-popup-close-button:hover {
-  color: #f1f1f1;
-}
-
 #marker-popup--info {
   flex-direction: column;
   border: none;
@@ -67,6 +58,7 @@
 #marker-popup--comment {
   padding: 10px;
   border-bottom: solid 2px #818181;
+  justify-content: center;
   /*margin: 5px;*/
 }
 
@@ -90,12 +82,13 @@
   margin: 5px 5px;
 }
 
-#marker-popup-send-button {
+
+.marker-popup-button {
   color: #818181;
   cursor: pointer;
 }
 
-#marker-popup-send-button:hover {
+.marker-popup-button:hover {
   color: #f1f1f1;
 }
 
@@ -103,6 +96,16 @@
   display: none;
 }
 
+
+#marker-popup--confirmations{
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: solid 2px #818181;
+  padding: 5px 10px 10px 10px;
+  margin: 0 5px 5px;
+}
 
 @media (max-width: 768px){
   :host{
@@ -150,8 +153,17 @@
     margin-right: 6%;
   }
 
+  #marker-popup--confirmations{
+    margin-right: 6%;
+  }
+
+  .primary{
+    text-overflow: ellipsis;
+  }
+
   .secondary {
     display: none;
+    text-overflow: ellipsis;
   }
 
   #marker-popup--footer {
