@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-import {GeoCoordinates, Marker, MarkerComment, OSMAddressNode} from "../../ontologies/DataStructures";
+import {GeoCoordinates, Marker, MarkerComment, MarkerUpVote, OSMAddressNode} from "../../ontologies/DataStructures";
 import {Observable , throwError} from "rxjs/index";
 import { map , catchError } from 'rxjs/operators';
 import {RouteAPIResponse} from "../../ontologies/RouteData";
@@ -11,7 +11,7 @@ import {RouteAPIResponse} from "../../ontologies/RouteData";
 })
 export class RestAdapterService {
 
-  rootApiUrl: string = "https://192.168.1.12:9443/api/pothole/";
+  rootApiUrl: string = "https://192.168.0.16:8080/api/pothole/";
 
   constructor(private httpClient: HttpClient) { }
 
@@ -97,8 +97,13 @@ export class RestAdapterService {
   }
 
   addComment(comment: MarkerComment, onSuccess: (value: MarkerComment) => void, onError: (error: any) => void){
-    let url: string = this.rootApiUrl + comment.markerId;
+    let url: string = this.rootApiUrl + comment.markerId  + "/comment";
     this.httpClient.put<MarkerComment>(url, comment, httpOptions).subscribe(onSuccess, onError);
+  }
+
+  addUpVote(upvote: MarkerUpVote, onSuccess: (value: MarkerUpVote) => void, onError: (error: any) => void){
+    let url: string = this.rootApiUrl + upvote.markerId + "/upvote";
+    this.httpClient.put<MarkerUpVote>(url, upvote, httpOptions).subscribe(onSuccess, onError);
   }
 
   private handleError(error: HttpErrorResponse) {
