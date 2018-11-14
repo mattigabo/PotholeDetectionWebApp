@@ -18,6 +18,7 @@ import { NavigatorComponent } from './header/navigator/navigator.component';
 import {CoordinatesService} from "./services/coordinates/coordinates.service";
 import {WindowService} from "./services/window/window.service";
 import { CheckboxGroupComponent } from './header/navigator/checkbox-group/checkbox-group.component';
+import {FingerprintService} from "./services/fingerprint/fingerprint.service";
 
 @NgModule({ // This is the metadata object
   declarations: [
@@ -41,7 +42,8 @@ import { CheckboxGroupComponent } from './header/navigator/checkbox-group/checkb
     RestAdapterService,
     DistributionService,
     CoordinatesService,
-    WindowService
+    WindowService,
+    FingerprintService
   ],
   bootstrap: [AppComponent]
 })

@@ -10,6 +10,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {Toast, ToasterService} from "angular2-toaster";
 import {WindowService} from "../../services/window/window.service";
 import {MediaTypes} from "../../core/custom";
+import {FingerprintService} from "../../services/fingerprint/fingerprint.service";
 
 @Component({
   selector: 'app-markers-popup',
@@ -44,6 +45,7 @@ export class MarkersPopupComponent extends MapAddict{
               private _distributionService : DistributionService,
               private _sanitizer: DomSanitizer,
               private _toasterService: ToasterService,
+              private _fingerprint: FingerprintService,
               private _windower: WindowService) {
 
     super();
@@ -190,20 +192,20 @@ export class MarkersPopupComponent extends MapAddict{
     let errorToast: Toast = {
       type: 'error',
       title: 'Pothole not confirmed',
-      body: "An error has occured during the confirmation! Please retry",
+      body: "An error has occured during the confirmation! Have you already upvoted this?",
       showCloseButton: true
     };
 
-    var upvote: MarkerUpVote = new MarkerUpVote(this.markerId);
+    var upvote: MarkerUpVote = new MarkerUpVote(this.markerId, this._fingerprint.getGUID());
 
     this._restService.addUpVote(upvote,
       X =>  {
-        this._toasterService.pop(successToast)
+        this._toasterService.pop(successToast);
         this.confirmationLevel++;
       },
       err => this._toasterService.pop(errorToast),
     );
-  }
+  };
 
   private sendComment(comment: MarkerComment){
 

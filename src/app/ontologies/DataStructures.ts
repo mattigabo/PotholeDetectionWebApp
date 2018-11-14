@@ -63,9 +63,11 @@ export class MarkerComment {
 
 export class MarkerUpVote{
   markerId: number;
+  token: string;
 
-  constructor(markerId:number) {
+  constructor(markerId:number, token: string) {
     this.markerId = markerId;
+    this.token = token;
   }
 }
 

@@ -2,7 +2,10 @@ import {AfterViewChecked, AfterViewInit, Component, OnInit} from '@angular/core'
 import * as $ from 'jquery';
 import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
 import {WindowService} from "./services/window/window.service";
-// import a11yChecker from 'a11y-checker';
+import {FingerprintService} from "./services/fingerprint/fingerprint.service";
+import {RestAdapterService} from "./services/rest/rest-adapter.service";
+
+declare var Fingerprint2:any;
 
 @Component({
   selector: 'app-root',
@@ -20,7 +23,9 @@ export class AppComponent implements OnInit, AfterViewInit, AfterViewChecked {
   });
 
   constructor(private toaster: ToasterService,
-              private windower: WindowService) {
+              private windower: WindowService,
+              private restService: RestAdapterService,
+              private fingerprinter: FingerprintService) {
   }
 
   ngOnInit(): void {
@@ -86,6 +91,26 @@ export class AppComponent implements OnInit, AfterViewInit, AfterViewChecked {
   ngAfterViewInit() {
     this.onOrientationChange();
     // a11yChecker();
+    let rs = this.restService;
+    let ts = this.toaster;
+    this.fingerprinter.generateGUID().then((guid) => {
+      console.log("YOUR GUID: ", guid);
+      rs.addRegistration(guid.toString(),
+        () => {
+          ts.popAsync({
+            type: "Info",
+            title: "Registration",
+            body: "Anonymous Registration successfully executed!"
+          })
+        },
+        () => {
+          ts.popAsync({
+            type: "Error",
+            title: "Registration",
+            body: "Unable to complete Registration! You may be already registered."
+          })
+        })
+    })
   }
 
   ngAfterViewChecked(): void {

@@ -11,7 +11,7 @@ import {RouteAPIResponse} from "../../ontologies/RouteData";
 })
 export class RestAdapterService {
 
-  rootApiUrl: string = "https://192.168.0.16:8080/api/pothole/";
+  rootApiUrl: string = "https://192.168.1.12:9443/api/pothole/";
 
   constructor(private httpClient: HttpClient) { }
 
@@ -104,6 +104,11 @@ export class RestAdapterService {
   addUpVote(upvote: MarkerUpVote, onSuccess: (value: MarkerUpVote) => void, onError: (error: any) => void){
     let url: string = this.rootApiUrl + upvote.markerId + "/upvote";
     this.httpClient.put<MarkerUpVote>(url, upvote, httpOptions).subscribe(onSuccess, onError);
+  }
+
+  addRegistration(token: string, onSuccess: (value: string) => void, onError: (error: any) => void){
+    let url: string = this.rootApiUrl + "/register";
+    return this.httpClient.post<string>(url, token, httpOptions).subscribe(onSuccess, onError);
   }
 
   private handleError(error: HttpErrorResponse) {
