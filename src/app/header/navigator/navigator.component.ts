@@ -150,10 +150,12 @@ export class NavigatorComponent extends HeatmapUpdater {
             $('#filter-by-route').hide();
             $('#filter-by-place--buttons').hide();
             $('#layers-checkbox-group').hide();
+            $('#filter-by-place--return-footer').css({display:'flex'}).hide().fadeIn(400);
           } else if (entry === this.route_field) {
             $('#filter-by-place').hide();
             $('#filter-by-route--buttons').hide();
             $('#layers-checkbox-group').hide();
+            $('#filter-by-route--return-footer').css({display:'flex'}).hide().fadeIn(400);
           }
         });
 
@@ -169,6 +171,8 @@ export class NavigatorComponent extends HeatmapUpdater {
       $('#layers-checkbox-group').show();
       $('#filter-by-route--buttons').show();
       $('#filter-by-place--buttons').show();
+      $('#filter-by-place--return-footer').hide();
+      $('#filter-by-route--return-footer').hide();
       $(document).off('keyup', this._onEnterBlur);
       $(window).off('resize', this._onResizeBlur);
     }

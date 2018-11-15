@@ -190,18 +190,33 @@
     position: fixed;
     left: 0;
     top: 0;
-    padding: 15px;
+    /*padding: 4%;*/
     width: 100%;
     height: 100%;
     background-color: #333333;
     z-index: 3;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .return-footer {
+    color: #818181;
+    align-self: center;
+    margin-bottom: 5%;
+  }
+
+  .return-footer > * {
+    margin: 0;
+    text-align: center;
   }
 
   #text-stub {
     margin-left: 0;
     width: 90%;
-    height: 90%;
+    height: 80%;
     font-size: medium;
+
   }
 }
 

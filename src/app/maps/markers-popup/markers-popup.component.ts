@@ -170,7 +170,7 @@ export class MarkersPopupComponent extends MapAddict{
       $("#marker-popup").fadeOut(200);
       $(event.target).blur();
       let stub = $("#text-stub");
-      $("#comment-stub").fadeIn(200, () => stub.focus());
+      $("#comment-stub").css({display:'flex'}).hide().fadeIn(200, () => stub.focus());
       $(window).on('resize', this._onResizeBlur(stub));
     }
   };

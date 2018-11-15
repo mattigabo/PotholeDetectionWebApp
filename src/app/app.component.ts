@@ -105,11 +105,11 @@ export class AppComponent implements OnInit, AfterViewInit, AfterViewChecked {
           })
         },
         () => {
-          ts.popAsync({
-            type: "info",
-            title: "Registration",
-            body: "Unable to complete Registration! You may be already registered."
-          })
+          // ts.popAsync({
+          //   type: "info",
+          //   title: "Registration",
+          //   body: "Unable to complete Registration! You may be already registered."
+          // })
         })
     })
   }
