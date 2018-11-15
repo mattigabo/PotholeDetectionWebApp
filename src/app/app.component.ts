@@ -4,6 +4,7 @@ import {Toast, ToasterConfig, ToasterService} from "angular2-toaster";
 import {WindowService} from "./services/window/window.service";
 import {FingerprintService} from "./services/fingerprint/fingerprint.service";
 import {RestAdapterService} from "./services/rest/rest-adapter.service";
+import {Registration} from "./ontologies/DataStructures";
 
 declare var Fingerprint2:any;
 
@@ -95,7 +96,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterViewChecked {
     let ts = this.toaster;
     this.fingerprinter.generateGUID().then((guid) => {
       console.log("YOUR GUID: ", guid);
-      rs.addRegistration(guid.toString(),
+      rs.addRegistration(new Registration(guid.toString()),
         () => {
           ts.popAsync({
             type: "Info",

@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-import {GeoCoordinates, Marker, MarkerComment, MarkerUpVote, OSMAddressNode} from "../../ontologies/DataStructures";
-import {Observable , throwError} from "rxjs/index";
+import {
+  GeoCoordinates,
+  Marker,
+  MarkerComment,
+  MarkerUpVote,
+  OSMAddressNode,
+  Registration
+} from "../../ontologies/DataStructures";
+import {Observable , throwError} from "rxjs";
 import { map , catchError } from 'rxjs/operators';
 import {RouteAPIResponse} from "../../ontologies/RouteData";
 
@@ -106,9 +113,9 @@ export class RestAdapterService {
     this.httpClient.put<MarkerUpVote>(url, upvote, httpOptions).subscribe(onSuccess, onError);
   }
 
-  addRegistration(token: string, onSuccess: (value: string) => void, onError: (error: any) => void){
+  addRegistration(token: Registration, onSuccess: (value: Registration) => void, onError: (error: any) => void){
     let url: string = this.rootApiUrl + "/register";
-    return this.httpClient.post<string>(url, token, httpOptions).subscribe(onSuccess, onError);
+    return this.httpClient.post<Registration>(url, token, httpOptions).subscribe(onSuccess, onError);
   }
 
   private handleError(error: HttpErrorResponse) {

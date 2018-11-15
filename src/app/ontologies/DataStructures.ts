@@ -61,6 +61,15 @@ export class MarkerComment {
   }
 }
 
+export class Registration{
+  token: string;
+
+  constructor(token: string) {
+    this.token = token;
+  }
+}
+
+
 export class MarkerUpVote{
   markerId: number;
   token: string;
