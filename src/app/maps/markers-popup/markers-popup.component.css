@@ -51,8 +51,14 @@
 }
 
 #marker-popup--info > * {
-  padding-bottom: 10px;
-  padding-left: 10px;
+  padding-bottom: 0.5em;
+  /*padding-left: 10px;*/
+}
+
+.marker-field {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #marker-popup--comment {
@@ -96,6 +102,9 @@
   display: none;
 }
 
+.marker-field-value {
+  text-overflow: ellipsis;
+}
 
 #marker-popup--confirmations{
   position: relative;

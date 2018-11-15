@@ -43,7 +43,7 @@ export class MarkersPopupComponent extends MapAddict{
   // isUserDefined: () => boolean = () => this.wrapper.layerGroup(LAYER_NAME.USER_DEFINED)
   //   .hasLayer(new Leaflet.Marker([this.latitude, this.longitude]));
 
-  _null = "'null'";
+  _null = "null";
 
   constructor(private _restService : RestAdapterService,
               private _distributionService : DistributionService,
