@@ -83,9 +83,17 @@ export class MarkersPopupComponent extends MapAddict{
 
   addComment = (click: Event) => {
     this._sanitizer.sanitize(SecurityContext.HTML, this.commentText);
-    var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText);
+    if (this.commentText === "") {
+      var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText);
 
-    this.sendComment(mcomment);
+      this.sendComment(mcomment);
+    } else {
+      this._toasterService.popAsync({
+        type: "error",
+        title: "Beware!",
+        body: "Empty comment is invalid! Express yourself through words!"
+      })
+    }
   };
 
   public displayMarkerPopUp =  (event) => {
