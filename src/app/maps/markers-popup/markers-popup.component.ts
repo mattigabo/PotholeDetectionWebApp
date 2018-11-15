@@ -11,6 +11,8 @@ import {Toast, ToasterService} from "angular2-toaster";
 import {WindowService} from "../../services/window/window.service";
 import {MediaTypes} from "../../core/custom";
 import {FingerprintService} from "../../services/fingerprint/fingerprint.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import * as Leaflet from 'leaflet';
 
 @Component({
   selector: 'app-markers-popup',
@@ -38,6 +40,8 @@ export class MarkersPopupComponent extends MapAddict{
   confirmationLevel:number;
 
   isMobile: () => boolean = () => window.matchMedia(MediaTypes.tablet.getMaxWidthMediaQuery()).matches;
+  // isUserDefined: () => boolean = () => this.wrapper.layerGroup(LAYER_NAME.USER_DEFINED)
+  //   .hasLayer(new Leaflet.Marker([this.latitude, this.longitude]));
 
   _null = "'null'";
 
@@ -189,13 +193,6 @@ export class MarkersPopupComponent extends MapAddict{
       showCloseButton: true
     };
 
-    let errorToast: Toast = {
-      type: 'error',
-      title: 'Pothole not confirmed',
-      body: "An error has occured during the confirmation! Have you already upvoted this?",
-      showCloseButton: true
-    };
-
     var upvote: MarkerUpVote = new MarkerUpVote(this.markerId, this._fingerprint.getGUID());
 
     this._restService.addUpVote(upvote,
@@ -203,7 +200,27 @@ export class MarkersPopupComponent extends MapAddict{
         this._toasterService.pop(successToast);
         this.confirmationLevel++;
       },
-      err => this._toasterService.pop(errorToast),
+      err => {
+        let httpError: HttpErrorResponse = (err as HttpErrorResponse)
+        switch(httpError.status) {
+          case 412:
+            this._toasterService.pop( {
+                type: 'info',
+                title: 'Pothole not confirmed',
+                body: "Already voted!",
+                showCloseButton: true
+              });
+            break;
+          case 500:
+            this._toasterService.pop({
+              type: 'error',
+              title: 'Pothole not confirmed',
+              body: "Error during the communication with the server",
+              showCloseButton: true
+            });
+            break;
+        }
+      }
     );
   };
 

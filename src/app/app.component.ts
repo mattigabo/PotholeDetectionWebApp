@@ -99,14 +99,14 @@ export class AppComponent implements OnInit, AfterViewInit, AfterViewChecked {
       rs.addRegistration(new Registration(guid.toString()),
         () => {
           ts.popAsync({
-            type: "Info",
+            type: "success",
             title: "Registration",
             body: "Anonymous Registration successfully executed!"
           })
         },
         () => {
           ts.popAsync({
-            type: "Error",
+            type: "info",
             title: "Registration",
             body: "Unable to complete Registration! You may be already registered."
           })

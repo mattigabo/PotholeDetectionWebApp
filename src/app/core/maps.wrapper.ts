@@ -136,14 +136,14 @@ export class MapsWrapper {
         .subscribe(osm_node => {
           let country = osm_node.country,
               region = osm_node.region,
-              county = osm_node.county
-              // city = osm_node.city === null ? osm_node.town : osm_node.city
+              county = osm_node.county,
+              city = osm_node.city === null ? osm_node.town : osm_node.city
           ;
 
            console.log(osm_node);
 
           this._restService
-            .getAllMarkers(country, region, county)
+            .getAllMarkers(country, region, county, city)
             .subscribe(markers => {
               markers
                 .map(m => m.coordinates)

@@ -37,13 +37,23 @@ export class MapsComponent extends MapAddict{
         console.log("Map Component Ready!");
 
         this.restService.getAllMarkers()
-          .subscribe((potholes: Marker[]) => {
-            this.populateLayer(
-              potholes.map(m => this.toLatLng(m.coordinates)),
-              this.system_defined,
-              Custom.serverMarker
-            );
-          });
+          .subscribe(
+            (potholes: Marker[]) => {
+              this.populateLayer(
+                potholes.map(m => this.toLatLng(m.coordinates)),
+                this.system_defined,
+                Custom.serverMarker
+              );
+            },
+            error => {
+              this.toasterService.pop({
+                type: 'error',
+                title: 'Marker loading error',
+                body: "Error during the communication with the server",
+                showCloseButton: true
+              })
+            }
+          );
 
         console.log(this.layers);
         this.refreshIfNotOnChrome()
