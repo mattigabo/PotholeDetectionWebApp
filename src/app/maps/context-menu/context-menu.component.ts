@@ -7,11 +7,12 @@ import {RestAdapterService} from "../../services/rest/rest-adapter.service";
 import {Toast, ToasterService} from "angular2-toaster";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
-import {GeoCoordinates} from "../../ontologies/DataStructures";
+import {Coordinates, CURequest, GeoCoordinates} from "../../ontologies/DataStructures";
 import {heatLayer, HeatOptions, HeatLayer} from "../../core/heat.layer";
 import {Custom, MediaTypes} from "../../core/custom";
-import {latLng, LatLng, Layer} from "leaflet";
+import {latLng, LatLng, LatLngExpression, Layer} from "leaflet";
 import {HeatmapUpdater} from "../../core/heatmap-updater";
+import {FingerprintService} from "../../services/fingerprint/fingerprint.service";
 
 @Component({
   selector: 'app-context-menu',
@@ -47,6 +48,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
   constructor(private _restService: RestAdapterService,
               private _toasterService: ToasterService,
               private _coordinatesService: CoordinatesService,
+              private _fingerprint: FingerprintService,
               private _distService: DistributionService) {
     super(_distService);
 
@@ -113,7 +115,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
 
         console.log("updating heatmap");
 
-        let activeMarkers = this.getActiveMarkersCoordinates()
+        let activeMarkers = this.getActiveMarkersCoordinates();
         // console.log(activeMarkers)
         this._heatLayer.display(activeMarkers)
       }
@@ -197,11 +199,18 @@ export class ContextMenuComponent extends HeatmapUpdater {
 
     ContextMenuComponent.hideContextMenu(event);
 
-    let geoCoordinates: GeoCoordinates = new GeoCoordinates(this._coordinatesService.coordinates.lat,
-      this._coordinatesService.coordinates.lng);
+    let geoCoordinates = new GeoCoordinates(
+      this._coordinatesService.coordinates.lat,
+      this._coordinatesService.coordinates.lng
+    );
 
-    this._restService.addMarker(geoCoordinates,
-      X =>  this.onUserMarkerAdded(this._coordinatesService.coordinates),
+    let marker_request = new CURequest<Coordinates>(
+      this._fingerprint.getGUID(),
+      geoCoordinates.toCoordinates()
+    );
+
+    this._restService.addMarker(marker_request,
+      X => this.onUserMarkerAdded([geoCoordinates.lat, geoCoordinates.lng]),
       err => this.onUserMarkerNotAdded(),
     );
   }
@@ -366,9 +375,10 @@ export class ContextMenuComponent extends HeatmapUpdater {
     $('#area-select-item').hide();
   }
 
-  private onUserMarkerAdded(coordinates){
+  private onUserMarkerAdded(coordinates: LatLngExpression){
 
     Custom.userMarker(coordinates).addTo(this.user_defined);
+
     this._distService.submit(
       new Entry(MapsWrapper.ACTION.UPDATE_HEATMAP, coordinates)
     );
@@ -380,7 +390,7 @@ export class ContextMenuComponent extends HeatmapUpdater {
       showCloseButton: true
     };
 
-    this._toasterService.pop(successToast);
+    this._toasterService.popAsync(successToast);
   }
 
   private onUserMarkerNotAdded(){

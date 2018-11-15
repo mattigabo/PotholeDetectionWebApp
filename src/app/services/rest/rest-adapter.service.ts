@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {
+  Coordinates,
+  CURequest,
   GeoCoordinates,
   Marker,
   MarkerComment,
@@ -9,8 +10,8 @@ import {
   OSMAddressNode,
   Registration
 } from "../../ontologies/DataStructures";
-import {Observable , throwError} from "rxjs";
-import { map , catchError } from 'rxjs/operators';
+import {Observable, throwError} from "rxjs";
+import {map} from 'rxjs/operators';
 import {RouteAPIResponse} from "../../ontologies/RouteData";
 
 @Injectable({
@@ -18,7 +19,7 @@ import {RouteAPIResponse} from "../../ontologies/RouteData";
 })
 export class RestAdapterService {
 
-  rootApiUrl: string = "https://192.168.0.16:8080/api/pothole/";
+  rootApiUrl: string = "https://192.168.1.12:9443/api/pothole/";
 
   constructor(private httpClient: HttpClient) { }
 
@@ -97,23 +98,23 @@ export class RestAdapterService {
     return this.doGETResourcesRequest(requestUrl);
   }
 
-  addMarker(coordinates: GeoCoordinates, onSuccess: (value: Coordinates) => void, onError: (error: any) => void){
-    let marker: Coordinates = new Coordinates(coordinates.lat, coordinates.lng);
-    console.log(marker);
-    return this.httpClient.post<Coordinates>(this.rootApiUrl, marker, httpOptions).subscribe(onSuccess, onError);
+  addMarker(request: CURequest<Coordinates>, onSuccess: (value: any) => void, onError: (error: any) => void){
+    // let marker: CURequest<Coordinates> = new Coordinates(coordinates.lat, coordinates.lng);
+    console.log(request);
+    return this.httpClient.post<CURequest<Coordinates>>(this.rootApiUrl, request, httpOptions).subscribe(onSuccess, onError);
   }
 
-  addComment(comment: MarkerComment, onSuccess: (value: MarkerComment) => void, onError: (error: any) => void){
-    let url: string = this.rootApiUrl + comment.markerId  + "/comment";
-    this.httpClient.put<MarkerComment>(url, comment, httpOptions).subscribe(onSuccess, onError);
+  addComment(request: CURequest<MarkerComment>, onSuccess: (value: any) => void, onError: (error: any) => void){
+    let url: string = this.rootApiUrl + request.content.markerId  + "/comment";
+    this.httpClient.put<CURequest<MarkerComment>>(url, request, httpOptions).subscribe(onSuccess, onError);
   }
 
-  addUpVote(upvote: MarkerUpVote, onSuccess: (value: MarkerUpVote) => void, onError: (error: any) => void){
-    let url: string = this.rootApiUrl + upvote.markerId + "/upvote";
-    this.httpClient.put<MarkerUpVote>(url, upvote, httpOptions).subscribe(onSuccess, onError);
+  addUpVote(request: CURequest<MarkerUpVote>, onSuccess: (value: any) => void, onError: (error: any) => void){
+    let url: string = this.rootApiUrl + request.content.markerId + "/upvote";
+    this.httpClient.put<CURequest<MarkerUpVote>>(url, request, httpOptions).subscribe(onSuccess, onError);
   }
 
-  addRegistration(token: Registration, onSuccess: (value: Registration) => void, onError: (error: any) => void){
+  addRegistration(token: Registration, onSuccess: (value: any) => void, onError: (error: any) => void){
     let url: string = this.rootApiUrl + "/register";
     return this.httpClient.post<Registration>(url, token, httpOptions).subscribe(onSuccess, onError);
   }
@@ -146,12 +147,3 @@ interface RESTServiceBodyResponse<T>{
   info: string;
 }
 
-class Coordinates{
-  lat: number;
-  lng: number;
-
-  constructor(lat:number, lng: number){
-    this.lat = lat;
-    this.lng = lng
-  }
-}

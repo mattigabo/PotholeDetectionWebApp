@@ -5,7 +5,7 @@ import {LAYER_NAME, MapsWrapper} from "../../core/maps.wrapper";
 import {DistributionService, Entry} from "../../services/distribution/distribution.service";
 import {CoordinatesService} from "../../services/coordinates/coordinates.service";
 import {MapAddict} from "../../core/map-addict";
-import {GeoCoordinates, Marker, MarkerComment, MarkerUpVote} from "../../ontologies/DataStructures";
+import {CURequest, GeoCoordinates, Marker, MarkerComment, MarkerUpVote} from "../../ontologies/DataStructures";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Toast, ToasterService} from "angular2-toaster";
 import {WindowService} from "../../services/window/window.service";
@@ -193,15 +193,18 @@ export class MarkersPopupComponent extends MapAddict{
       showCloseButton: true
     };
 
-    var upvote: MarkerUpVote = new MarkerUpVote(this.markerId, this._fingerprint.getGUID());
+    let upvote_request = new CURequest<MarkerUpVote>(
+      this._fingerprint.getGUID(),
+      new MarkerUpVote(this.markerId)
+    );
 
-    this._restService.addUpVote(upvote,
+    this._restService.addUpVote(upvote_request,
       X =>  {
         this._toasterService.pop(successToast);
         this.confirmationLevel++;
       },
       err => {
-        let httpError: HttpErrorResponse = (err as HttpErrorResponse)
+        let httpError: HttpErrorResponse = (err as HttpErrorResponse);
         switch(httpError.status) {
           case 412:
             this._toasterService.pop( {
@@ -240,7 +243,9 @@ export class MarkersPopupComponent extends MapAddict{
       showCloseButton: true
     };
 
-    this._restService.addComment(comment,
+    let comment_request = new CURequest<MarkerComment>(this._fingerprint.getGUID(), comment);
+
+    this._restService.addComment(comment_request,
       X =>  this._toasterService.pop(successToast),
       err => this._toasterService.pop(errorToast),
     );

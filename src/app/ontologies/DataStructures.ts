@@ -2,7 +2,6 @@
  *  In this file are defined the setData structures of Objects returned by RestApi call in order to use the http client
  *  automatic binding of json proprieties
  */
-import {LatLngExpression, LatLngTuple} from "leaflet";
 
 export interface Marker {
   id: number;
@@ -24,6 +23,10 @@ export class GeoCoordinates {
     } else {
       this.radius = 0;
     }
+  }
+
+  toCoordinates(){
+    return new Coordinates(this.lat, this.lng);
   }
 }
 
@@ -72,11 +75,29 @@ export class Registration{
 
 export class MarkerUpVote{
   markerId: number;
-  token: string;
 
-  constructor(markerId:number, token: string) {
+  constructor(markerId:number) {
     this.markerId = markerId;
-    this.token = token;
   }
 }
 
+export class CURequest<T> {
+
+  token: string;
+  content: T;
+
+  constructor(token: string, content: T) {
+    this.token = token;
+    this.content = content;
+  }
+}
+
+export class Coordinates {
+  lat: number;
+  lng: number;
+
+  constructor(lat: number, lng: number) {
+    this.lat = lat;
+    this.lng = lng
+  }
+}
