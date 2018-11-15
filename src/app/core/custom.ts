@@ -100,8 +100,8 @@ export class Custom {
 }
 
 export class MediaType{
-  constructor(private maxWidthPx: number, private maxHeightPx: number){
-  }
+
+  constructor(private maxWidthPx?: number, private maxHeightPx?: number){}
 
   getMaxWidthMediaQuery(): string{
     return "(max-width:"+ this.maxWidthPx +"px)";
@@ -111,10 +111,15 @@ export class MediaType{
     return "(max-height:"+ this.maxHeightPx +"px)";
 
   }
+
+  getStandAloneMode() : string {
+    return "(display-mode: standalone)"
+  }
 }
 
 export class MediaTypes {
   static smartphone: MediaType = new MediaType(480, 736);
   static tablet: MediaType = new MediaType(768, 1024);
-  static bigTablet: MediaType = new MediaType(1024, 1366)
+  static bigTablet: MediaType = new MediaType(1024, 1366);
+  static empty: MediaType = new MediaType(0, 0);
 }

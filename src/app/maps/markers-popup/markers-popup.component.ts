@@ -43,7 +43,7 @@ export class MarkersPopupComponent extends MapAddict{
   // isUserDefined: () => boolean = () => this.wrapper.layerGroup(LAYER_NAME.USER_DEFINED)
   //   .hasLayer(new Leaflet.Marker([this.latitude, this.longitude]));
 
-  _null = "'null'";
+  _null = "null";
 
   constructor(private _restService : RestAdapterService,
               private _distributionService : DistributionService,
@@ -83,9 +83,17 @@ export class MarkersPopupComponent extends MapAddict{
 
   addComment = (click: Event) => {
     this._sanitizer.sanitize(SecurityContext.HTML, this.commentText);
-    var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText);
+    if (this.commentText === "") {
+      var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText);
 
-    this.sendComment(mcomment);
+      this.sendComment(mcomment);
+    } else {
+      this._toasterService.popAsync({
+        type: "error",
+        title: "Beware!",
+        body: "Empty comment is invalid! Express yourself through words!"
+      })
+    }
   };
 
   public displayMarkerPopUp =  (event) => {
@@ -170,7 +178,7 @@ export class MarkersPopupComponent extends MapAddict{
       $("#marker-popup").fadeOut(200);
       $(event.target).blur();
       let stub = $("#text-stub");
-      $("#comment-stub").fadeIn(200, () => stub.focus());
+      $("#comment-stub").css({display:'flex'}).hide().fadeIn(200, () => stub.focus());
       $(window).on('resize', this._onResizeBlur(stub));
     }
   };
