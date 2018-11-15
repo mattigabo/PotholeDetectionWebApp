@@ -114,6 +114,18 @@ a:hover {
   justify-content: space-between;
 }
 
+.return-footer {
+  display: none;
+  color: #818181;
+  align-self: center;
+  margin-bottom: 5%;
+}
+
+.return-footer > * {
+  margin: 0;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
 
   .nav {
@@ -133,18 +145,6 @@ a:hover {
 
   a {
     color: #f1f1f1;
-  }
-
-  .return-footer {
-    display: none;
-    color: #818181;
-    align-self: center;
-    margin-bottom: 5%;
-  }
-
-  .return-footer > * {
-    margin: 0;
-    text-align: center;
   }
 }
 

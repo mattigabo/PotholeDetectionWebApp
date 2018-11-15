@@ -115,7 +115,7 @@ export class RestAdapterService {
   }
 
   addRegistration(token: Registration, onSuccess: (value: any) => void, onError: (error: any) => void){
-    let url: string = this.rootApiUrl + "/register";
+    let url: string = this.rootApiUrl + "register";
     return this.httpClient.post<Registration>(url, token, httpOptions).subscribe(onSuccess, onError);
   }
 

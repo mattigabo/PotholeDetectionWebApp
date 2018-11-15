@@ -82,8 +82,10 @@ export class MarkersPopupComponent extends MapAddict{
   }
 
   addComment = (click: Event) => {
+
     this._sanitizer.sanitize(SecurityContext.HTML, this.commentText);
-    if (this.commentText === "") {
+
+    if (this.commentText && this.commentText.length > 0) {
       var mcomment: MarkerComment = new MarkerComment(this.markerId, this.commentText);
 
       this.sendComment(mcomment);
