@@ -95,11 +95,11 @@ export class MapsWrapper {
       'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
       {
         attribution:
-          '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> | ' +
-          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
-          '&copy; <a href="https://www.mapbox.com/">Mapbox</a> | ' +
-          '<a href="https://www.linkedin.com/in/alessandro-cevoli/">Xander</a>&' +
-          '<a href="https://www.linkedin.com/in/matteogabellini/">Gabe</a>',
+          '&copy; <a class="map-bottom-link" href="https://www.openstreetmap.org/">OpenStreetMap</a> | ' +
+          '<a class="map-bottom-link" href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
+          '&copy; <a class="map-bottom-link" href="https://www.mapbox.com/">Mapbox</a> | ' +
+          '<a class="map-bottom-link" href="https://www.linkedin.com/in/alessandro-cevoli/">Xander</a>&' +
+          '<a class="map-bottom-link" href="https://www.linkedin.com/in/matteogabellini/">Gabe</a>',
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1IjoicHVtcGtpbnNoZWFkIiwiYSI6ImNqa2NuM3l2cDFzdGYzcXA4MmoyZ2dsYWsifQ.FahVhmZj5RODSwGjl5-EaQ'
       })

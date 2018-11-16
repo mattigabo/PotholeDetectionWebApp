@@ -19,7 +19,7 @@ import {RouteAPIResponse} from "../../ontologies/RouteData";
 })
 export class RestAdapterService {
 
-  rootApiUrl: string = "https://192.168.1.12:9443/api/pothole/";
+  rootApiUrl: string = "https://192.168.43.207:9443/api/pothole/";
 
   constructor(private httpClient: HttpClient) { }
 

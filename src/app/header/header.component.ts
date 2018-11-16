@@ -17,7 +17,7 @@ export class HeaderComponent extends MapAddict {
 
   help = "https://github.com/mattigabo/PotholeDetectionWebApp/wiki/Web-App-Functionalities";
   email = 'pumpkinheads@gmail.com';
-  mail_sender = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=" + this.email + "&tf=1";
+  mail_sender = "mailto:" + this.email;//"https://mail.google.com/mail/u/0/?view=cm&fs=1&to=" + this.email + "&tf=1";
   repository = 'https://github.com/mattigabo/PotholeDetectionWebApp';
 
   constructor(private restService : RestAdapterService,
