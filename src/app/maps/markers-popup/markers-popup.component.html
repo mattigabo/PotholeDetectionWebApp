@@ -63,13 +63,15 @@
     </a>
   </div>
   <div id="marker-popup--comment" class="marker-popup-entry">
+    <label for="marker-popup-comment--text" class="marker-popup-text-label">
+      <span hidden>Insert here your comment about the selected pothole</span>
       <textarea id="marker-popup-comment--text"
-                class="marker-popup-text"
-                placeholder="Insert here your comment! (max.: 500 chars)"
-                maxlength="500" rows="10" cols="30"
-                (input)="commentText = $event.target.value"
-                (focus)="onFocusHideMarkerPopup($event)"></textarea>
-        <span hidden>Insert here your comment about the selected pothole</span>
+              class="marker-popup-text"
+              placeholder="Insert here your comment! (max.: 500 chars)"
+              maxlength="500" rows="10" cols="30"
+              (input)="commentText = $event.target.value"
+              (focus)="onFocusHideMarkerPopup($event)"></textarea>
+    </label>
   </div>
   <div id="marker-popup--footer" class="marker-popup-entry">
     <a id="marker-popup-close-button"
@@ -88,11 +90,14 @@
 </div>
 
 <div id="comment-stub" class="stub close-on-esc" hidden>
+  <label for="text-stub" class="marker-popup-text-label">
+    <span hidden>Insert here your comment about the selected pothole</span>
     <textarea id="text-stub"
-              class="marker-popup-text"
-              placeholder="Insert here your comment! (max.: 500 chars)"
-              maxlength="500" rows="10" cols="30"
-              (input)="commentText = $event.target.value"
-              (blur)="onBlurDisplayMarkerPopup($event)"></textarea>
+        class="marker-popup-text"
+        placeholder="Insert here your comment! (max.: 500 chars)"
+        maxlength="500" rows="10" cols="30"
+        (input)="commentText = $event.target.value"
+        (blur)="onBlurDisplayMarkerPopup($event)"></textarea>
+  </label>
   <div class="return-footer"> <p>Tap here to return!</p> </div>
 </div>

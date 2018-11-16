@@ -65,17 +65,21 @@
   padding: 10px;
   border-bottom: solid 2px #818181;
   justify-content: center;
-  /*margin: 5px;*/
+}
+
+.marker-popup-text-label{
+  width: 100%;
+  height: 100%;
+  padding: 1%;
 }
 
 .marker-popup-text {
+
+  width: 99%;
+  height: 99%;
   background: whitesmoke;
   color: #444444;
-  width: 95%;
-  min-height: 30%;
-  max-width: 95%;
   resize: none;
-  margin: 5px;
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-style: italic;
 }
@@ -87,7 +91,6 @@
   padding: 10px;
   margin: 5px 5px;
 }
-
 
 .marker-popup-button {
   color: #818181;
@@ -166,6 +169,10 @@
     margin-right: 6%;
   }
 
+  #marker-popup--footer {
+    margin-right: 6%;
+  }
+
   .primary{
     text-overflow: ellipsis;
   }
@@ -175,14 +182,14 @@
     text-overflow: ellipsis;
   }
 
-  #marker-popup--footer {
-    margin-right: 6%;
-    padding: 4%;
+  .marker-popup-text-label {
+    height: 80%;
+    padding: 2%;
   }
 
   .marker-popup-text {
-    width: 90%;
-    height: auto;
+    width: 98%;
+    height: 98%;
   }
 
   .stub {
@@ -201,9 +208,10 @@
   }
 
   .return-footer {
+    width: 100%;
     color: #818181;
     align-self: center;
-    margin-bottom: 5%;
+    margin-bottom: 10%;
   }
 
   .return-footer > * {
@@ -212,11 +220,12 @@
   }
 
   #text-stub {
-    margin-left: 0;
-    width: 90%;
-    height: 80%;
+    /*margin-left: 0;*/
+    margin-left: 2%;
+    width: 95%;
+    height: 100%;
     font-size: medium;
-
+    align-self: center;
   }
 }
 
