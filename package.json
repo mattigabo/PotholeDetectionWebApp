@@ -34,6 +34,7 @@
     "leaflet-draw": "^1.0.4",
     "leaflet-hotline": "^0.4.0",
     "leaflet.heat": "^0.2.0",
+    "lodash": "^4.17.15",
     "npm": "^6.10.1",
     "rxjs": "^6.5.2",
     "zone.js": "^0.8.29"
